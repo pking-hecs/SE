@@ -1,0 +1,78 @@
+async function sendMessage() {
+    const inputField = document.getElementById('user-input');
+    const chatWindow = document.getElementById('chat-window');
+    const prompt = inputField.value.trim();
+
+    if (!prompt) return;
+
+    // Append User Message
+    appendMessage('user', prompt);
+    inputField.value = '';
+
+    // Append Loading State
+    const loadingId = 'loading-' + Date.now();
+    appendMessage('assistant', '<div class="flex gap-2 items-center"><i class="fas fa-circle-notch fa-spin"></i> Agents are collaborating...</div>', loadingId);
+
+    try {
+        const response = await fetch('http://localhost:8000/analyze', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ prompt: prompt })
+        });
+
+        const result = await response.json();
+
+        // Remove loading and add result
+        document.getElementById(loadingId).remove();
+
+        if (result.status === 'success') {
+            const data = result.data;
+            const formattedResponse = `
+                <div class="space-y-4">
+                    <div class="p-3 bg-blue-500/10 border border-blue-500/30 rounded-lg">
+                        <h4 class="text-blue-400 font-bold mb-2"><i class="fas fa-list"></i> Classified Requirements</h4>
+                        <p class="text-sm text-slate-300 whitespace-pre-wrap">${data.requirements}</p>
+                    </div>
+                    <div class="p-3 bg-amber-500/10 border border-amber-500/30 rounded-lg">
+                        <h4 class="text-amber-400 font-bold mb-2"><i class="fas fa-balance-scale"></i> Compliance & Risk</h4>
+                        <p class="text-sm text-slate-300 whitespace-pre-wrap">${data.compliance}</p>
+                    </div>
+                    <div class="p-3 bg-green-500/10 border border-green-500/30 rounded-lg">
+                        <h4 class="text-green-400 font-bold mb-2"><i class="fas fa-rocket"></i> SDLC Recommendation</h4>
+                        <p class="text-sm text-slate-300 whitespace-pre-wrap">${data.sdlc}</p>
+                    </div>
+                    <div class="p-3 bg-purple-500/10 border border-purple-500/30 rounded-lg">
+                        <h4 class="text-purple-400 font-bold mb-2"><i class="fas fa-file-alt"></i> Full SRS & Implementation Plan</h4>
+                        <p class="text-sm text-slate-300 whitespace-pre-wrap">${data.srs_plan}</p>
+                    </div>
+                </div>
+            `;
+            appendMessage('assistant', formattedResponse);
+        } else {
+            appendMessage('assistant', '❌ Error: ' + result.detail);
+        }
+    } catch (error) {
+        document.getElementById(loadingId).remove();
+        appendMessage('assistant', '❌ System Error: Could not connect to Backend. Make sure main.py is running.');
+    }
+}
+
+function appendMessage(role, content, id = null) {
+    const chatWindow = document.getElementById('chat-window');
+    const div = document.createElement('div');
+    div.className = `flex ${role === 'user' ? 'justify-end' : 'justify-start'}`;
+    if (id) div.id = id;
+
+    const inner = document.createElement('div');
+    inner.className = `${role === 'user' ? 'bg-blue-600 text-white' : 'glass text-slate-300'} p-4 rounded-2xl max-w-3xl shadow-xl`;
+    inner.innerHTML = content;
+
+    div.appendChild(inner);
+    chatWindow.appendChild(div);
+    chatWindow.scrollTop = chatWindow.scrollHeight;
+}
+
+document.getElementById('send-btn').addEventListener('click', sendMessage);
+document.getElementById('user-input').addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') sendMessage();
+});
