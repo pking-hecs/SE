@@ -1,0 +1,51 @@
+# Agentic AI for Financial Requirements Engineering
+
+## Project Goal
+An autonomous, collaborative multi-agent AI system to automate requirement gathering, analysis, and SDLC identification specifically for the highly regulated financial sector.
+
+## System Scope
+- **Domains:** Digital Banking, Loan Origination, Payment Processing, Fraud Detection, Insurance, Regulatory Reporting, KYC, Financial Analytics.
+- **Core Outputs:** SRS, User Stories, Use Cases, Acceptance Criteria, Compliance Mappings, Risk Register, Traceability Matrix, Recommended SDLC Model.
+
+## Multi-Agent Architecture
+- **Coordinator Agent:** Workflow control & task assignment.
+- **Stakeholder Interaction Agent:** Adaptive interviews & clarification.
+- **Requirement Extraction Agent:** Natural language to structured requirements.
+- **Clarification Agent:** Ambiguity & gap detection.
+- **Classification Agent:** Functional vs Non-Functional (Security, Privacy, etc.).
+- **Conflict-Detection Agent:** Contradiction & duplication identification.
+- **Compliance Agent:** Mapping to financial regulations & policies.
+- **Security & Privacy Agent:** Cybersecurity & privacy requirement identification.
+- **Risk-Analysis Agent:** Business & technical risk assessment.
+- **SDLC Selection Agent:** Project characteristic analysis & model recommendation.
+- **Documentation Agent:** Artifact generation (SRS, Traceability).
+- **Validation Agent:** Consistency & evidence verification.
+- **Human-Approval Agent:** Routing critical decisions to humans.
+
+## Technical Constraints
+- **Groundedness:** Use RAG to prevent hallucinations.
+- **Security:** Data masking, RBAC, protection against prompt injection.
+- **Traceability:** Every requirement linked to a source stakeholder/document.
+- **Human-in-the-loop:** Mandatory for regulatory and high-risk decisions.
+
+## Development Roadmap (The 20-Step Plan)
+1. Define System Scope
+2. Identify Stakeholders
+3. Define Input Sources
+4. Design Multi-Agent Architecture
+5. Build Financial Knowledge Base
+6. Implement RAG
+7. Design Gathering Conversations
+8. Extract & Structure Requirements
+9. Classify Requirements
+10. Analyse Requirement Quality
+11. Compliance & Security Analysis
+12. Generate Requirement Artefacts
+13. Extract SDLC Decision Factors
+14. Design SDLC Selection Engine
+15. Generate Project-Specific SDLC Workflow
+16. Implement Human-in-the-Loop
+17. Secure the Platform
+18. Develop Prototype
+19. Test & Evaluate
+20. Deploy & Monitor
