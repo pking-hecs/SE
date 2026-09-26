@@ -1,0 +1,6 @@
+### Financial Regulations Knowledge Base
+- GDPR: General Data Protection Regulation. Requires explicit consent for data processing, right to be forgotten, and strict data breach notification within 72 hours.
+- PCI-DSS: Payment Card Industry Data Security Standard. Requires firewall installation, encryption of cardholder data across open, public networks, and regular security testing.
+- Basel III: International regulatory framework for banks. Focuses on capital adequacy, stress testing, and market liquidity risk.
+- AML/KYC: Anti-Money Laundering and Know Your Customer. Requires identity verification of clients and monitoring of suspicious transactions.
+- ISO 27001: International standard for information security management systems (ISMS).
