@@ -1,4 +1,10 @@
 import time
+import sys
+from pathlib import Path
+
+# Ensure repository root is on Python path
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+
 from src.core.orchestrator.state import ProjectState, Requirement, AgentResponse
 from src.core.rag.engine import FinancialRAG
 from src.agents.interaction.agent import InteractionAgent

@@ -1,44 +1,73 @@
-# Agentic AI for Financial Requirements Engineering
+# Financial Requirements Engineering AI Platform
 
-An autonomous, collaborative multi-agent AI system designed to automate requirement gathering, analysis, and SDLC identification in the highly regulated financial sector.
+## 🚀 Overview
+A production-grade, multi-agent AI system for financial software requirements engineering. It transforms stakeholder conversations and documents into structured, validated, and compliant requirements.
 
-## 🚀 Project Overview
-Gathering requirements in banking and finance is typically manual, time-consuming, and prone to regulatory omissions. This system uses a team of specialized AI agents to interact with stakeholders, analyze conversations, detect ambiguities, and ensure every requirement is mapped to financial regulations.
+## 🛠️ Tech Stack
+- **Frontend**: React, TypeScript, Vite, Tailwind CSS, TanStack Query, Lucide Icons
+- **Backend**: FastAPI, Python 3.10+, Pydantic, SQLAlchemy, Alembic
+- **AI**: Ollama (Gemma model), LangGraph (Agent orchestration), Sentence-Transformers (Local Embeddings)
+- **Database**: PostgreSQL + `pgvector` (RAG & Persistence), Redis (State Cache)
+- **DevOps**: Docker Compose
 
-## 🛠️ Core Features
-- **Multi-Agent Orchestration:** 13 specialized agents (Coordinator, Compliance, Risk, SDLC Selection, etc.) collaborating via a hub-and-spoke model.
-- **Retrieval-Augmented Generation (RAG):** Grounding all requirements in an authorized **Financial Knowledge Base (FKB)** to eliminate hallucinations and ensure regulatory adherence.
-- **Security & Privacy:** Integrated PII masking (emails, account numbers) and prompt-injection guards to protect sensitive financial data.
-- **Automated Artifacts:** Generation of professional **Software Requirements Specifications (SRS)**, User Stories, and Requirements Traceability Matrices (RTM).
-- **Intelligent SDLC Selection:** A decision engine that recommends the best development model (Agile, V-Model, Spiral, etc.) based on risk, stability, and regulatory criticality.
-- **Human-in-the-Loop (HITL):** Mandatory approval gates for critical regulatory and architectural decisions.
+## 🏗️ Architecture
+The system uses a **Coordinator-Specialist** pattern:
+1. **Coordinator Agent**: Manages the state graph and routes tasks.
+2. **Specialists**:
+    - `InteractionAgent`: Adaptive stakeholder interviews.
+    - `ExtractionAgent`: Converts NL to structured Pydantic requirements.
+    - `QualityAgent`: Detects ambiguity, incompleteness, and duplication.
+    - `ConflictAgent`: Identifies contradictions between requirements.
+    - `SecurityAgent`: Threat analysis and PII masking.
+    - `ComplianceAgent`: RAG-based mapping to financial regulations.
+    - `RiskAgent`: Calculates financial and technical risk scores.
+    - `ValidationAgent`: Final gatekeeper before human approval.
+    - `SdlcAgent`: Recommends SDLC based on a weighted scoring model.
+    - `DocAgent`: Generates SRS, RTM, and User Stories.
+
+## 🚦 Getting Started
+
+### 1. Ollama Setup
+Ensure Ollama is installed and the model is pulled:
+```bash
+ollama pull gemma:2b # or your detected gemma model
+```
+
+### 2. Infrastructure
+Start the database and cache:
+```bash
+docker compose up -d db redis
+```
+
+### 3. Backend Setup
+```bash
+cd backend
+python -m venv venv
+source venv/bin/activate # Windows: .\venv\Scripts\activate
+pip install -r requirements.txt
+# Initialize DB
+alembic upgrade head
+# Start Server
+uvicorn app.main:app --reload
+```
+
+### 4. Frontend Setup
+```bash
+cd frontend
+npm install
+npm run dev
+```
 
 ## 📁 Project Structure
-- `src/core/`: The "Brain" (RAG engine, SDLC engine, Orchestrator state, Security guards).
-- `src/agents/`: The "Workers" (Interaction, Extraction, Analysis, Compliance, Documentation agents).
-- `docs/`: Full technical specifications, architecture designs, and stakeholder maps.
-- `src/main.py`: The main entry point to run the end-to-end pipeline.
+- `backend/app/api/`: REST endpoints.
+- `backend/app/agents/`: Specialist AI logic.
+- `backend/app/core/`: Orchestrator, RAG engine, and Security guard.
+- `backend/app/models/`: SQLAlchemy database models.
+- `frontend/src/`: React components and state management.
+- `demo_documents/`: Sample financial policies for testing RAG.
 
-## 🏃 How to Run
-### Prerequisites
-- Python 3.10+
-
-### Execution (PowerShell)
-```powershell
-$env:PYTHONPATH = (Get-Location).Path
-python src/main.py
-```
-
-### Execution (Git Bash)
-```bash
-export PYTHONPATH=$(pwd) && python src/main.py
-```
-
-## 📊 Expected Results
-Upon running, the system will:
-1. Mask sensitive data from stakeholder input.
-2. Extract structured requirements.
-3. Map requirements to regulatory codes (e.g., `[KB-REG-001]`).
-4. Recommend a justified SDLC model.
-5. Request human sign-off for the project baseline.
-6. Generate a final SRS preview.
+## 🛡️ Security & Compliance
+- **RBAC**: Strict role separation (Stakeholder vs Analyst vs Approver).
+- **Data Privacy**: Automatic PII masking before LLM processing.
+- **Prompt Guard**: Middleware to detect and block prompt injection.
+- **Audit Trail**: Immutable logging of every requirement change and approval.

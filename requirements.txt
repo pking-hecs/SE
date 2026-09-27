@@ -1,4 +1,9 @@
 streamlit
+fastapi
+uvicorn[standard]
+pydantic
 langchain
 langchain-community
+langchain-ollama
 python-dotenv
+google-generativeai>=0.8.0

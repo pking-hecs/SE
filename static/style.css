@@ -1,0 +1,328 @@
+:root {
+    --bg-canvas: #08090d;
+    --header-bg: rgba(12, 13, 19, 0.95);
+    --header-border: #1a1d29;
+    --card-surface: #12151f;
+    --card-surface-hover: #171b27;
+    --card-inner: #0b0c12;
+    --card-border: #222736;
+    --card-border-hover: #32394d;
+    --card-shadow: 0 16px 36px -4px rgba(0, 0, 0, 0.75), 0 4px 14px rgba(0, 0, 0, 0.45);
+    
+    --text-primary: #f8fafc;
+    --text-secondary: #cbd5e1;
+    --text-muted: #94a3b8;
+    
+    --input-bg: #0a0b10;
+    --input-border: #232736;
+    
+    /* Solid, Non-Neon Accent Colors */
+    --solid-blue: #2563eb;
+    --solid-blue-hover: #1d4ed8;
+    --solid-green: #15803d;
+    --solid-green-hover: #166534;
+    --solid-red: #dc2626;
+    --solid-red-hover: #b91c1c;
+    --solid-amber: #d97706;
+    --solid-amber-hover: #b45309;
+    --solid-purple: #7c3aed;
+    --solid-purple-hover: #6d28d9;
+    --solid-slate: #334155;
+    
+    /* Badge Solid Backgrounds & Borders (Dark) */
+    --badge-blue-bg: #1e293b;
+    --badge-blue-border: #334155;
+    --badge-blue-text: #93c5fd;
+
+    --badge-green-bg: #14532d;
+    --badge-green-border: #166534;
+    --badge-green-text: #86efac;
+
+    --badge-red-bg: #7f1d1d;
+    --badge-red-border: #991b1b;
+    --badge-red-text: #fca5a5;
+
+    --badge-amber-bg: #78350f;
+    --badge-amber-border: #92400e;
+    --badge-amber-text: #fde68a;
+
+    --badge-purple-bg: #4c1d95;
+    --badge-purple-border: #5b21b6;
+    --badge-purple-text: #d8b4fe;
+
+    --chat-user-bg: #181d2a;
+    --chat-user-border: #293247;
+    --chat-user-text: #f8fafc;
+
+    --chat-ai-bg: #12151f;
+    --chat-ai-border: #202534;
+    --chat-ai-text: #f1f5f9;
+}
+
+/* Light Theme Variables */
+.light-theme {
+    --bg-canvas: #f1f5f9;
+    --header-bg: rgba(255, 255, 255, 0.95);
+    --header-border: #cbd5e1;
+    --card-surface: #ffffff;
+    --card-surface-hover: #f8fafc;
+    --card-inner: #f8fafc;
+    --card-border: #cbd5e1;
+    --card-border-hover: #94a3b8;
+    --card-shadow: 0 10px 25px -4px rgba(15, 23, 42, 0.08), 0 4px 10px -2px rgba(15, 23, 42, 0.04);
+    
+    --text-primary: #0f172a;
+    --text-secondary: #334155;
+    --text-muted: #64748b;
+    
+    --input-bg: #ffffff;
+    --input-border: #cbd5e1;
+
+    /* Badge Solid Backgrounds & Borders (Light) */
+    --badge-blue-bg: #eff6ff;
+    --badge-blue-border: #bfdbfe;
+    --badge-blue-text: #1d4ed8;
+
+    --badge-green-bg: #f0fdf4;
+    --badge-green-border: #bbf7d0;
+    --badge-green-text: #15803d;
+
+    --badge-red-bg: #fef2f2;
+    --badge-red-border: #fecaca;
+    --badge-red-text: #b91c1c;
+
+    --badge-amber-bg: #fffbeb;
+    --badge-amber-border: #fde68a;
+    --badge-amber-text: #b45309;
+
+    --badge-purple-bg: #faf5ff;
+    --badge-purple-border: #e9d5ff;
+    --badge-purple-text: #6d28d9;
+
+    --chat-user-bg: #eff6ff;
+    --chat-user-border: #bfdbfe;
+    --chat-user-text: #1e3a8a;
+
+    --chat-ai-bg: #ffffff;
+    --chat-ai-border: #e2e8f0;
+    --chat-ai-text: #0f172a;
+}
+
+html {
+    font-size: 15px;
+}
+
+body {
+    background-color: var(--bg-canvas);
+    color: var(--text-primary);
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    min-height: 100vh;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+/* Header */
+.theme-header {
+    background: var(--header-bg);
+    border-color: var(--header-border);
+}
+
+.theme-title {
+    color: var(--text-primary);
+}
+
+.theme-tag {
+    background: var(--card-inner);
+    border: 1px solid var(--card-border);
+    color: var(--text-secondary);
+}
+
+.theme-btn {
+    background: var(--card-inner);
+    border: 1px solid var(--card-border);
+    color: var(--text-secondary);
+}
+.theme-btn:hover {
+    background: var(--card-surface-hover);
+    color: var(--text-primary);
+    border-color: var(--card-border-hover);
+}
+
+/* Floating Card Container with sleek elevation */
+.floating-card, .glass-panel {
+    background: var(--card-surface);
+    border: 1px solid var(--card-border);
+    border-radius: 22px;
+    box-shadow: var(--card-shadow);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+}
+
+.floating-card:hover, .glass-panel:hover {
+    border-color: var(--card-border-hover);
+}
+
+/* Inner Nested Card for sub-sections */
+.inner-card {
+    background: var(--card-inner);
+    border: 1px solid var(--card-border);
+    border-radius: 16px;
+    color: var(--text-secondary);
+}
+
+/* Floating Inputs */
+.floating-input, .glass-input {
+    background: var(--input-bg);
+    border: 1px solid var(--input-border);
+    color: var(--text-primary);
+    border-radius: 12px;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease, background-color 0.2s ease;
+}
+
+.floating-input:focus, .glass-input:focus {
+    border-color: var(--solid-blue);
+    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.25);
+    outline: none;
+}
+
+/* Domain & Sample Preset Chips */
+.domain-label {
+    color: var(--text-primary);
+}
+
+.sample-label {
+    color: var(--text-secondary);
+}
+
+.preset-chip {
+    background: var(--card-inner);
+    border: 1px solid var(--card-border);
+    color: var(--text-secondary);
+}
+.preset-chip:hover {
+    background: var(--card-surface-hover);
+    color: var(--text-primary);
+    border-color: var(--solid-blue);
+}
+
+/* Tab Navigation Strip */
+.tab-btn {
+    border-radius: 12px;
+    border: 1px solid transparent;
+    transition: all 0.18s ease;
+    font-weight: 600;
+    color: var(--text-secondary);
+}
+
+.tab-btn:hover {
+    background: var(--card-inner);
+    color: var(--text-primary);
+}
+
+.tab-btn.active {
+    background: var(--card-inner);
+    border-color: var(--solid-blue);
+    color: var(--text-primary);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Solid Buttons (NO NEON) */
+.btn-approve {
+    background-color: var(--solid-green);
+    color: #ffffff;
+    font-weight: 600;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(21, 128, 61, 0.2);
+    transition: all 0.15s ease;
+}
+.btn-approve:hover {
+    background-color: var(--solid-green-hover);
+    transform: translateY(-1px);
+}
+
+.btn-remove {
+    background-color: var(--solid-red);
+    color: #ffffff;
+    font-weight: 600;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(220, 38, 38, 0.2);
+    transition: all 0.15s ease;
+}
+.btn-remove:hover {
+    background-color: var(--solid-red-hover);
+    transform: translateY(-1px);
+}
+
+.btn-primary {
+    background-color: var(--solid-blue);
+    color: #ffffff;
+    font-weight: 600;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+    transition: all 0.15s ease;
+}
+.btn-primary:hover {
+    background-color: var(--solid-blue-hover);
+    transform: translateY(-1px);
+}
+
+.btn-secondary {
+    background-color: var(--card-inner);
+    border: 1px solid var(--card-border);
+    color: var(--text-secondary);
+    font-weight: 500;
+    border-radius: 12px;
+    transition: all 0.15s ease;
+}
+.btn-secondary:hover {
+    background-color: var(--card-surface-hover);
+    color: var(--text-primary);
+    border-color: var(--card-border-hover);
+}
+
+/* Solid Badges */
+.badge-blue {
+    background: var(--badge-blue-bg);
+    border: 1px solid var(--badge-blue-border);
+    color: var(--badge-blue-text);
+}
+
+.badge-green {
+    background: var(--badge-green-bg);
+    border: 1px solid var(--badge-green-border);
+    color: var(--badge-green-text);
+}
+
+.badge-red {
+    background: var(--badge-red-bg);
+    border: 1px solid var(--badge-red-border);
+    color: var(--badge-red-text);
+}
+
+.badge-amber {
+    background: var(--badge-amber-bg);
+    border: 1px solid var(--badge-amber-border);
+    color: var(--badge-amber-text);
+}
+
+.badge-purple {
+    background: var(--badge-purple-bg);
+    border: 1px solid var(--badge-purple-border);
+    color: var(--badge-purple-text);
+}
+
+/* Custom Scrollbars */
+.custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+    background: var(--bg-canvas);
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background: var(--card-border);
+    border-radius: 4px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: var(--card-border-hover);
+}
