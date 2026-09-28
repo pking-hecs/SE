@@ -4,47 +4,56 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Financial Requirement AI | Autonomous RE Platform</title>
+    <title>FinReq | Autonomous Financial Requirements Engineering Platform</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap"
         rel="stylesheet">
-    <!-- Font Awesome -->
+    <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Custom Style -->
     <link rel="stylesheet" href="style.css">
 </head>
 
-<body class="overflow-x-hidden custom-scrollbar bg-[#08090d] text-slate-100">
+<body class="overflow-x-hidden custom-scrollbar bg-[#090a10] text-slate-100 antialiased selection:bg-blue-500/20 selection:text-blue-200">
 
-    <!-- Top Navigation Bar: Clean & Minimal, just "Financial Requirement AI" + Theme Toggle -->
-    <header class="border-b theme-header sticky top-0 z-50 px-8 py-3.5 backdrop-blur-md transition-colors">
-        <div class="w-full flex items-center justify-between">
-            <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-2xl bg-blue-700 flex items-center justify-center shadow-md">
-                    <i class="fas fa-landmark text-white text-base"></i>
+    <!-- Top Navigation Bar -->
+    <header class="border-b theme-header sticky top-0 z-50 px-6 py-3 transition-colors">
+        <div class="max-w-[1700px] mx-auto flex items-center justify-between">
+            <!-- Brand Wordmark -->
+            <div class="flex items-center gap-3.5">
+                <div class="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center font-mono font-bold text-white text-xs tracking-wider shadow-sm">
+                    FR
                 </div>
-                <h1 class="text-xl font-bold tracking-tight theme-title flex items-center gap-2.5">
-                    Financial Requirement AI
-                </h1>
+                <div>
+                    <div class="flex items-center gap-2">
+                        <h1 class="text-sm font-bold tracking-tight theme-title">
+                            FINREQ
+                        </h1>
+                        <span class="text-[10px] font-mono px-1.5 py-0.5 rounded border border-blue-500/30 bg-blue-500/10 text-blue-400 font-semibold">v2.4.0</span>
+                    </div>
+                    <p class="text-[11px] text-slate-400 font-normal">Autonomous Financial Requirements &amp; Regulatory Compliance Engine</p>
+                </div>
             </div>
 
-            <!-- Theme Toggle, Minimal Session Tag & Reset Button -->
-            <div class="flex items-center gap-3">
-                <span id="active-project-tag"
-                    class="text-xs px-3 py-1.5 rounded-xl theme-tag font-mono">No Active Session</span>
+            <!-- Session State & Controls -->
+            <div class="flex items-center gap-2.5">
+                <div class="flex items-center gap-2 text-xs px-3 py-1.5 rounded-lg theme-tag">
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                    <span id="active-project-tag" class="font-mono text-xs text-slate-300">No Active Session</span>
+                </div>
                 <button id="theme-toggle-btn" onclick="toggleTheme()"
-                    class="theme-btn px-3.5 py-1.5 rounded-xl transition text-xs font-semibold flex items-center gap-1.5 shadow-sm"
-                    title="Toggle Light / Dark Theme">
-                    <i id="theme-icon" class="fas fa-sun text-amber-500"></i>
+                    class="theme-btn px-3 py-1.5 rounded-lg text-xs font-medium flex items-center gap-1.5"
+                    title="Toggle Theme">
+                    <i id="theme-icon" class="fas fa-sun text-amber-400 text-xs"></i>
                     <span id="theme-text">Light</span>
                 </button>
                 <button onclick="resetSession()"
-                    class="theme-btn px-3.5 py-1.5 rounded-xl transition text-xs font-semibold flex items-center gap-1.5 shadow-sm"
+                    class="theme-btn px-3 py-1.5 rounded-lg text-xs font-medium flex items-center gap-1.5 hover:text-red-400"
                     title="Reset Session">
                     <i class="fas fa-rotate-right text-xs"></i> Reset
                 </button>
@@ -52,104 +61,102 @@
         </div>
     </header>
 
-    <!-- 13 Agents Live Orchestration Visualizer (Floating Card) -->
-    <section class="w-full px-8 pt-5 pb-2">
-        <div class="p-4 floating-card">
-            <div class="flex items-center justify-between mb-3">
-                <div class="flex items-center gap-2.5">
-                    <span class="text-xs font-bold uppercase tracking-wider flex items-center gap-2 theme-title">
-                        <i class="fas fa-network-wired text-blue-600"></i> Autonomous Multi-Agent Hierarchy
+    <div class="max-w-[1700px] mx-auto px-6 py-3 space-y-3">
+
+        <!-- 13 Multi-Agent Telemetry Ledger Strip -->
+        <section class="floating-card p-3">
+            <div class="flex items-center justify-between mb-2.5 px-1">
+                <div class="flex items-center gap-2">
+                    <span class="text-[11px] font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
+                        <i class="fas fa-microchip text-blue-500"></i> Multi-Agent Architecture
                     </span>
-                    <span
-                        class="text-[11px] px-2.5 py-0.5 rounded-full badge-blue font-semibold">13 Specialists</span>
+                    <span class="text-[10px] font-mono px-2 py-0.5 rounded badge-blue font-semibold">13 Nodes Active</span>
                 </div>
-                <div id="pipeline-status" class="text-xs text-slate-400 font-medium flex items-center gap-2">
-                    <span class="w-2 h-2 rounded-full bg-slate-500"></span> Idle - Enter project idea to run pipeline
+                <div id="pipeline-status" class="text-xs text-slate-400 font-mono flex items-center gap-2">
+                    <span class="w-1.5 h-1.5 rounded-full bg-slate-500"></span> System Idle &bull; Ready for Input
                 </div>
             </div>
 
-            <!-- Agent Pills Grid with Solid Tones -->
-            <div class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-7 lg:grid-cols-13 gap-2 text-center text-xs">
+            <!-- Agent Nodes Grid -->
+            <div class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-7 lg:grid-cols-13 gap-1.5 text-center text-xs">
                 <div id="agent-coordinator"
-                    class="p-2 rounded-xl inner-card text-xs font-medium transition-all shadow-sm"
+                    class="p-2 rounded-lg agent-node text-xs font-normal"
                     title="Controls workflow & orchestrates state">
-                    <i class="fas fa-sitemap block mb-1 text-slate-400"></i> Coordinator
+                    <i class="fas fa-sitemap block mb-1 text-slate-400 text-xs"></i> Coordinator
                 </div>
                 <div id="agent-interaction"
-                    class="p-2 rounded-xl inner-card text-xs font-medium transition-all shadow-sm"
-                    title="Conducts adaptive interviews">
-                    <i class="fas fa-comments block mb-1 text-blue-600"></i> Interaction
+                    class="p-2 rounded-lg agent-node text-xs font-normal"
+                    title="Conducts adaptive stakeholder interviews">
+                    <i class="fas fa-comments block mb-1 text-blue-400 text-xs"></i> Interaction
                 </div>
                 <div id="agent-extraction"
-                    class="p-2 rounded-xl inner-card text-xs font-medium transition-all shadow-sm"
-                    title="Extracts structured requirements">
-                    <i class="fas fa-file-export block mb-1 text-blue-500"></i> Extraction
+                    class="p-2 rounded-lg agent-node text-xs font-normal"
+                    title="Extracts structured functional & NFR requirements">
+                    <i class="fas fa-file-export block mb-1 text-blue-400 text-xs"></i> Extraction
                 </div>
                 <div id="agent-clarification"
-                    class="p-2 rounded-xl inner-card text-xs font-medium transition-all shadow-sm"
+                    class="p-2 rounded-lg agent-node text-xs font-normal"
                     title="Detects ambiguity & missing bounds">
-                    <i class="fas fa-question-circle block mb-1 text-amber-600"></i> Clarification
+                    <i class="fas fa-circle-question block mb-1 text-amber-400 text-xs"></i> Clarification
                 </div>
                 <div id="agent-classification"
-                    class="p-2 rounded-xl inner-card text-xs font-medium transition-all shadow-sm"
-                    title="13-dimension financial taxonomy">
-                    <i class="fas fa-tags block mb-1 text-purple-600"></i> Classifier
+                    class="p-2 rounded-lg agent-node text-xs font-normal"
+                    title="13-dimension financial taxonomy categorizer">
+                    <i class="fas fa-tags block mb-1 text-purple-400 text-xs"></i> Classifier
                 </div>
                 <div id="agent-conflict"
-                    class="p-2 rounded-xl inner-card text-xs font-medium transition-all shadow-sm"
-                    title="Detects contradictions & duplication">
-                    <i class="fas fa-code-compare block mb-1 text-red-600"></i> Conflict
+                    class="p-2 rounded-lg agent-node text-xs font-normal"
+                    title="Detects requirement contradictions & overlap">
+                    <i class="fas fa-code-compare block mb-1 text-rose-400 text-xs"></i> Conflict
                 </div>
                 <div id="agent-compliance"
-                    class="p-2 rounded-xl inner-card text-xs font-medium transition-all shadow-sm"
-                    title="RAG mapping to GDPR, PCI, Basel">
-                    <i class="fas fa-scale-balanced block mb-1 text-red-600"></i> Compliance
+                    class="p-2 rounded-lg agent-node text-xs font-normal"
+                    title="RAG mapping to GDPR, PCI-DSS, Basel III/IV">
+                    <i class="fas fa-scale-balanced block mb-1 text-rose-400 text-xs"></i> Compliance
                 </div>
                 <div id="agent-security"
-                    class="p-2 rounded-xl inner-card text-xs font-medium transition-all shadow-sm"
-                    title="Threat modeling & security controls">
-                    <i class="fas fa-user-shield block mb-1 text-emerald-600"></i> Security
+                    class="p-2 rounded-lg agent-node text-xs font-normal"
+                    title="STRIDE threat modeling & security controls">
+                    <i class="fas fa-shield-halved block mb-1 text-emerald-400 text-xs"></i> Security
                 </div>
                 <div id="agent-risk"
-                    class="p-2 rounded-xl inner-card text-xs font-medium transition-all shadow-sm"
-                    title="Evaluates business & technical risks">
-                    <i class="fas fa-triangle-exclamation block mb-1 text-amber-600"></i> Risk
+                    class="p-2 rounded-lg agent-node text-xs font-normal"
+                    title="Evaluates business, credit & operational risks">
+                    <i class="fas fa-triangle-exclamation block mb-1 text-amber-400 text-xs"></i> Risk
                 </div>
                 <div id="agent-sdlc"
-                    class="p-2 rounded-xl inner-card text-xs font-medium transition-all shadow-sm"
-                    title="Multi-criteria SDLC recommendation">
-                    <i class="fas fa-diagram-project block mb-1 text-emerald-600"></i> SDLC
+                    class="p-2 rounded-lg agent-node text-xs font-normal"
+                    title="Multi-criteria SDLC recommendation engine">
+                    <i class="fas fa-diagram-project block mb-1 text-emerald-400 text-xs"></i> SDLC
                 </div>
                 <div id="agent-doc"
-                    class="p-2 rounded-xl inner-card text-xs font-medium transition-all shadow-sm"
-                    title="Synthesizes SRS, User Stories & RTM">
-                    <i class="fas fa-file-lines block mb-1 text-purple-600"></i> Docs
+                    class="p-2 rounded-lg agent-node text-xs font-normal"
+                    title="Synthesizes SRS, User Stories & RTM matrix">
+                    <i class="fas fa-file-lines block mb-1 text-purple-400 text-xs"></i> Docs
                 </div>
                 <div id="agent-validator"
-                    class="p-2 rounded-xl inner-card text-xs font-medium transition-all shadow-sm"
-                    title="Verifies evidence & completeness">
-                    <i class="fas fa-clipboard-check block mb-1 text-blue-600"></i> Validator
+                    class="p-2 rounded-lg agent-node text-xs font-normal"
+                    title="Verifies evidence grounding & completeness">
+                    <i class="fas fa-clipboard-check block mb-1 text-blue-400 text-xs"></i> Validator
                 </div>
                 <div id="agent-approval"
-                    class="p-2 rounded-xl inner-card text-xs font-medium transition-all shadow-sm"
-                    title="Human-in-the-loop checkpoints">
-                    <i class="fas fa-signature block mb-1 text-teal-600"></i> Approver
+                    class="p-2 rounded-lg agent-node text-xs font-normal"
+                    title="Human-in-the-loop governance sign-off">
+                    <i class="fas fa-signature block mb-1 text-teal-400 text-xs"></i> Approver
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <!-- Domain & Sample Projects Top Bar (Floating Card below all 13 models) -->
-    <section class="w-full px-8 pt-1 pb-2">
-        <div class="p-3.5 floating-card flex items-center justify-between gap-4 flex-wrap">
-            <!-- Left: Financial Domain Selection -->
-            <div class="flex items-center gap-3 flex-wrap">
+        <!-- Domain & Quick Presets Control Bar -->
+        <section class="floating-card p-2.5 flex items-center justify-between gap-4 flex-wrap">
+            <!-- Left: Financial Domain Selector -->
+            <div class="flex items-center gap-2.5 flex-wrap">
                 <label for="domain-select"
-                    class="text-xs font-bold uppercase tracking-wider flex items-center gap-1.5 domain-label">
-                    <i class="fas fa-layer-group text-blue-600"></i> Financial Domain:
+                    class="text-[11px] font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
+                    <i class="fas fa-layer-group text-blue-400"></i> Domain:
                 </label>
                 <select id="domain-select"
-                    class="floating-input text-xs font-semibold px-3 py-1.5 min-w-[280px]">
+                    class="floating-input text-xs font-medium px-3 py-1.5 min-w-[280px] bg-transparent">
                     <option value="Digital Banking & Mobile Payments">Digital Banking &amp; Mobile Payments</option>
                     <option value="Loan Origination & Credit Assessment">Loan Origination &amp; Credit Assessment</option>
                     <option value="Payment Processing & ISO 20022">Payment Processing &amp; ISO 20022 Gateway</option>
@@ -161,447 +168,409 @@
                 </select>
             </div>
 
-            <!-- Right: Sample Projects Quick Chips -->
+            <!-- Right: Sample Presets Quick Load -->
             <div class="flex items-center gap-2 flex-wrap">
-                <span class="text-xs font-bold uppercase tracking-wider sample-label flex items-center gap-1.5">
-                    <i class="fas fa-folder-tree text-amber-600"></i> Sample Projects:
+                <span class="text-[11px] font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1">
+                    Templates:
                 </span>
-                <div class="flex items-center gap-2 overflow-x-auto">
+                <div class="flex items-center gap-1.5 overflow-x-auto">
                     <button onclick="loadPreset('loan')"
-                        class="preset-chip px-3 py-1.5 rounded-xl text-xs font-semibold transition flex items-center gap-1.5 shadow-sm">
-                        <span>🏦</span> SME Loan Origination
+                        class="preset-chip px-2.5 py-1 rounded text-xs transition flex items-center gap-1.5">
+                        <i class="fas fa-building-columns text-[11px] text-blue-400"></i> SME Lending
                     </button>
                     <button onclick="loadPreset('kyc')"
-                        class="preset-chip px-3 py-1.5 rounded-xl text-xs font-semibold transition flex items-center gap-1.5 shadow-sm">
-                        <span>👤</span> Biometric KYC &amp; Identity
+                        class="preset-chip px-2.5 py-1 rounded text-xs transition flex items-center gap-1.5">
+                        <i class="fas fa-id-card text-[11px] text-emerald-400"></i> Biometric KYC
                     </button>
                     <button onclick="loadPreset('payments')"
-                        class="preset-chip px-3 py-1.5 rounded-xl text-xs font-semibold transition flex items-center gap-1.5 shadow-sm">
-                        <span>💳</span> ISO 20022 Payments
+                        class="preset-chip px-2.5 py-1 rounded text-xs transition flex items-center gap-1.5">
+                        <i class="fas fa-credit-card text-[11px] text-purple-400"></i> ISO 20022 Payments
                     </button>
                     <button onclick="loadPreset('fraud')"
-                        class="preset-chip px-3 py-1.5 rounded-xl text-xs font-semibold transition flex items-center gap-1.5 shadow-sm">
-                        <span>🛡️</span> AML &amp; Fraud Detection
+                        class="preset-chip px-2.5 py-1 rounded text-xs transition flex items-center gap-1.5">
+                        <i class="fas fa-shield-cat text-[11px] text-amber-400"></i> AML &amp; Fraud
                     </button>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <!-- Main Workspace: Split Screen (Floating Cards) -->
-    <main class="w-full px-8 py-3 grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <!-- Main Workspace: Split Screen -->
+        <main class="grid grid-cols-1 lg:grid-cols-12 gap-4">
 
-        <!-- Left Panel: Chat & Adaptive Interview Console (5 cols) -->
-        <div class="lg:col-span-5 flex flex-col floating-card overflow-hidden h-[calc(100vh-270px)] min-h-[600px]">
+            <!-- Left Panel: Chat & Elicitation Console (5 cols) -->
+            <div class="lg:col-span-5 flex flex-col floating-card overflow-hidden h-[calc(100vh-250px)] min-h-[580px]">
 
-            <!-- Chat Header -->
-            <div class="px-5 py-3.5 border-b border-[#202534] inner-card !rounded-none !border-t-0 !border-x-0 flex items-center justify-between">
-                <div class="flex items-center gap-2.5">
-                    <div
-                        class="w-8 h-8 rounded-xl bg-blue-700 text-white flex items-center justify-center text-sm shadow-md">
-                        <i class="fas fa-robot"></i>
+                <!-- Console Header -->
+                <div class="px-4 py-3 border-b border-[var(--card-border)] flex items-center justify-between">
+                    <div class="flex items-center gap-2">
+                        <div class="w-2 h-2 rounded-full bg-emerald-500"></div>
+                        <h2 class="text-xs font-bold uppercase tracking-wider theme-title">Stakeholder Console</h2>
                     </div>
-                    <div>
-                        <h2 class="text-base font-bold theme-title">Stakeholder Console</h2>
-                        <p class="text-xs text-slate-400">Multi-Agent Elicitation &amp; Clarification</p>
+                    <div class="text-xs text-slate-400 font-mono">
+                        <span id="chat-count" class="font-bold text-blue-400">0</span> messages
                     </div>
                 </div>
-                <div class="text-xs text-slate-300">
-                    <span id="chat-count"
-                        class="font-mono inner-card px-2.5 py-1 rounded-xl text-blue-500 font-bold">0</span>
-                    msgs
-                </div>
-            </div>
 
-            <!-- Chat Message Window -->
-            <div id="chat-window" class="flex-1 p-5 overflow-y-auto space-y-4 custom-scrollbar">
-                <!-- Welcome Prompt -->
-                <div class="flex items-start gap-3">
-                    <div
-                        class="w-8 h-8 rounded-full bg-blue-600 flex-shrink-0 flex items-center justify-center text-white text-xs font-bold shadow">
-                        AI
-                    </div>
-                    <div class="inner-card p-4 max-w-lg text-sm leading-relaxed text-slate-200">
-                        <p class="font-semibold text-white mb-1.5 text-base">Welcome to Financial Requirement AI.</p>
-                        <p>I am your financial requirements architect. Choose a financial domain, select your
-                            stakeholder persona, and enter your project requirements below.</p>
-                        <div
-                            class="mt-3 p-3 rounded-xl bg-[#090b10] border border-[#1c202d] text-xs text-slate-300 space-y-1.5">
-                            <div><i class="fas fa-check text-emerald-400 mr-1.5"></i> Automatic PII masking &amp; Prompt
-                                Injection Guard</div>
-                            <div><i class="fas fa-check text-emerald-400 mr-1.5"></i> RAG Grounding in GDPR, PCI-DSS,
-                                Basel III/IV &amp; Policies</div>
-                            <div><i class="fas fa-check text-emerald-400 mr-1.5"></i> Ranked SDLC Recommendation &amp;
-                                ISO/IEEE SRS Artifacts</div>
+                <!-- Chat Message Window -->
+                <div id="chat-window" class="flex-1 p-4 overflow-y-auto space-y-3.5 custom-scrollbar">
+                    <!-- Welcome Card -->
+                    <div class="flex items-start gap-3">
+                        <div class="w-7 h-7 rounded-md bg-blue-600/20 border border-blue-500/30 flex-shrink-0 flex items-center justify-center text-blue-400 text-xs font-mono font-bold">
+                            FR
+                        </div>
+                        <div class="inner-card p-3.5 max-w-xl text-xs leading-relaxed space-y-2">
+                            <p class="font-semibold text-slate-100 text-sm">FinReq Engineering Assistant Initialized</p>
+                            <p class="text-slate-300">Specify your financial project vision or paste preliminary requirement notes. The system will orchestrate 13 specialized agents to synthesize an IEEE-compliant baseline, ground in financial regulations via RAG, and compute multi-criteria SDLC recommendations.</p>
+                            <div class="pt-2 border-t border-[var(--card-border)] grid grid-cols-1 gap-1 text-[11px] text-slate-400">
+                                <div class="flex items-center gap-1.5"><i class="fas fa-shield-check text-emerald-400"></i> PII Redaction &amp; Prompt Injection Guard Active</div>
+                                <div class="flex items-center gap-1.5"><i class="fas fa-scale-balanced text-blue-400"></i> RAG Grounding in GDPR, PCI-DSS, Basel III/IV</div>
+                                <div class="flex items-center gap-1.5"><i class="fas fa-diagram-project text-purple-400"></i> Multi-Criteria SDLC Recommendation &amp; RTM Matrix</div>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- PII / Security Alert Bar -->
-            <div id="security-alert-bar"
-                class="hidden px-4 py-2 bg-amber-950/80 border-t border-b border-amber-800 text-xs text-amber-200 flex items-center justify-between">
-                <span id="security-alert-text"><i class="fas fa-shield-cat mr-1.5"></i> Data Masked</span>
-                <span class="text-xs bg-amber-800 px-2 py-0.5 rounded-lg font-medium text-white">Security Guard
-                    Active</span>
-            </div>
-
-            <!-- Role Choosing Option: DIRECTLY ABOVE INPUT BOX -->
-            <div
-                class="px-4 py-2.5 inner-card !rounded-none !border-x-0 border-t flex items-center justify-between gap-3 flex-wrap">
-                <div class="flex items-center gap-2.5">
-                    <label for="role-select"
-                        class="text-xs font-bold uppercase tracking-wide flex items-center gap-1.5 domain-label">
-                        <i class="fas fa-user-tie text-blue-600"></i> Role:
-                    </label>
-                    <select id="role-select"
-                        class="floating-input text-xs font-semibold px-3 py-1.5 focus:outline-none transition">
-                        <option value="Business Analyst">Business Analyst</option>
-                        <option value="Compliance Officer">Compliance Officer</option>
-                        <option value="Information-Security Team">Information-Security Team</option>
-                        <option value="Product Owner">Product Owner</option>
-                        <option value="Software Architect">Software Architect</option>
-                        <option value="Risk-Management Team">Risk-Management Team</option>
-                        <option value="Auditor">Auditor</option>
-                        <option value="Customer">Customer</option>
-                    </select>
+                <!-- Security Alert Bar -->
+                <div id="security-alert-bar"
+                    class="hidden px-4 py-1.5 bg-amber-500/10 border-t border-b border-amber-500/30 text-xs text-amber-300 flex items-center justify-between">
+                    <span id="security-alert-text" class="flex items-center gap-1.5 font-mono text-[11px]"><i class="fas fa-shield-virus"></i> Security Guard Active</span>
+                    <span class="text-[10px] font-mono uppercase tracking-wider bg-amber-500/20 px-2 py-0.5 rounded border border-amber-500/30">Protected</span>
                 </div>
-                <span class="text-xs text-slate-400 font-medium hidden sm:inline">Questions adapt to chosen role</span>
+
+                <!-- Role Selector -->
+                <div class="px-3.5 py-2 border-t border-[var(--card-border)] bg-[var(--card-inner)] flex items-center justify-between gap-2">
+                    <div class="flex items-center gap-2">
+                        <label for="role-select" class="text-[11px] font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1">
+                            <i class="fas fa-user text-blue-400 text-xs"></i> Persona:
+                        </label>
+                        <select id="role-select" class="floating-input text-xs font-medium px-2 py-1 bg-transparent">
+                            <option value="Business Analyst">Business Analyst</option>
+                            <option value="Compliance Officer">Compliance Officer</option>
+                            <option value="Information-Security Team">Information-Security Team</option>
+                            <option value="Product Owner">Product Owner</option>
+                            <option value="Software Architect">Software Architect</option>
+                            <option value="Risk-Management Team">Risk-Management Team</option>
+                            <option value="Auditor">Auditor</option>
+                            <option value="Customer">Customer</option>
+                        </select>
+                    </div>
+                    <span class="text-[11px] text-slate-500 font-mono hidden sm:inline">Adaptive Questions</span>
+                </div>
+
+                <!-- Chat Input Dock -->
+                <div class="p-3 border-t border-[var(--card-border)]">
+                    <form id="chat-form" onsubmit="handleSend(event)" class="relative">
+                        <textarea id="user-input" rows="3"
+                            placeholder="Enter financial project requirements or answer clarification questions..."
+                            class="w-full text-xs font-normal placeholder-slate-500 rounded-lg p-3 pr-12 resize-none floating-input focus:outline-none transition custom-scrollbar leading-relaxed"></textarea>
+                        <button type="submit" id="send-btn"
+                            class="absolute right-2.5 bottom-3.5 w-7 h-7 rounded-md bg-blue-600 hover:bg-blue-500 active:scale-95 text-white font-bold transition flex items-center justify-center shadow-sm">
+                            <i class="fas fa-arrow-up text-xs"></i>
+                        </button>
+                    </form>
+                </div>
             </div>
 
-            <!-- Chat Input Area -->
-            <div class="p-4 border-t inner-card !rounded-none !border-x-0 !border-b-0">
-                <form id="chat-form" onsubmit="handleSend(event)" class="relative">
-                    <textarea id="user-input" rows="3"
-                        placeholder="Enter project idea or answer clarification questions (e.g. 'A digital loan origination platform for SMEs with sub-second credit score checks and Basel III capital calculations')..."
-                        class="w-full text-sm placeholder-slate-500 rounded-2xl p-3.5 pr-14 resize-none floating-input focus:outline-none transition custom-scrollbar"></textarea>
-                    <button type="submit" id="send-btn"
-                        class="absolute right-3.5 bottom-4 w-9 h-9 rounded-xl bg-blue-700 hover:bg-blue-600 active:scale-95 text-white font-bold transition flex items-center justify-center shadow-md">
-                        <i class="fas fa-arrow-up text-sm"></i>
+            <!-- Right Panel: Living Specification & Governance Ledger (7 cols) -->
+            <div class="lg:col-span-7 flex flex-col floating-card overflow-hidden h-[calc(100vh-250px)] min-h-[580px]">
+
+                <!-- Tab Navigation Strip -->
+                <div class="px-3 py-2 tab-strip flex items-center gap-1 overflow-x-auto custom-scrollbar">
+                    <button onclick="switchTab('requirements')" id="tab-btn-requirements"
+                        class="tab-btn active px-3 py-1.5 text-xs flex items-center gap-1.5 whitespace-nowrap">
+                        <i class="fas fa-list-check text-blue-400 text-xs"></i> Requirements
+                        <span id="req-count" class="font-mono text-[10px] px-1.5 py-0.2 rounded badge-blue">0</span>
                     </button>
-                </form>
-            </div>
-        </div>
+                    <button onclick="switchTab('compliance')" id="tab-btn-compliance"
+                        class="tab-btn px-3 py-1.5 text-xs flex items-center gap-1.5 whitespace-nowrap">
+                        <i class="fas fa-scale-balanced text-rose-400 text-xs"></i> Compliance &amp; RAG
+                    </button>
+                    <button onclick="switchTab('sdlc')" id="tab-btn-sdlc"
+                        class="tab-btn px-3 py-1.5 text-xs flex items-center gap-1.5 whitespace-nowrap">
+                        <i class="fas fa-diagram-project text-emerald-400 text-xs"></i> SDLC Advisor
+                    </button>
+                    <button onclick="switchTab('risks')" id="tab-btn-risks"
+                        class="tab-btn px-3 py-1.5 text-xs flex items-center gap-1.5 whitespace-nowrap">
+                        <i class="fas fa-shield-virus text-amber-400 text-xs"></i> Risk Register
+                        <span id="risk-count" class="font-mono text-[10px] px-1.5 py-0.2 rounded badge-amber">0</span>
+                    </button>
+                    <button onclick="switchTab('clarifications')" id="tab-btn-clarifications"
+                        class="tab-btn px-3 py-1.5 text-xs flex items-center gap-1.5 whitespace-nowrap">
+                        <i class="fas fa-circle-nodes text-purple-400 text-xs"></i> Quality &amp; Gaps
+                    </button>
+                    <button onclick="switchTab('artifacts')" id="tab-btn-artifacts"
+                        class="tab-btn px-3 py-1.5 text-xs flex items-center gap-1.5 whitespace-nowrap">
+                        <i class="fas fa-box-archive text-blue-400 text-xs"></i> Artifacts
+                    </button>
+                    <button onclick="switchTab('audit')" id="tab-btn-audit"
+                        class="tab-btn px-3 py-1.5 text-xs flex items-center gap-1.5 whitespace-nowrap">
+                        <i class="fas fa-receipt text-slate-400 text-xs"></i> Audit Trail
+                    </button>
+                </div>
 
-        <!-- Right Panel: Multi-Tab Intelligence & Artifacts Console (7 cols) -->
-        <div class="lg:col-span-7 flex flex-col floating-card overflow-hidden h-[calc(100vh-270px)] min-h-[600px]">
+                <!-- Tab Contents Container -->
+                <div class="flex-1 p-4 overflow-y-auto custom-scrollbar">
 
-            <!-- Tab Navigation Strip with Solid Colors -->
-            <div
-                class="px-4 py-3 border-b inner-card !rounded-none !border-t-0 !border-x-0 flex items-center gap-1.5 overflow-x-auto custom-scrollbar">
-                <button onclick="switchTab('requirements')" id="tab-btn-requirements"
-                    class="tab-btn active px-3.5 py-2 text-xs font-semibold flex items-center gap-1.5 whitespace-nowrap">
-                    <i class="fas fa-list-check text-blue-600"></i> Requirements (<span id="req-count">0</span>)
-                </button>
-                <button onclick="switchTab('compliance')" id="tab-btn-compliance"
-                    class="tab-btn px-3.5 py-2 text-xs font-semibold flex items-center gap-1.5 whitespace-nowrap">
-                    <i class="fas fa-scale-balanced text-red-600"></i> Compliance &amp; RAG
-                </button>
-                <button onclick="switchTab('sdlc')" id="tab-btn-sdlc"
-                    class="tab-btn px-3.5 py-2 text-xs font-semibold flex items-center gap-1.5 whitespace-nowrap">
-                    <i class="fas fa-diagram-project text-emerald-600"></i> SDLC Advisor
-                </button>
-                <button onclick="switchTab('risks')" id="tab-btn-risks"
-                    class="tab-btn px-3.5 py-2 text-xs font-semibold flex items-center gap-1.5 whitespace-nowrap">
-                    <i class="fas fa-shield-virus text-amber-600"></i> Risks (<span id="risk-count">0</span>)
-                </button>
-                <button onclick="switchTab('clarifications')" id="tab-btn-clarifications"
-                    class="tab-btn px-3.5 py-2 text-xs font-semibold flex items-center gap-1.5 whitespace-nowrap">
-                    <i class="fas fa-code-compare text-purple-600"></i> Quality &amp; Gaps
-                </button>
-                <button onclick="switchTab('artifacts')" id="tab-btn-artifacts"
-                    class="tab-btn px-3.5 py-2 text-xs font-semibold flex items-center gap-1.5 whitespace-nowrap">
-                    <i class="fas fa-box-archive text-blue-700"></i> Artifacts
-                </button>
-                <button onclick="switchTab('audit')" id="tab-btn-audit"
-                    class="tab-btn px-3.5 py-2 text-xs font-semibold flex items-center gap-1.5 whitespace-nowrap">
-                    <i class="fas fa-receipt text-slate-500"></i> Audit Log
-                </button>
-            </div>
-
-            <!-- Tab Contents Container -->
-            <div class="flex-1 p-5 overflow-y-auto custom-scrollbar">
-
-                <!-- TAB 1: REQUIREMENTS BASELINE -->
-                <div id="tab-content-requirements" class="space-y-4">
-                    <div class="flex items-center justify-between pb-3 border-b inner-card !rounded-none !border-t-0 !border-x-0">
-                        <div>
-                            <h3 class="text-base font-bold theme-title flex items-center gap-2">
-                                <i class="fas fa-database text-blue-600"></i> Extracted Requirements Baseline
-                            </h3>
-                            <p class="text-xs text-slate-400">Classified across 13 financial dimensions with acceptance criteria</p>
-                        </div>
-                        <div class="flex items-center gap-2">
+                    <!-- TAB 1: REQUIREMENTS BASELINE -->
+                    <div id="tab-content-requirements" class="space-y-3">
+                        <div class="flex items-center justify-between pb-2 border-b border-[var(--card-border)]">
+                            <div>
+                                <h3 class="text-xs font-bold uppercase tracking-wider theme-title">
+                                    Requirements Baseline Ledger
+                                </h3>
+                                <p class="text-[11px] text-slate-400">Classified across 13 financial dimensions with acceptance criteria &amp; sign-off states</p>
+                            </div>
                             <button onclick="approveAllReqs()"
-                                class="btn-approve text-xs px-3.5 py-2 rounded-xl font-semibold flex items-center gap-1.5 shadow-sm">
-                                <i class="fas fa-check-double"></i> Approve Baseline
+                                class="btn-approve text-xs px-3 py-1 rounded font-medium flex items-center gap-1.5">
+                                <i class="fas fa-check-double text-xs"></i> Approve All
                             </button>
                         </div>
-                    </div>
 
-                    <div id="requirements-list" class="space-y-3">
-                        <div class="text-center py-16 text-slate-400 text-sm">
-                            <i class="fas fa-folder-open text-3xl mb-3 text-slate-600"></i>
-                            <p class="font-medium text-slate-300">No requirements generated yet.</p>
-                            <p class="text-xs text-slate-500 mt-1">Submit a project description on the left to activate
-                                multi-agent extraction.</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- TAB 2: COMPLIANCE & RAG GROUNDING -->
-                <div id="tab-content-compliance" class="hidden space-y-4">
-                    <div class="flex items-center justify-between pb-3 border-b border-[#202534]">
-                        <div>
-                            <h3 class="text-base font-bold text-white flex items-center gap-2">
-                                <i class="fas fa-scale-balanced text-rose-400"></i> Regulatory Compliance &amp; Policy
-                                Grounding
-                            </h3>
-                            <p class="text-xs text-slate-400">Retrieved from authoritative Financial Knowledge Base
-                                (GDPR, PCI-DSS, Basel III, AML)</p>
-                        </div>
-                        <button onclick="approveSection('compliance')"
-                            class="text-xs px-3.5 py-2 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-semibold transition shadow-sm">
-                            <i class="fas fa-stamp mr-1"></i> Sign Off Compliance
-                        </button>
-                    </div>
-
-                    <div id="compliance-list" class="space-y-3">
-                        <div class="text-center py-16 text-slate-400 text-sm">
-                            <i class="fas fa-scale-balanced text-3xl mb-3 text-slate-600"></i>
-                            <p>No regulatory mappings available yet.</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- TAB 3: SDLC ADVISOR -->
-                <div id="tab-content-sdlc" class="hidden space-y-5">
-                    <div class="flex items-center justify-between pb-3 border-b border-[#202534]">
-                        <div>
-                            <h3 class="text-base font-bold text-white flex items-center gap-2">
-                                <i class="fas fa-diagram-project text-emerald-400"></i> Multi-Criteria SDLC
-                                Recommendation
-                            </h3>
-                            <p class="text-xs text-slate-400">Evaluates stability, regulatory criticality, technical
-                                risk, and delivery frequency</p>
-                        </div>
-                        <button onclick="approveSection('sdlc')"
-                            class="btn-approve text-xs px-3.5 py-2 rounded-xl font-semibold transition shadow-sm">
-                            <i class="fas fa-check mr-1"></i> Approve SDLC
-                        </button>
-                    </div>
-
-                    <!-- Recommended Model Card -->
-                    <div id="sdlc-primary-card" class="p-4 rounded-2xl bg-[#0f1118] border border-[#232838] shadow-md">
-                        <div class="flex items-center justify-between mb-2">
-                            <span
-                                class="text-xs font-bold uppercase tracking-wider text-emerald-400 flex items-center gap-1.5">
-                                <i class="fas fa-trophy"></i> Primary Recommendation
-                            </span>
-                            <span id="sdlc-top-badge"
-                                class="px-2.5 py-0.5 rounded-full bg-emerald-700 text-white text-xs font-bold">
-                                91% Match
-                            </span>
-                        </div>
-                        <h4 id="sdlc-top-model" class="text-lg font-bold text-white mb-1.5">Agile–DevSecOps hybrid</h4>
-                        <p id="sdlc-rationale" class="text-sm text-slate-200 leading-relaxed">
-                            Selected due to high regulatory criticality requiring strict verification gates combined
-                            with frequent digital feature releases.
-                        </p>
-                    </div>
-
-                    <!-- Ranked Percentage Bars -->
-                    <div class="p-4 rounded-2xl bg-[#0f1118] border border-[#232838] space-y-3">
-                        <div class="flex items-center justify-between">
-                            <h4 class="text-xs font-bold text-slate-200 uppercase tracking-wider">Multi-Criteria Model
-                                Ranking:</h4>
-                            <span
-                                class="text-xs font-mono font-semibold px-2 py-0.5 rounded-lg bg-[#151822] text-emerald-400 border border-[#272d3e]">Sum
-                                = 100%</span>
-                        </div>
-                        <div id="sdlc-ranking-bars" class="space-y-2.5 text-xs">
-                            <!-- Bars injected by JS -->
-                        </div>
-                    </div>
-
-                    <!-- Custom 7-Phase Financial SDLC Workflow -->
-                    <div class="space-y-2.5">
-                        <h4 class="text-xs font-bold text-slate-200 uppercase tracking-wider flex items-center gap-1.5">
-                            <i class="fas fa-list-ol text-blue-400"></i> Project-Specific SDLC Workflow &amp; Governance
-                            Gates
-                        </h4>
-                        <div id="sdlc-workflow-list" class="space-y-2">
-                            <!-- Workflow injected by JS -->
-                        </div>
-                    </div>
-                </div>
-
-                <!-- TAB 4: THREAT & RISK REGISTER -->
-                <div id="tab-content-risks" class="hidden space-y-4">
-                    <div class="flex items-center justify-between pb-3 border-b border-[#202534]">
-                        <div>
-                            <h3 class="text-base font-bold text-white flex items-center gap-2">
-                                <i class="fas fa-shield-virus text-amber-400"></i> Financial Threat &amp; Risk Register
-                            </h3>
-                            <p class="text-xs text-slate-400">STRIDE Threat modeling, operational likelihood, impact,
-                                and mitigation controls</p>
-                        </div>
-                        <button onclick="approveSection('risk')"
-                            class="text-xs px-3.5 py-2 rounded-xl bg-amber-600 hover:bg-amber-500 text-white font-semibold transition shadow-sm">
-                            <i class="fas fa-stamp mr-1"></i> Approve Risk Matrix
-                        </button>
-                    </div>
-
-                    <div id="risk-list" class="space-y-3">
-                        <div class="text-center py-16 text-slate-400 text-sm">
-                            <i class="fas fa-shield-virus text-3xl mb-3 text-slate-600"></i>
-                            <p>No risk entries recorded yet.</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- TAB 5: QUALITY, CLARIFICATIONS & CONFLICTS -->
-                <div id="tab-content-clarifications" class="hidden space-y-4">
-                    <div class="pb-3 border-b border-[#202534]">
-                        <h3 class="text-base font-bold text-white flex items-center gap-2">
-                            <i class="fas fa-magnifying-glass-chart text-purple-400"></i> Requirement Quality &amp;
-                            Contradiction Audit
-                        </h3>
-                        <p class="text-xs text-slate-400">Clarification Agent and Conflict Detection Agent findings</p>
-                    </div>
-
-                    <div id="quality-findings-container" class="space-y-4">
-                        <div class="text-center py-16 text-slate-400 text-sm">
-                            <i class="fas fa-check-circle text-3xl mb-3 text-emerald-500"></i>
-                            <p>No ambiguity or conflict analysis available yet.</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- TAB 6: ARTIFACTS & EXPORT -->
-                <div id="tab-content-artifacts" class="hidden space-y-5">
-                    <div class="flex items-center justify-between pb-3 border-b border-[#202534]">
-                        <div>
-                            <h3 class="text-base font-bold text-white flex items-center gap-2">
-                                <i class="fas fa-box-archive text-indigo-400"></i> Generated Requirements Artefacts
-                            </h3>
-                            <p class="text-xs text-slate-400">ISO/IEC/IEEE 29148 SRS, Traceability Matrix (RTM), and
-                                User Stories</p>
-                        </div>
-                        <button onclick="approveSection('srs')"
-                            class="text-xs px-3.5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-semibold transition shadow-sm">
-                            <i class="fas fa-signature mr-1"></i> Sign-Off Final SRS
-                        </button>
-                    </div>
-
-                    <!-- Download Buttons Grid (Floating cards style) -->
-                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                        <button onclick="exportArtifact('srs')"
-                            class="p-3.5 rounded-2xl bg-[#0f1118] hover:bg-[#161a26] border border-[#232838] text-left transition group shadow-md">
-                            <div class="flex items-center justify-between mb-1.5">
-                                <i class="fas fa-file-lines text-purple-400 text-lg"></i>
-                                <i class="fas fa-download text-xs text-slate-400 group-hover:text-purple-300"></i>
+                        <div id="requirements-list" class="space-y-2.5">
+                            <div class="text-center py-20 text-slate-400 text-xs">
+                                <i class="fas fa-folder-open text-2xl mb-2 text-slate-600 block"></i>
+                                <p class="font-medium text-slate-300">No requirements extracted yet.</p>
+                                <p class="text-[11px] text-slate-500 mt-0.5">Submit project requirements on the left to initiate multi-agent pipeline extraction.</p>
                             </div>
-                            <div class="text-sm font-bold text-white">Full SRS (.md)</div>
-                            <div class="text-xs text-slate-400">Software Specification</div>
-                        </button>
-
-                        <button onclick="exportArtifact('rtm')"
-                            class="p-3.5 rounded-2xl bg-[#0f1118] hover:bg-[#161a26] border border-[#232838] text-left transition group shadow-md">
-                            <div class="flex items-center justify-between mb-1.5">
-                                <i class="fas fa-table text-sky-400 text-lg"></i>
-                                <i class="fas fa-download text-xs text-slate-400 group-hover:text-sky-300"></i>
-                            </div>
-                            <div class="text-sm font-bold text-white">RTM Matrix (.md)</div>
-                            <div class="text-xs text-slate-400">Traceability Matrix</div>
-                        </button>
-
-                        <button onclick="exportArtifact('user_stories')"
-                            class="p-3.5 rounded-2xl bg-[#0f1118] hover:bg-[#161a26] border border-[#232838] text-left transition group shadow-md">
-                            <div class="flex items-center justify-between mb-1.5">
-                                <i class="fas fa-user-check text-emerald-400 text-lg"></i>
-                                <i class="fas fa-download text-xs text-slate-400 group-hover:text-emerald-300"></i>
-                            </div>
-                            <div class="text-sm font-bold text-white">User Stories (.md)</div>
-                            <div class="text-xs text-slate-400">Gherkin Acceptance</div>
-                        </button>
-
-                        <button onclick="exportArtifact('risk_register')"
-                            class="p-3.5 rounded-2xl bg-[#0f1118] hover:bg-[#161a26] border border-[#232838] text-left transition group shadow-md">
-                            <div class="flex items-center justify-between mb-1.5">
-                                <i class="fas fa-shield-virus text-amber-400 text-lg"></i>
-                                <i class="fas fa-download text-xs text-slate-400 group-hover:text-amber-300"></i>
-                            </div>
-                            <div class="text-sm font-bold text-white">Risk Register (.md)</div>
-                            <div class="text-xs text-slate-400">Threat Register</div>
-                        </button>
-                    </div>
-
-                    <!-- Live SRS Preview -->
-                    <div class="space-y-2">
-                        <div class="flex items-center justify-between">
-                            <span class="text-xs font-bold text-slate-200 uppercase tracking-wider">Software
-                                Requirements Specification Preview</span>
-                            <span class="text-xs text-slate-400 font-mono">IEEE Std 830-1998 Aligned</span>
-                        </div>
-                        <pre id="srs-preview-box"
-                            class="p-4 rounded-2xl bg-[#090b10] border border-[#202534] text-xs text-slate-300 font-mono overflow-x-auto whitespace-pre-wrap leading-relaxed max-h-[340px] custom-scrollbar shadow-inner">No SRS document generated yet. Submit a prompt to generate.</pre>
-                    </div>
-                </div>
-
-                <!-- TAB 7: AUDIT TRAIL -->
-                <div id="tab-content-audit" class="hidden space-y-4">
-                    <div class="pb-3 border-b border-[#202534]">
-                        <h3 class="text-base font-bold text-white flex items-center gap-2">
-                            <i class="fas fa-receipt text-slate-300"></i> Immutable Governance &amp; Audit Trail
-                        </h3>
-                        <p class="text-xs text-slate-400">Append-only chronological log of all autonomous agent actions
-                            and human decisions</p>
-                    </div>
-
-                    <div id="audit-trail-timeline" class="space-y-2.5">
-                        <div class="text-center py-16 text-slate-400 text-sm">
-                            <i class="fas fa-clipboard-list text-3xl mb-3 text-slate-600"></i>
-                            <p>No audit events logged yet.</p>
                         </div>
                     </div>
-                </div>
 
+                    <!-- TAB 2: COMPLIANCE & RAG GROUNDING -->
+                    <div id="tab-content-compliance" class="hidden space-y-3">
+                        <div class="flex items-center justify-between pb-2 border-b border-[var(--card-border)]">
+                            <div>
+                                <h3 class="text-xs font-bold uppercase tracking-wider theme-title">
+                                    Regulatory Grounding &amp; Citations
+                                </h3>
+                                <p class="text-[11px] text-slate-400">Retrieved from authoritative Financial Knowledge Base (GDPR, PCI-DSS, Basel III/IV, AML)</p>
+                            </div>
+                            <button onclick="approveSection('compliance')"
+                                class="btn-primary text-xs px-3 py-1 rounded font-medium flex items-center gap-1.5">
+                                <i class="fas fa-stamp text-xs"></i> Sign Off Compliance
+                            </button>
+                        </div>
+
+                        <div id="compliance-list" class="space-y-2.5">
+                            <div class="text-center py-20 text-slate-400 text-xs">
+                                <i class="fas fa-scale-balanced text-2xl mb-2 text-slate-600 block"></i>
+                                <p>No regulatory mappings generated yet.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- TAB 3: SDLC ADVISOR -->
+                    <div id="tab-content-sdlc" class="hidden space-y-3.5">
+                        <div class="flex items-center justify-between pb-2 border-b border-[var(--card-border)]">
+                            <div>
+                                <h3 class="text-xs font-bold uppercase tracking-wider theme-title">
+                                    Multi-Criteria SDLC Recommendation
+                                </h3>
+                                <p class="text-[11px] text-slate-400">Model selection weighted by regulatory criticality, architecture complexity &amp; release tempo</p>
+                            </div>
+                            <button onclick="approveSection('sdlc')"
+                                class="btn-approve text-xs px-3 py-1 rounded font-medium flex items-center gap-1.5">
+                                <i class="fas fa-check text-xs"></i> Approve SDLC
+                            </button>
+                        </div>
+
+                        <!-- Top Recommendation Banner -->
+                        <div id="sdlc-primary-card" class="p-3.5 rounded-lg inner-card space-y-1.5">
+                            <div class="flex items-center justify-between">
+                                <span class="text-[10px] font-mono uppercase tracking-wider text-emerald-400 font-bold flex items-center gap-1">
+                                    <i class="fas fa-award"></i> Optimal Methodology Match
+                                </span>
+                                <span id="sdlc-top-badge" class="font-mono text-[11px] px-2 py-0.5 rounded badge-green font-semibold">
+                                    91% Weight
+                                </span>
+                            </div>
+                            <h4 id="sdlc-top-model" class="text-sm font-bold theme-title">Agile–DevSecOps Hybrid</h4>
+                            <p id="sdlc-rationale" class="text-xs text-slate-300 leading-relaxed">
+                                Selected based on regulatory gating combined with continuous delivery constraints.
+                            </p>
+                        </div>
+
+                        <!-- Ranked Percentage Distribution -->
+                        <div class="p-3.5 rounded-lg inner-card space-y-2.5">
+                            <div class="flex items-center justify-between">
+                                <h4 class="text-[11px] font-bold uppercase tracking-wider text-slate-400">Evaluation Distribution:</h4>
+                                <span class="font-mono text-[10px] px-1.5 py-0.5 rounded badge-blue">Sum: 100%</span>
+                            </div>
+                            <div id="sdlc-ranking-bars" class="space-y-2 text-xs">
+                                <!-- Bars rendered dynamically -->
+                            </div>
+                        </div>
+
+                        <!-- Project-Specific 7-Phase Financial SDLC Workflow -->
+                        <div class="space-y-2">
+                            <h4 class="text-[11px] font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
+                                <i class="fas fa-timeline text-blue-400"></i> Governance Phases &amp; Validation Gates
+                            </h4>
+                            <div id="sdlc-workflow-list" class="space-y-2">
+                                <!-- Rendered dynamically -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- TAB 4: THREAT & RISK REGISTER -->
+                    <div id="tab-content-risks" class="hidden space-y-3">
+                        <div class="flex items-center justify-between pb-2 border-b border-[var(--card-border)]">
+                            <div>
+                                <h3 class="text-xs font-bold uppercase tracking-wider theme-title">
+                                    Financial Threat &amp; Risk Register
+                                </h3>
+                                <p class="text-[11px] text-slate-400">STRIDE Threat modeling, operational likelihood, impact &amp; compensating controls</p>
+                            </div>
+                            <button onclick="approveSection('risk')"
+                                class="btn-primary text-xs px-3 py-1 rounded font-medium flex items-center gap-1.5">
+                                <i class="fas fa-stamp text-xs"></i> Approve Matrix
+                            </button>
+                        </div>
+
+                        <div id="risk-list" class="space-y-2.5">
+                            <div class="text-center py-20 text-slate-400 text-xs">
+                                <i class="fas fa-shield-virus text-2xl mb-2 text-slate-600 block"></i>
+                                <p>No risk entries recorded yet.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- TAB 5: QUALITY, CLARIFICATIONS & CONFLICTS -->
+                    <div id="tab-content-clarifications" class="hidden space-y-3">
+                        <div class="pb-2 border-b border-[var(--card-border)]">
+                            <h3 class="text-xs font-bold uppercase tracking-wider theme-title">
+                                Specification Quality &amp; Contradiction Audit
+                            </h3>
+                            <p class="text-[11px] text-slate-400">Clarification Agent and Conflict Detection Agent findings</p>
+                        </div>
+
+                        <div id="quality-findings-container" class="space-y-3">
+                            <div class="text-center py-20 text-slate-400 text-xs">
+                                <i class="fas fa-circle-check text-2xl mb-2 text-emerald-500 block"></i>
+                                <p>No ambiguity or conflict analysis available yet.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- TAB 6: ARTIFACTS & EXPORT -->
+                    <div id="tab-content-artifacts" class="hidden space-y-3.5">
+                        <div class="flex items-center justify-between pb-2 border-b border-[var(--card-border)]">
+                            <div>
+                                <h3 class="text-xs font-bold uppercase tracking-wider theme-title">
+                                    Engineered Specification Artifacts
+                                </h3>
+                                <p class="text-[11px] text-slate-400">ISO/IEC/IEEE 29148 SRS, Requirements Traceability Matrix (RTM) &amp; Gherkin User Stories</p>
+                            </div>
+                            <button onclick="approveSection('srs')"
+                                class="btn-primary text-xs px-3 py-1 rounded font-medium flex items-center gap-1.5">
+                                <i class="fas fa-signature text-xs"></i> Sign-Off Final SRS
+                            </button>
+                        </div>
+
+                        <!-- Export Buttons Grid -->
+                        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+                            <button onclick="exportArtifact('srs')"
+                                class="p-3 rounded-lg inner-card hover:border-blue-500/40 text-left transition group">
+                                <div class="flex items-center justify-between mb-1">
+                                    <i class="fas fa-file-lines text-blue-400 text-sm"></i>
+                                    <i class="fas fa-download text-[11px] text-slate-500 group-hover:text-blue-400"></i>
+                                </div>
+                                <div class="text-xs font-bold theme-title">Full SRS (.md)</div>
+                                <div class="text-[10px] text-slate-400 font-mono">IEEE Std 830</div>
+                            </button>
+
+                            <button onclick="exportArtifact('rtm')"
+                                class="p-3 rounded-lg inner-card hover:border-blue-500/40 text-left transition group">
+                                <div class="flex items-center justify-between mb-1">
+                                    <i class="fas fa-table text-emerald-400 text-sm"></i>
+                                    <i class="fas fa-download text-[11px] text-slate-500 group-hover:text-emerald-400"></i>
+                                </div>
+                                <div class="text-xs font-bold theme-title">RTM Matrix (.md)</div>
+                                <div class="text-[10px] text-slate-400 font-mono">Traceability Map</div>
+                            </button>
+
+                            <button onclick="exportArtifact('user_stories')"
+                                class="p-3 rounded-lg inner-card hover:border-blue-500/40 text-left transition group">
+                                <div class="flex items-center justify-between mb-1">
+                                    <i class="fas fa-user-check text-purple-400 text-sm"></i>
+                                    <i class="fas fa-download text-[11px] text-slate-500 group-hover:text-purple-400"></i>
+                                </div>
+                                <div class="text-xs font-bold theme-title">User Stories (.md)</div>
+                                <div class="text-[10px] text-slate-400 font-mono">Gherkin Criteria</div>
+                            </button>
+
+                            <button onclick="exportArtifact('risk_register')"
+                                class="p-3 rounded-lg inner-card hover:border-blue-500/40 text-left transition group">
+                                <div class="flex items-center justify-between mb-1">
+                                    <i class="fas fa-shield-virus text-amber-400 text-sm"></i>
+                                    <i class="fas fa-download text-[11px] text-slate-500 group-hover:text-amber-400"></i>
+                                </div>
+                                <div class="text-xs font-bold theme-title">Risk Register (.md)</div>
+                                <div class="text-[10px] text-slate-400 font-mono">Threat Mitigation</div>
+                            </button>
+                        </div>
+
+                        <!-- Live SRS Preview -->
+                        <div class="space-y-1.5">
+                            <div class="flex items-center justify-between text-xs">
+                                <span class="text-[11px] font-bold uppercase tracking-wider text-slate-400">SRS Specification Preview:</span>
+                                <span class="font-mono text-[10px] text-slate-500">IEEE 29148 Aligned</span>
+                            </div>
+                            <pre id="srs-preview-box"
+                                class="p-3.5 rounded-lg inner-card text-xs font-mono text-slate-300 overflow-x-auto whitespace-pre-wrap leading-relaxed max-h-[320px] custom-scrollbar">No SRS document generated yet. Submit a prompt to generate.</pre>
+                        </div>
+                    </div>
+
+                    <!-- TAB 7: AUDIT TRAIL -->
+                    <div id="tab-content-audit" class="hidden space-y-3">
+                        <div class="pb-2 border-b border-[var(--card-border)]">
+                            <h3 class="text-xs font-bold uppercase tracking-wider theme-title">
+                                Immutable Governance &amp; Action Ledger
+                            </h3>
+                            <p class="text-[11px] text-slate-400">Append-only chronological audit log of all autonomous agent actions and stakeholder decisions</p>
+                        </div>
+
+                        <div id="audit-trail-timeline" class="space-y-2">
+                            <div class="text-center py-20 text-slate-400 text-xs">
+                                <i class="fas fa-clipboard-list text-2xl mb-2 text-slate-600 block"></i>
+                                <p>No audit events recorded yet.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
             </div>
-        </div>
-    </main>
+        </main>
+    </div>
 
-    <!-- Modal for Editing Requirement (Floating Card) -->
+    <!-- Modal for Modifying Requirement -->
     <div id="edit-modal"
-        class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
-        <div class="floating-card p-6 max-w-lg w-full space-y-4 border-[#282d3e] bg-[#141722]">
-            <div class="flex items-center justify-between border-b border-[#202534] pb-3">
-                <h3 class="text-base font-bold text-white flex items-center gap-2">
-                    <i class="fas fa-pen-to-square text-blue-400"></i> Modify Requirement <span id="modal-req-id"
-                        class="text-blue-300 font-mono"></span>
+        class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="floating-card p-5 max-w-lg w-full space-y-3.5 bg-[var(--card-surface)] border-[var(--card-border)]">
+            <div class="flex items-center justify-between border-b border-[var(--card-border)] pb-2.5">
+                <h3 class="text-xs font-bold uppercase tracking-wider theme-title flex items-center gap-1.5">
+                    <i class="fas fa-pen-to-square text-blue-400"></i> Modify Requirement <span id="modal-req-id" class="font-mono text-blue-400"></span>
                 </h3>
-                <button onclick="closeEditModal()" class="text-slate-400 hover:text-white"><i
-                        class="fas fa-xmark text-lg"></i></button>
+                <button onclick="closeEditModal()" class="text-slate-400 hover:text-white"><i class="fas fa-xmark text-sm"></i></button>
             </div>
             <div>
-                <label class="block text-xs font-bold text-slate-300 mb-1.5 uppercase">Requirement Statement:</label>
+                <label class="block text-[11px] font-bold text-slate-400 mb-1 uppercase tracking-wider">Requirement Statement:</label>
                 <textarea id="modal-statement" rows="3"
-                    class="w-full floating-input text-sm text-slate-100 p-3 focus:outline-none"></textarea>
+                    class="w-full floating-input text-xs text-slate-100 p-2.5 focus:outline-none leading-relaxed"></textarea>
             </div>
-            <div class="grid grid-cols-2 gap-3">
+            <div class="grid grid-cols-2 gap-2.5">
                 <div>
-                    <label class="block text-xs font-bold text-slate-300 mb-1.5 uppercase">Priority:</label>
+                    <label class="block text-[11px] font-bold text-slate-400 mb-1 uppercase tracking-wider">Priority:</label>
                     <select id="modal-priority"
-                        class="w-full floating-input text-xs text-slate-100 p-2.5 focus:outline-none">
+                        class="w-full floating-input text-xs text-slate-100 p-2 focus:outline-none">
                         <option value="High">High</option>
                         <option value="Medium">Medium</option>
                         <option value="Low">Low</option>
                     </select>
                 </div>
                 <div>
-                    <label class="block text-xs font-bold text-slate-300 mb-1.5 uppercase">Status:</label>
+                    <label class="block text-[11px] font-bold text-slate-400 mb-1 uppercase tracking-wider">Status:</label>
                     <select id="modal-status"
-                        class="w-full floating-input text-xs text-slate-100 p-2.5 focus:outline-none">
+                        class="w-full floating-input text-xs text-slate-100 p-2 focus:outline-none">
                         <option value="approved">Approved</option>
                         <option value="validated">Validated</option>
                         <option value="draft">Draft</option>
@@ -610,15 +579,13 @@
                 </div>
             </div>
             <div>
-                <label class="block text-xs font-bold text-slate-300 mb-1.5 uppercase">Approval Remarks / Change
-                    Justification:</label>
+                <label class="block text-[11px] font-bold text-slate-400 mb-1 uppercase tracking-wider">Approval Remarks / Change Rationale:</label>
                 <input type="text" id="modal-comments" placeholder="Human override rationale..."
-                    class="w-full floating-input text-xs text-slate-100 p-2.5 focus:outline-none">
+                    class="w-full floating-input text-xs text-slate-100 p-2 focus:outline-none">
             </div>
-            <div class="flex justify-end gap-2.5 pt-2">
-                <button onclick="closeEditModal()" class="btn-secondary px-4 py-2 text-xs font-semibold">Cancel</button>
-                <button onclick="saveEditRequirement()"
-                    class="btn-primary px-4 py-2 text-xs font-semibold shadow-md">Save Changes</button>
+            <div class="flex justify-end gap-2 pt-1.5">
+                <button onclick="closeEditModal()" class="btn-secondary px-3 py-1.5 text-xs font-medium">Cancel</button>
+                <button onclick="saveEditRequirement()" class="btn-primary px-3 py-1.5 text-xs font-medium">Save Changes</button>
             </div>
         </div>
     </div>

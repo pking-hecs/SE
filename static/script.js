@@ -24,12 +24,12 @@ function applyTheme(theme) {
     if (theme === 'light') {
         document.body.classList.add('light-theme');
         document.documentElement.classList.add('light-theme');
-        if (icon) icon.className = 'fas fa-moon text-blue-700';
+        if (icon) icon.className = 'fas fa-moon text-blue-600 text-xs';
         if (text) text.textContent = 'Dark';
     } else {
         document.body.classList.remove('light-theme');
         document.documentElement.classList.remove('light-theme');
-        if (icon) icon.className = 'fas fa-sun text-amber-500';
+        if (icon) icon.className = 'fas fa-sun text-amber-400 text-xs';
         if (text) text.textContent = 'Light';
     }
 }
@@ -78,15 +78,15 @@ function formatMarkdown(text) {
     if (!text) return '';
     let safe = escapeHTML(text);
     // Replace **bold** with <strong>bold</strong>
-    safe = safe.replace(/\*\*(.*?)\*\*/g, '<strong class="font-bold text-inherit">$1</strong>');
+    safe = safe.replace(/\*\*(.*?)\*\*/g, '<strong class="font-semibold text-inherit">$1</strong>');
     // Replace *italic* with <em>italic</em>
     safe = safe.replace(/\*(.*?)\*/g, '<em class="text-slate-400">$1</em>');
     // Replace `code` with styled <code>
-    safe = safe.replace(/`([^`]+)`/g, '<code class="px-1.5 py-0.5 rounded badge-blue font-mono text-xs">$1</code>');
+    safe = safe.replace(/`([^`]+)`/g, '<code class="px-1.5 py-0.5 rounded badge-blue font-mono text-[11px]">$1</code>');
     // Bullet points • or - at line start
-    safe = safe.replace(/^[•\-] (.*)$/gm, '<div class="flex items-start gap-2 my-1"><span class="text-blue-600 font-bold">•</span><span>$1</span></div>');
+    safe = safe.replace(/^[•\-] (.*)$/gm, '<div class="flex items-start gap-2 my-1"><span class="text-blue-400 font-bold">•</span><span>$1</span></div>');
     // Numbered items: 1.
-    safe = safe.replace(/^(\d+)\.\s+(.*)$/gm, '<div class="flex items-start gap-2 my-1"><span class="text-blue-600 font-bold">$1.</span><span>$2</span></div>');
+    safe = safe.replace(/^(\d+)\.\s+(.*)$/gm, '<div class="flex items-start gap-2 my-1"><span class="text-blue-400 font-mono font-semibold">$1.</span><span>$2</span></div>');
     // Line breaks
     safe = safe.replace(/\n/g, '<br>');
     return safe;
@@ -121,10 +121,10 @@ function setAgentsActive(active) {
         if (!el) return;
         if (active) {
             setTimeout(() => {
-                el.className = "p-2 rounded-xl inner-card !border-blue-600 font-semibold shadow-md text-blue-600 transition-all";
-            }, index * 60);
+                el.className = "p-2 rounded-lg agent-node active-agent font-medium text-xs transition-all";
+            }, index * 40);
         } else {
-            el.className = "p-2 rounded-xl inner-card text-xs font-medium transition-all shadow-sm";
+            el.className = "p-2 rounded-lg agent-node text-xs font-normal transition-all";
         }
     });
 }
@@ -139,10 +139,10 @@ async function handleSend(e) {
     appendChatMessage('user', prompt);
 
     const loadingId = 'loading-' + Date.now();
-    appendChatMessage('assistant', '<div class="flex items-center gap-2 text-slate-400 text-xs"><i class="fas fa-circle-notch fa-spin text-sky-400"></i> Autonomous multi-agent pipeline executing...</div>', loadingId);
+    appendChatMessage('assistant', '<div class="flex items-center gap-2 text-slate-400 text-xs font-mono"><i class="fas fa-circle-notch fa-spin text-blue-400"></i> Orchestrating 13 specialist agents...</div>', loadingId);
 
     setAgentsActive(true);
-    document.getElementById('pipeline-status').innerHTML = '<span class="w-2 h-2 rounded-full bg-sky-400 pulse-badge"></span> Orchestrating 13 Specialists...';
+    document.getElementById('pipeline-status').innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-blue-400 pulse-badge"></span> Multi-Agent Pipeline Executing...';
 
     const domain = document.getElementById('domain-select').value;
     const role = document.getElementById('role-select').value;
@@ -171,12 +171,24 @@ async function handleSend(e) {
         setAgentsActive(false);
 
         if (!response.ok || result.status !== 'success') {
-            document.getElementById('pipeline-status').innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span> Error encountered';
-            appendChatMessage('assistant', `❌ Error: ${escapeHTML(result.detail || 'Request failed')}`);
+            const statusCode = response.status;
+            let errMsg = escapeHTML(result.detail || 'Request failed');
+            if (statusCode === 429) {
+                errMsg = `⏳ <strong>Gemini API Rate Limit Reached.</strong><br>` +
+                    `The free-tier API allows ~15 requests/minute. Please wait <strong>30–60 seconds</strong> and try again.<br>` +
+                    `<span class="text-slate-400 text-xs">Tip: The compliance RAG and validation agents always work regardless of quota.</span>`;
+                document.getElementById('pipeline-status').innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span> Rate limited – please wait';
+            } else if (statusCode === 503) {
+                errMsg = `🔄 <strong>Gemini AI is temporarily overloaded.</strong><br>Please retry in a few seconds.`;
+                document.getElementById('pipeline-status').innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span> AI service busy – retrying';
+            } else {
+                document.getElementById('pipeline-status').innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span> Error encountered';
+            }
+            appendChatMessage('assistant', `<div class="space-y-1">${errMsg}</div>`);
             return;
         }
 
-        document.getElementById('pipeline-status').innerHTML = '<span class="w-2 h-2 rounded-full bg-emerald-400"></span> All 13 agents validated';
+        document.getElementById('pipeline-status').innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> System Ready &bull; Pipeline Validated';
 
         if (result.project_id && !currentProjectId) {
             currentProjectId = result.project_id;
@@ -241,38 +253,38 @@ async function handleSend(e) {
             let questionsHtml = '';
             if (questions && questions.length > 0) {
                 questionsHtml = `
-                    <div class="mt-3.5 p-4 rounded-2xl inner-card space-y-3 shadow-md border-blue-600/40">
+                    <div class="mt-3 p-3.5 rounded-lg inner-card space-y-2.5 border-blue-500/30">
                         <div class="flex items-center justify-between">
-                            <div class="flex items-center gap-2 text-blue-600 font-bold text-xs uppercase tracking-wide">
+                            <div class="flex items-center gap-1.5 text-blue-400 font-semibold text-xs uppercase tracking-wider">
                                 <i class="fas fa-clipboard-question"></i>
-                                <span>Adaptive Clarification Interview (Stakeholder: ${escapeHTML(role)})</span>
+                                <span>Adaptive Clarification (${escapeHTML(role)})</span>
                             </div>
-                            <span class="text-[10px] px-2.5 py-0.5 rounded-full badge-blue font-semibold">Input Needed</span>
+                            <span class="text-[10px] font-mono px-2 py-0.5 rounded badge-blue">Input Requested</span>
                         </div>
                         <p class="text-xs text-slate-400 leading-normal">
-                            The Clarification & Interaction Agents identified missing parameters and ambiguity. Please clarify the following:
+                            The Clarification &amp; Interaction agents identified ambiguity bounds. Clarify the following items:
                         </p>
                         <div class="space-y-2">
                             ${questions.slice(0, 3).map((q, idx) => `
-                                <div class="p-3 rounded-xl inner-card text-xs">
-                                    <div class="font-bold text-blue-600 mb-1 flex items-center gap-1.5">
-                                        <i class="fas fa-circle-question text-blue-600 text-xs"></i>
-                                        <span>Clarification Question ${idx + 1}:</span>
+                                <div class="p-2.5 rounded bg-[var(--card-inner)] border border-[var(--card-border-subtle)] text-xs">
+                                    <div class="font-mono text-blue-400 mb-1 text-[11px] font-semibold flex items-center gap-1.5">
+                                        <i class="fas fa-circle-question text-xs"></i>
+                                        <span>Item ${idx + 1}:</span>
                                     </div>
-                                    <div class="leading-relaxed pl-4 theme-title">${escapeHTML(q)}</div>
+                                    <div class="leading-relaxed theme-title">${escapeHTML(q)}</div>
                                 </div>
                             `).join('')}
                         </div>
-                        <div class="pt-2.5 border-t border-slate-700/40">
-                            <div class="text-xs text-slate-400 mb-2 flex items-center gap-1.5">
-                                <i class="fas fa-lightbulb text-amber-600 text-xs"></i>
-                                <span>Quick-fill answer templates (click to pre-fill chat):</span>
+                        <div class="pt-2 border-t border-[var(--card-border)]">
+                            <div class="text-[11px] text-slate-400 mb-1.5 flex items-center gap-1">
+                                <i class="fas fa-lightbulb text-amber-400 text-xs"></i>
+                                <span>Quick Answer Templates:</span>
                             </div>
-                            <div class="flex flex-wrap gap-2">
-                                <button type="button" onclick="fillChatInput('Peak throughput is 5,000 TPS with p99 latency < 150ms. Step-up MFA threshold is $10,000. Core banking connects via IBM MQ using ISO 20022 PACS.008.')" class="preset-chip text-xs px-3 py-1.5 rounded-xl transition font-medium cursor-pointer text-left shadow-sm">
-                                    ⚡ <strong>Payment SLAs:</strong> 5,000 TPS, &lt;150ms, $10k MFA, IBM MQ
+                            <div class="flex flex-wrap gap-1.5">
+                                <button type="button" onclick="fillChatInput('Peak throughput is 5,000 TPS with p99 latency < 150ms. Step-up MFA threshold is $10,000. Core banking connects via IBM MQ using ISO 20022 PACS.008.')" class="preset-chip text-[11px] px-2.5 py-1 rounded transition text-left">
+                                    ⚡ <strong>Payment SLAs:</strong> 5,000 TPS, &lt;150ms, $10k MFA
                                 </button>
-                                <button type="button" onclick="fillChatInput('Statutory retention is 7 years immutable audit trail. Mandatory four-eyes dual authorization for transfers exceeding $50,000.')" class="preset-chip text-xs px-3 py-1.5 rounded-xl transition font-medium cursor-pointer text-left shadow-sm">
+                                <button type="button" onclick="fillChatInput('Statutory retention is 7 years immutable audit trail. Mandatory four-eyes dual authorization for transfers exceeding $50,000.')" class="preset-chip text-[11px] px-2.5 py-1 rounded transition text-left">
                                     🛡️ <strong>Compliance:</strong> 7-yr retention, $50k dual auth
                                 </button>
                             </div>
@@ -282,19 +294,19 @@ async function handleSend(e) {
             }
 
             appendChatMessage('assistant', `
-                <div class="space-y-3">
-                    <div class="p-3.5 rounded-2xl badge-green text-sm shadow-md font-medium">
-                        <i class="fas fa-check-circle mr-1.5 text-emerald-600"></i> <strong>Initial Analysis Complete:</strong> Extracted <strong>${currentRequirements.length}</strong> requirements, mapped <strong>${data.compliance_mappings.length}</strong> regulatory citations, and selected <strong>${data.sdlc_info.recommended_model}</strong>.
+                <div class="space-y-2.5">
+                    <div class="p-2.5 rounded-lg badge-green text-xs font-medium flex items-center gap-2">
+                        <i class="fas fa-check-circle text-emerald-400"></i>
+                        <span><strong>Baseline Synthesized:</strong> Extracted <strong>${currentRequirements.length}</strong> requirements, mapped <strong>${data.compliance_mappings.length}</strong> regulatory citations, recommended <strong>${data.sdlc_info.recommended_model}</strong>.</span>
                     </div>
-                    <p class="text-sm leading-relaxed theme-title">
-                        I've structured the baseline across your selected domain (<strong>${escapeHTML(domain)}</strong>).
-                        Review the generated requirements in the right panel, and answer the clarification questions below to refine the specifications:
+                    <p class="text-xs leading-relaxed theme-title">
+                        Structured across financial domain (<strong>${escapeHTML(domain)}</strong>). Review requirements ledger in the right panel and answer clarification items below:
                     </p>
                     ${questionsHtml}
                 </div>
             `);
         } else if (result.response) {
-            appendChatMessage('assistant', `<div class="text-sm leading-relaxed theme-title">${formatMarkdown(result.response)}</div>`);
+            appendChatMessage('assistant', `<div class="text-xs leading-relaxed theme-title">${formatMarkdown(result.response)}</div>`);
             if (result.audit_trail) {
                 renderAuditTrail(result.audit_trail);
             }
@@ -307,32 +319,32 @@ async function handleSend(e) {
     } catch (err) {
         document.getElementById(loadingId)?.remove();
         setAgentsActive(false);
-        document.getElementById('pipeline-status').innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-red-600"></span> Connection error';
-        appendChatMessage('assistant', `❌ Connection failure: Could not reach the FinReq AI backend.`);
+        document.getElementById('pipeline-status').innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span> Connection error';
+        appendChatMessage('assistant', `❌ Connection failure: Could not reach the FinReq backend.`);
     }
 }
 
 function appendChatMessage(role, htmlContent, id = null) {
     const chatWindow = document.getElementById('chat-window');
     const wrapper = document.createElement('div');
-    wrapper.className = `flex items-start gap-3 ${role === 'user' ? 'justify-end' : 'justify-start'}`;
+    wrapper.className = `flex items-start gap-2.5 ${role === 'user' ? 'justify-end' : 'justify-start'}`;
     if (id) wrapper.id = id;
 
     if (role === 'user') {
         wrapper.innerHTML = `
-            <div class="inner-card p-3.5 max-w-lg text-sm leading-relaxed shadow-md">
+            <div class="inner-card p-3 max-w-lg text-xs leading-relaxed border-blue-500/20 bg-blue-950/20 text-slate-200">
                 ${escapeHTML(htmlContent)}
             </div>
-            <div class="w-9 h-9 rounded-2xl bg-blue-700 flex-shrink-0 flex items-center justify-center text-white text-xs font-bold shadow-md">
+            <div class="w-7 h-7 rounded-md bg-blue-600/30 border border-blue-500/30 flex-shrink-0 flex items-center justify-center text-blue-300 font-mono text-[11px] font-bold">
                 U
             </div>
         `;
     } else {
         wrapper.innerHTML = `
-            <div class="w-9 h-9 rounded-2xl bg-slate-700 flex-shrink-0 flex items-center justify-center text-white text-xs font-bold shadow-md">
-                AI
+            <div class="w-7 h-7 rounded-md bg-slate-800 border border-slate-700 flex-shrink-0 flex items-center justify-center text-slate-300 font-mono text-[11px] font-bold">
+                FR
             </div>
-            <div class="inner-card p-4 max-w-xl text-sm leading-relaxed shadow-md">
+            <div class="inner-card p-3 max-w-xl text-xs leading-relaxed space-y-2">
                 ${htmlContent}
             </div>
         `;
@@ -342,7 +354,7 @@ function appendChatMessage(role, htmlContent, id = null) {
     chatWindow.scrollTop = chatWindow.scrollHeight;
 
     const countEl = document.getElementById('chat-count');
-    countEl.textContent = chatWindow.children.length;
+    if (countEl) countEl.textContent = chatWindow.children.length;
 }
 
 // ---------------------------
@@ -353,7 +365,7 @@ function renderRequirements(reqs) {
     document.getElementById('req-count').textContent = reqs.length;
     const container = document.getElementById('requirements-list');
     if (!reqs.length) {
-        container.innerHTML = `<div class="text-center py-12 text-slate-400 text-sm font-medium">No requirements available in baseline.</div>`;
+        container.innerHTML = `<div class="text-center py-12 text-slate-400 text-xs font-medium">No requirements available in baseline.</div>`;
         return;
     }
 
@@ -362,57 +374,58 @@ function renderRequirements(reqs) {
         const isApproved = r.approval_status === 'approved' || r.status === 'approved';
         const isHighPrio = (r.priority || '').toLowerCase() === 'high';
         const prioBadge = isHighPrio
-            ? '<span class="text-xs px-2.5 py-0.5 rounded-lg badge-red font-semibold">High Priority</span>'
-            : '<span class="text-xs px-2.5 py-0.5 rounded-lg badge-amber font-semibold">Medium Priority</span>';
+            ? '<span class="text-[10px] font-mono px-2 py-0.5 rounded badge-red font-semibold">High Priority</span>'
+            : '<span class="text-[10px] font-mono px-2 py-0.5 rounded badge-amber font-semibold">Medium Priority</span>';
 
         const statusBadge = isApproved
-            ? '<span class="text-xs px-2.5 py-0.5 rounded-full badge-green font-semibold flex items-center gap-1"><i class="fas fa-circle-check"></i> Approved</span>'
-            : '<span class="text-xs px-2.5 py-0.5 rounded-full badge-blue font-medium">Pending Sign-off</span>';
+            ? '<span class="text-[10px] font-mono px-2 py-0.5 rounded badge-green font-semibold flex items-center gap-1"><i class="fas fa-check"></i> Approved</span>'
+            : '<span class="text-[10px] font-mono px-2 py-0.5 rounded badge-blue font-medium">Pending Review</span>';
 
         return `
-            <div class="p-4 rounded-2xl inner-card ${isApproved ? '!border-emerald-600' : ''} shadow-md transition space-y-3">
-                <div class="flex items-center justify-between flex-wrap gap-2.5">
-                    <div class="flex items-center gap-2 flex-wrap">
-                        <span class="font-mono text-xs font-bold badge-blue px-2.5 py-1 rounded-xl">${escapeHTML(id)}</span>
-                        <span class="text-xs px-2.5 py-0.5 rounded-full badge-blue font-medium">${escapeHTML(r.category || 'Functional')}</span>
+            <div class="p-3.5 rounded-lg inner-card ${isApproved ? '!border-emerald-500/40' : ''} space-y-2.5 transition">
+                <div class="flex items-center justify-between flex-wrap gap-2">
+                    <div class="flex items-center gap-1.5 flex-wrap">
+                        <span class="font-mono text-xs font-bold text-blue-400 bg-blue-500/10 px-2 py-0.5 rounded border border-blue-500/20">${escapeHTML(id)}</span>
+                        <span class="text-[10px] font-mono px-2 py-0.5 rounded badge-blue">${escapeHTML(r.category || 'Functional')}</span>
                         ${prioBadge}
                         ${statusBadge}
-                        <span class="text-xs text-slate-400">Risk: <strong class="${(r.risk || r.risk_level) === 'High' ? 'text-red-600' : 'text-amber-600'}">${escapeHTML(r.risk || r.risk_level || 'Medium')}</strong></span>
+                        <span class="text-[11px] text-slate-400">Risk: <strong class="${(r.risk || r.risk_level) === 'High' ? 'text-red-400' : 'text-amber-400'} font-medium">${escapeHTML(r.risk || r.risk_level || 'Medium')}</strong></span>
                     </div>
 
-                    <!-- Action Buttons: Approve, Remove, Edit -->
-                    <div class="flex items-center gap-2">
+                    <!-- Action Buttons -->
+                    <div class="flex items-center gap-1.5">
                         ${isApproved ? `
-                            <button onclick="approveSingleReq('${id}', 'draft')" class="text-xs px-3 py-1.5 rounded-xl bg-emerald-800 hover:bg-emerald-700 text-white font-semibold transition flex items-center gap-1 shadow-sm" title="Click to undo approval">
-                                <i class="fas fa-check-double mr-1"></i> Approved
+                            <button onclick="approveSingleReq('${id}', 'draft')" class="text-xs px-2.5 py-1 rounded bg-emerald-700/30 border border-emerald-500/40 text-emerald-300 font-medium transition flex items-center gap-1 hover:bg-emerald-700/50" title="Click to undo approval">
+                                <i class="fas fa-check-double text-[11px]"></i> Approved
                             </button>
                         ` : `
-                            <button onclick="approveSingleReq('${id}', 'approved')" class="btn-approve text-xs px-3 py-1.5 rounded-xl font-semibold transition flex items-center gap-1 shadow-sm" title="Approve this requirement">
-                                <i class="fas fa-check mr-1"></i> Approve
+                            <button onclick="approveSingleReq('${id}', 'approved')" class="btn-approve text-xs px-2.5 py-1 rounded font-medium transition flex items-center gap-1" title="Approve requirement">
+                                <i class="fas fa-check text-[11px]"></i> Approve
                             </button>
                         `}
-                        <button onclick="removeSingleReq('${id}')" class="btn-remove text-xs px-3 py-1.5 rounded-xl font-semibold transition flex items-center gap-1 shadow-sm" title="Remove requirement from baseline">
-                            <i class="fas fa-trash-can mr-1"></i> Remove
+                        <button onclick="removeSingleReq('${id}')" class="btn-remove text-xs px-2.5 py-1 rounded font-medium transition flex items-center gap-1" title="Remove requirement">
+                            <i class="fas fa-trash text-[11px]"></i>
                         </button>
-                        <button onclick="openEditModal('${id}')" class="btn-secondary text-xs px-2.5 py-1.5 rounded-xl transition" title="Modify requirement">
-                            <i class="fas fa-pen"></i>
+                        <button onclick="openEditModal('${id}')" class="btn-secondary text-xs px-2 py-1 rounded transition" title="Modify requirement">
+                            <i class="fas fa-pen text-[11px]"></i>
                         </button>
                     </div>
                 </div>
 
-                <p class="text-sm theme-title leading-relaxed font-normal">${escapeHTML(r.statement)}</p>
+                <p class="text-xs text-slate-200 leading-relaxed font-normal">${escapeHTML(r.statement)}</p>
 
                 ${r.acceptance_criteria ? `
-                    <div class="p-3 rounded-xl inner-card text-xs">
-                        <span class="text-blue-600 font-bold font-mono">Acceptance Criteria:</span> ${escapeHTML(Array.isArray(r.acceptance_criteria) ? r.acceptance_criteria.join(' ') : r.acceptance_criteria)}
+                    <div class="p-2.5 rounded bg-[var(--card-inner)] border border-[var(--card-border-subtle)] text-[11px] text-slate-300">
+                        <span class="text-blue-400 font-semibold font-mono text-[10px] uppercase tracking-wider block mb-0.5">Acceptance Criteria:</span>
+                        <span class="leading-relaxed">${escapeHTML(Array.isArray(r.acceptance_criteria) ? r.acceptance_criteria.join(' ') : r.acceptance_criteria)}</span>
                     </div>
                 ` : ''}
 
                 ${(r.compliance_mapping || r.regulations) && (r.compliance_mapping?.length || r.regulations?.length) ? `
-                    <div class="flex items-center gap-1.5 text-xs text-slate-400 flex-wrap">
-                        <span class="font-semibold text-slate-400">Regulations:</span>
+                    <div class="flex items-center gap-1 text-[11px] text-slate-400 flex-wrap pt-0.5">
+                        <span class="text-[10px] font-mono text-slate-400 uppercase">Citations:</span>
                         ${(r.compliance_mapping || r.regulations).map(reg => `
-                            <span class="font-mono text-xs px-2.5 py-0.5 rounded-lg badge-blue">${escapeHTML(reg)}</span>
+                            <span class="font-mono text-[10px] px-1.5 py-0.2 rounded badge-blue">${escapeHTML(reg)}</span>
                         `).join('')}
                     </div>
                 ` : ''}
@@ -424,24 +437,24 @@ function renderRequirements(reqs) {
 function renderCompliance(mappings) {
     const container = document.getElementById('compliance-list');
     if (!mappings.length) {
-        container.innerHTML = `<div class="text-center py-16 text-slate-400 text-sm">No compliance mappings available.</div>`;
+        container.innerHTML = `<div class="text-center py-16 text-slate-400 text-xs">No compliance mappings available.</div>`;
         return;
     }
 
     container.innerHTML = mappings.map(c => `
-        <div class="p-4 rounded-2xl inner-card space-y-2.5 shadow-md">
+        <div class="p-3.5 rounded-lg inner-card space-y-2">
             <div class="flex items-center justify-between flex-wrap gap-2">
-                <div class="flex items-center gap-2">
-                    <span class="text-xs font-mono font-bold badge-blue px-2.5 py-1 rounded-xl">${escapeHTML(c.req_id)}</span>
-                    <span class="text-xs font-mono px-2.5 py-1 rounded-xl badge-red font-bold">${escapeHTML(c.citation)}</span>
-                    <span class="text-xs text-slate-400">${escapeHTML(c.source_doc)}:${c.line_number}</span>
+                <div class="flex items-center gap-1.5">
+                    <span class="text-[10px] font-mono font-bold badge-blue px-2 py-0.5 rounded">${escapeHTML(c.req_id)}</span>
+                    <span class="text-[10px] font-mono px-2 py-0.5 rounded badge-red font-semibold">${escapeHTML(c.citation)}</span>
+                    <span class="text-[11px] text-slate-400 font-mono">${escapeHTML(c.source_doc)}:${c.line_number}</span>
                 </div>
-                <div class="flex items-center gap-2">
-                    <span class="text-xs px-2.5 py-0.5 rounded-lg badge-green font-medium">Coverage: ${escapeHTML(c.coverage)}</span>
-                    <span class="text-xs px-2.5 py-0.5 rounded-lg badge-blue font-medium">${Math.round(c.confidence * 100)}% Confidence</span>
+                <div class="flex items-center gap-1.5">
+                    <span class="text-[10px] font-mono px-2 py-0.5 rounded badge-green font-medium">Coverage: ${escapeHTML(c.coverage)}</span>
+                    <span class="text-[10px] font-mono px-2 py-0.5 rounded badge-blue font-medium">${Math.round(c.confidence * 100)}% Confidence</span>
                 </div>
             </div>
-            <p class="text-xs italic inner-card p-3 rounded-xl leading-relaxed">
+            <p class="text-xs text-slate-300 italic p-2.5 rounded bg-[var(--card-inner)] border border-[var(--card-border-subtle)] leading-relaxed font-mono">
                 "${escapeHTML(c.evidence)}"
             </p>
         </div>
@@ -482,15 +495,15 @@ function renderSDLC(info, workflow) {
     const barsContainer = document.getElementById('sdlc-ranking-bars');
     const barsHtml = entries.map(([model, score]) => {
         const isTop = model === info.recommended_model;
-        const barColor = isTop ? 'bg-emerald-600' : 'bg-slate-500';
+        const barColor = isTop ? 'bg-emerald-500' : 'bg-slate-600';
         return `
             <div>
                 <div class="flex justify-between items-center mb-1 text-xs">
-                    <span class="${isTop ? 'text-emerald-600 font-bold' : 'text-slate-400'}">${escapeHTML(model)} ${isTop ? '★' : ''}</span>
-                    <span class="font-mono ${isTop ? 'text-emerald-600 font-bold' : 'text-slate-400'}">${score}%</span>
+                    <span class="${isTop ? 'text-emerald-400 font-semibold' : 'text-slate-400'}">${escapeHTML(model)} ${isTop ? '★' : ''}</span>
+                    <span class="font-mono ${isTop ? 'text-emerald-400 font-semibold' : 'text-slate-400'}">${score}%</span>
                 </div>
-                <div class="w-full h-2 rounded-full inner-card overflow-hidden">
-                    <div class="h-full rounded-full ${barColor}" style="width: ${Math.max(score, 4)}%"></div>
+                <div class="w-full h-1.5 rounded-full bg-[var(--card-inner)] border border-[var(--card-border-subtle)] overflow-hidden">
+                    <div class="h-full rounded-full ${barColor} transition-all duration-500" style="width: ${Math.max(score, 4)}%"></div>
                 </div>
             </div>
         `;
@@ -498,26 +511,26 @@ function renderSDLC(info, workflow) {
 
     const sumTotal = entries.reduce((acc, [, s]) => acc + s, 0);
     barsContainer.innerHTML = barsHtml + `
-        <div class="pt-2 border-t border-slate-700/40 flex items-center justify-between text-xs">
-            <span class="text-slate-400 flex items-center gap-1.5">
-                <i class="fas fa-check-circle text-emerald-600"></i> Total Evaluation Weight:
+        <div class="pt-2 border-t border-[var(--card-border)] flex items-center justify-between text-xs">
+            <span class="text-slate-400 flex items-center gap-1">
+                <i class="fas fa-check-circle text-emerald-400 text-xs"></i> Total Weight:
             </span>
-            <span class="font-mono font-bold text-emerald-600">${sumTotal}%</span>
+            <span class="font-mono font-semibold text-emerald-400">${sumTotal}%</span>
         </div>
     `;
 
     // Render Custom 7-Phase Workflow
     const workflowContainer = document.getElementById('sdlc-workflow-list');
     workflowContainer.innerHTML = workflow.map(w => `
-        <div class="p-3.5 rounded-xl inner-card text-xs space-y-2 shadow-sm">
+        <div class="p-3 rounded-lg inner-card text-xs space-y-1.5">
             <div class="flex items-center justify-between">
-                <span class="font-bold theme-title text-sm">${escapeHTML(w.phase)}</span>
-                <span class="text-xs px-2.5 py-0.5 rounded-lg badge-purple">${escapeHTML(w.roles)}</span>
+                <span class="font-bold theme-title text-xs">${escapeHTML(w.phase)}</span>
+                <span class="text-[10px] font-mono px-2 py-0.5 rounded badge-purple">${escapeHTML(w.roles)}</span>
             </div>
-            <div class="text-xs leading-relaxed"><strong class="text-slate-400">Activities:</strong> ${w.activities.map(a => escapeHTML(a)).join(', ')}</div>
-            <div class="flex items-center justify-between text-xs pt-1.5 text-slate-400 border-t border-slate-700/30">
-                <span><i class="fas fa-shield-halved text-blue-600 mr-1"></i> ${escapeHTML(w.security_controls)}</span>
-                <span class="text-emerald-600 font-medium"><i class="fas fa-flag-checkered mr-1"></i> Gate: ${escapeHTML(w.validation_gate)}</span>
+            <div class="text-xs text-slate-300 leading-relaxed"><strong class="text-slate-400 font-normal">Activities:</strong> ${w.activities.map(a => escapeHTML(a)).join(', ')}</div>
+            <div class="flex items-center justify-between text-[11px] pt-1 text-slate-400 border-t border-[var(--card-border-subtle)]">
+                <span><i class="fas fa-shield-halved text-blue-400 mr-1"></i> ${escapeHTML(w.security_controls)}</span>
+                <span class="text-emerald-400 font-medium"><i class="fas fa-flag-checkered mr-1"></i> Gate: ${escapeHTML(w.validation_gate)}</span>
             </div>
         </div>
     `).join('');
@@ -527,26 +540,26 @@ function renderRisks(risks) {
     document.getElementById('risk-count').textContent = risks.length;
     const container = document.getElementById('risk-list');
     if (!risks.length) {
-        container.innerHTML = `<div class="text-center py-16 text-slate-400 text-sm">No risks recorded.</div>`;
+        container.innerHTML = `<div class="text-center py-16 text-slate-400 text-xs">No risks recorded.</div>`;
         return;
     }
 
     container.innerHTML = risks.map(k => `
-        <div class="p-4 rounded-2xl inner-card text-xs space-y-2.5 shadow-md">
+        <div class="p-3.5 rounded-lg inner-card text-xs space-y-2">
             <div class="flex items-center justify-between flex-wrap gap-2">
-                <div class="flex items-center gap-2">
-                    <span class="font-mono font-bold badge-amber px-2.5 py-1 rounded-xl">${escapeHTML(k.id)}</span>
-                    <span class="font-semibold theme-title text-sm">${escapeHTML(k.category)}</span>
+                <div class="flex items-center gap-1.5">
+                    <span class="font-mono font-bold badge-amber px-2 py-0.5 rounded text-[10px]">${escapeHTML(k.id)}</span>
+                    <span class="font-semibold theme-title text-xs">${escapeHTML(k.category)}</span>
                 </div>
-                <div class="flex items-center gap-2 text-xs">
+                <div class="flex items-center gap-2 text-[11px]">
                     <span class="text-slate-400">Likelihood: <strong class="text-slate-300">${escapeHTML(k.likelihood)}</strong></span>
-                    <span class="text-slate-400">Impact: <strong class="text-red-600">${escapeHTML(k.impact)}</strong></span>
-                    <span class="px-2.5 py-0.5 rounded-lg badge-amber font-bold font-mono">Score: ${k.score}/10</span>
+                    <span class="text-slate-400">Impact: <strong class="text-red-400">${escapeHTML(k.impact)}</strong></span>
+                    <span class="px-2 py-0.5 rounded badge-amber font-semibold font-mono text-[10px]">Score: ${k.score}/10</span>
                 </div>
             </div>
-            <p class="text-sm leading-relaxed theme-title">${escapeHTML(k.description)}</p>
-            <div class="p-3 rounded-xl inner-card text-xs text-emerald-600">
-                <strong class="text-emerald-600"><i class="fas fa-shield-heart mr-1"></i> Mitigation:</strong> ${escapeHTML(k.mitigation)}
+            <p class="text-xs leading-relaxed text-slate-200">${escapeHTML(k.description)}</p>
+            <div class="p-2.5 rounded bg-[var(--card-inner)] border border-[var(--card-border-subtle)] text-[11px] text-emerald-400">
+                <strong class="font-semibold text-emerald-400"><i class="fas fa-shield-heart mr-1"></i> Mitigation:</strong> ${escapeHTML(k.mitigation)}
             </div>
         </div>
     `).join('');
@@ -558,20 +571,20 @@ function renderClarifications(clarifications, conflicts) {
 
     if (conflicts && conflicts.length > 0) {
         html += `
-            <div class="space-y-3">
-                <h4 class="text-xs font-bold text-red-600 uppercase tracking-wider flex items-center gap-1.5">
-                    <i class="fas fa-triangle-exclamation"></i> Potential Contradictions & Conflicts Detected (${conflicts.length})
+            <div class="space-y-2.5">
+                <h4 class="text-[11px] font-bold text-rose-400 uppercase tracking-wider flex items-center gap-1.5">
+                    <i class="fas fa-triangle-exclamation"></i> Contradictions &amp; Conflicts Detected (${conflicts.length})
                 </h4>
         `;
         conflicts.forEach(c => {
             html += `
-                <div class="p-4 rounded-2xl inner-card !border-red-600/50 text-xs space-y-2 shadow-md">
-                    <div class="font-bold text-red-600 text-sm flex items-center gap-2">
-                        <span class="w-2 h-2 rounded-full bg-red-600"></span>
+                <div class="p-3.5 rounded-lg inner-card !border-rose-500/40 text-xs space-y-1.5">
+                    <div class="font-bold text-rose-400 text-xs flex items-center gap-1.5">
+                        <span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span>
                         ${escapeHTML(c.type || 'Requirement Contradiction')}
                     </div>
-                    <p class="theme-title leading-relaxed">${escapeHTML(c.description || c)}</p>
-                    ${c.resolution ? `<div class="p-3 rounded-xl inner-card text-xs text-blue-600"><strong class="text-blue-600">Resolution:</strong> ${escapeHTML(c.resolution)}</div>` : ''}
+                    <p class="text-xs text-slate-200 leading-relaxed">${escapeHTML(c.description || c)}</p>
+                    ${c.resolution ? `<div class="p-2.5 rounded bg-[var(--card-inner)] border border-[var(--card-border-subtle)] text-[11px] text-blue-400"><strong class="font-semibold text-blue-400">Resolution:</strong> ${escapeHTML(c.resolution)}</div>` : ''}
                 </div>
             `;
         });
@@ -580,21 +593,21 @@ function renderClarifications(clarifications, conflicts) {
 
     if (clarifications && clarifications.length > 0) {
         html += `
-            <div class="space-y-3 mt-4">
-                <h4 class="text-xs font-bold text-amber-600 uppercase tracking-wider flex items-center gap-1.5">
-                    <i class="fas fa-question-circle"></i> Ambiguity Clarification Questions (${clarifications.length})
+            <div class="space-y-2.5 mt-3">
+                <h4 class="text-[11px] font-bold text-amber-400 uppercase tracking-wider flex items-center gap-1.5">
+                    <i class="fas fa-circle-question"></i> Ambiguity Clarification Questions (${clarifications.length})
                 </h4>
         `;
         clarifications.forEach(q => {
             const questionText = q.clarification_question || q;
             html += `
-                <div class="p-4 rounded-2xl inner-card !border-amber-600/50 text-xs flex items-start justify-between gap-3 shadow-md">
-                    <div class="space-y-1.5">
-                        <span class="text-xs uppercase font-bold badge-amber px-2.5 py-0.5 rounded-lg inline-block">Subjective Term: ${escapeHTML(q.term || 'ambiguity')}</span>
-                        <p class="theme-title text-sm leading-relaxed">${escapeHTML(questionText)}</p>
+                <div class="p-3.5 rounded-lg inner-card !border-amber-500/40 text-xs flex items-start justify-between gap-3">
+                    <div class="space-y-1">
+                        <span class="text-[10px] font-mono uppercase font-bold badge-amber px-2 py-0.5 rounded inline-block">Subjective Term: ${escapeHTML(q.term || 'ambiguity')}</span>
+                        <p class="text-xs text-slate-200 leading-relaxed">${escapeHTML(questionText)}</p>
                     </div>
-                    <button onclick="injectClarificationPrompt('${escapeHTML(questionText).replace(/'/g, "\\'")}')" class="px-3 py-1.5 rounded-xl bg-amber-600 hover:bg-amber-700 text-white font-semibold text-xs whitespace-nowrap transition shadow-sm">
-                        Answer in Chat
+                    <button onclick="injectClarificationPrompt('${escapeHTML(questionText).replace(/'/g, "\\'")}')" class="px-2.5 py-1 rounded bg-amber-500/20 border border-amber-500/40 hover:bg-amber-500/30 text-amber-300 font-medium text-xs whitespace-nowrap transition">
+                        Answer
                     </button>
                 </div>
             `;
@@ -604,10 +617,10 @@ function renderClarifications(clarifications, conflicts) {
 
     if (!html) {
         html = `
-            <div class="p-6 rounded-2xl inner-card !border-emerald-600/60 text-center text-xs text-emerald-600 shadow-md">
-                <i class="fas fa-circle-check text-3xl mb-2.5 text-emerald-600"></i>
-                <p class="font-bold text-sm theme-title">Quality Gate Passed</p>
-                <p class="text-slate-400 text-xs mt-1">Zero contradictions or subjective ambiguities detected in current requirement baseline.</p>
+            <div class="p-6 rounded-lg inner-card !border-emerald-500/40 text-center text-xs text-emerald-400">
+                <i class="fas fa-circle-check text-2xl mb-2 text-emerald-400 block"></i>
+                <p class="font-bold text-xs theme-title">Quality Gate Passed</p>
+                <p class="text-slate-400 text-[11px] mt-0.5">Zero contradictions or subjective ambiguities detected in current baseline.</p>
             </div>
         `;
     }
@@ -633,15 +646,15 @@ function renderAuditTrail(trail) {
     }
 
     container.innerHTML = trail.map(ev => `
-        <div class="p-3.5 rounded-xl inner-card text-xs flex items-start gap-3 shadow-sm">
-            <span class="font-mono text-slate-400 text-xs mt-0.5 whitespace-nowrap inner-card px-2 py-0.5 rounded-lg">${ev.timestamp.split('T')[1]?.split('.')[0] || 'UTC'}</span>
-            <div class="flex-1 space-y-1">
-                <div class="flex items-center gap-2">
-                    <span class="font-bold text-blue-600">${escapeHTML(ev.agent)}</span>
-                    <span class="text-slate-400">➔</span>
-                    <span class="theme-title font-semibold">${escapeHTML(ev.action)}</span>
+        <div class="p-2.5 rounded-lg inner-card text-xs flex items-start gap-2.5">
+            <span class="font-mono text-slate-400 text-[10px] mt-0.5 whitespace-nowrap px-1.5 py-0.5 rounded bg-[var(--card-inner)] border border-[var(--card-border-subtle)]">${ev.timestamp.split('T')[1]?.split('.')[0] || 'UTC'}</span>
+            <div class="flex-1 space-y-0.5">
+                <div class="flex items-center gap-1.5">
+                    <span class="font-mono font-semibold text-blue-400 text-[11px]">${escapeHTML(ev.agent)}</span>
+                    <span class="text-slate-500 text-[10px]">➔</span>
+                    <span class="theme-title font-medium text-xs">${escapeHTML(ev.action)}</span>
                 </div>
-                <p class="text-slate-400">${escapeHTML(ev.detail)}</p>
+                <p class="text-[11px] text-slate-400">${escapeHTML(ev.detail)}</p>
             </div>
         </div>
     `).reverse().join('');
@@ -856,7 +869,7 @@ function resetSession() {
         document.getElementById('active-project-tag').textContent = "No Active Session";
         document.getElementById('chat-window').innerHTML = '';
         document.getElementById('user-input').value = '';
-        document.getElementById('pipeline-status').innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-slate-500"></span> Idle - Enter project idea to run pipeline';
+        document.getElementById('pipeline-status').innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-slate-500"></span> System Idle &bull; Ready for Input';
         renderRequirements([]);
         renderCompliance([]);
         renderRisks([]);

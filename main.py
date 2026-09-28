@@ -1,3 +1,47 @@
+import sys
+import re
+import logging
+from dotenv import load_dotenv
+
+load_dotenv()
+
+# Completely silence noisy HTTP loggers from printing URLs or internal server errors to terminal
+for _log in ("httpx", "httpcore", "openai", "urllib3", "google", "uvicorn.access"):
+    logging.getLogger(_log).setLevel(logging.WARNING)
+
+class TerminalSanitizer:
+    """Sanitizes terminal output so no provider/vendor/model names ever appear in the console."""
+    def __init__(self, stream):
+        self._stream = stream
+
+    def write(self, s):
+        if not s:
+            return
+        cleaned = re.sub(r"https?://\S+", "[endpoint]", s)
+        # Neutralize all provider and model names
+        scrubs = [
+            (r"(?i)\bgsk_[A-Za-z0-9_-]+\b", "[auth-token]"),
+            (r"(?i)\b(openai|groq|openrouter|anthropic|claude|deepseek|mistral|ollama|gemini)/[A-Za-z0-9_.-]+", "core-engine"),
+            (r"(?i)\b(groq|openrouter|gemini|openai|anthropic|claude|mistral|deepseek|ollama)\b", "engine"),
+            (r"(?i)\b(llama|qwen|gpt)[-_\w.]*\b", "engine"),
+            (r"\bAI\b", "System"),
+        ]
+        for pat, repl in scrubs:
+            cleaned = re.sub(pat, repl, cleaned)
+        self._stream.write(cleaned)
+
+    def flush(self):
+        self._stream.flush()
+
+    def isatty(self):
+        return getattr(self._stream, "isatty", lambda: False)()
+
+    def fileno(self):
+        return self._stream.fileno()
+
+sys.stdout = TerminalSanitizer(sys.stdout)
+sys.stderr = TerminalSanitizer(sys.stderr)
+
 import warnings
 warnings.filterwarnings("ignore")
 from fastapi import FastAPI, HTTPException, Response
@@ -11,7 +55,7 @@ from datetime import datetime
 from src.core.orchestrator.state import ProjectState, Requirement
 from agents.orchestrator import AgentOrchestrator
 
-app = FastAPI(title="FinReq AI Platform", version="2.0")
+app = FastAPI(title="FinReq Platform", version="2.0")
 
 app.add_middleware(
     CORSMiddleware,
@@ -58,7 +102,7 @@ class ReqRemoveRequest(BaseModel):
 async def health():
     return {
         "status": "ok",
-        "service": "FinReq AI Platform",
+        "service": "FinReq Platform",
         "agents_count": 13,
         "domains_supported": 8,
         "version": "2.0.0"
@@ -156,7 +200,19 @@ async def start_session(request: SessionStartRequest):
             "audit_trail": state.audit_trail
         }
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        err = str(e)
+        if "429" in err or "quota" in err.lower() or "resourceexhausted" in err.lower():
+            raise HTTPException(
+                status_code=429,
+                detail="Gemini API rate limit reached. Please wait 30-60 seconds and try again. "
+                       "The free Gemini API quota allows ~15 requests/minute."
+            )
+        if "503" in err or "unavailable" in err.lower():
+            raise HTTPException(
+                status_code=503,
+                detail="Gemini AI service is temporarily overloaded. Please retry in a few seconds."
+            )
+        raise HTTPException(status_code=500, detail=err)
 
 @app.post("/session/chat")
 async def session_chat(request: ChatRequest):
@@ -176,7 +232,13 @@ async def session_chat(request: ChatRequest):
             "audit_trail": state.audit_trail
         }
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        err = str(e)
+        if "429" in err or "quota" in err.lower():
+            raise HTTPException(
+                status_code=429,
+                detail="Gemini API rate limit reached. Please wait 30-60 seconds and try again."
+            )
+        raise HTTPException(status_code=500, detail=err)
 
 @app.post("/session/approve")
 async def approve_section(request: ApprovalRequest):
