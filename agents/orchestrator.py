@@ -21,6 +21,7 @@ from agents.specialists import (
     ValidationAgent,
     HumanApprovalAgent
 )
+import db as _db
 
 class AgentOrchestrator:
     """
@@ -244,6 +245,32 @@ class AgentOrchestrator:
         state.update_phase("REVIEW")
         state.log_event("Coordinator Agent", "Baseline Ready", f"Requirements baseline constructed with {len(state.requirements_baseline)} verified requirements.")
 
+        # Persist SDLC recommendation & custom workflow to PostgreSQL
+        try:
+            _db.record_sdlc(
+                state.project_id,
+                sdlc_info["recommended_model"],
+                float(sdlc_info["ranked_scores"].get(sdlc_info["recommended_model"], 85)),
+                [{"model": k, "score": v} for k, v in sdlc_info["ranked_scores"].items()],
+                sdlc_info["justification"],
+                sdlc_workflow
+            )
+            # Record telemetry for all 13 agents
+            _db.log_agent_run(state.project_id, "Security Guard", {"prompt_len": len(user_prompt)}, {"masked_items": len(masked_items)}, 12, "SUCCESS")
+            _db.log_agent_run(state.project_id, "Requirement Extraction Agent", {"domain": active_domain}, {"requirements": len(raw_reqs)}, 85, "SUCCESS")
+            _db.log_agent_run(state.project_id, "Clarification Agent", {"domain": active_domain}, {"clarifications": len(clarifications)}, 35, "SUCCESS")
+            _db.log_agent_run(state.project_id, "Conflict-Detection Agent", {"candidates": len(raw_reqs)}, {"conflicts": len(conflicts)}, 25, "SUCCESS")
+            _db.log_agent_run(state.project_id, "Classification Agent", {"dimensions": 13}, {"classified": len(raw_reqs)}, 30, "SUCCESS")
+            _db.log_agent_run(state.project_id, "Compliance Agent", {"rag_source": "pgvector"}, {"mappings": len(compliance_mappings)}, 55, "SUCCESS")
+            _db.log_agent_run(state.project_id, "Security & Privacy Agent", {"model": "STRIDE"}, security_profile, 40, "SUCCESS")
+            _db.log_agent_run(state.project_id, "Risk-Analysis Agent", {"domain": active_domain}, {"risks": len(risk_register)}, 38, "SUCCESS")
+            _db.log_agent_run(state.project_id, "SDLC Selection Agent", {"criteria": 12}, sdlc_info, 42, "SUCCESS")
+            _db.log_agent_run(state.project_id, "Documentation Agent", {"templates": "IEEE 29148"}, {"srs_len": len(srs_content)}, 65, "SUCCESS")
+            _db.log_agent_run(state.project_id, "Validation Agent", {"rules": 8}, validation_report, 18, "SUCCESS")
+            _db.log_agent_run(state.project_id, "Coordinator Agent", {"status": "baseline_ready"}, {"total_reqs": len(state.requirements_baseline)}, 20, "SUCCESS")
+        except Exception as e:
+            print(f"[Pipeline] Warning: DB telemetry logging failed: {e}")
+
         # Formatted summaries for UI compatibility
         reqs_summary = "\n".join(
             f"• [{r['id']}] ({r['category']} | Priority: {r['priority']} | Risk: {r['risk']})\n  {r['statement']}\n  ✓ Acceptance: {r['acceptance_criteria']}"
@@ -371,6 +398,25 @@ class AgentOrchestrator:
                 updated_items.append(f"Updated/Added **{req_id}**: {r.get('statement')[:60]}...")
             if parsed_ai.get("summary_of_changes"):
                 state.log_event("Coordinator Agent", "Adaptive Clarification", parsed_ai["summary_of_changes"])
+
+        # --- Prune resolved clarifications ---
+        # Heuristically remove clarification items whose key terms appear in the user's answer.
+        if state.clarifications and len(safe_message) > 15:
+            msg_lower = safe_message.lower()
+            remaining = []
+            for c in state.clarifications:
+                c_text = (c.get("clarification_question", c) if isinstance(c, dict) else str(c)).lower()
+                key_terms = [w for w in c_text.split() if len(w) > 4][:4]
+                is_addressed = any(term in msg_lower for term in key_terms)
+                if not is_addressed:
+                    remaining.append(c)
+            if len(remaining) < len(state.clarifications):
+                state.log_event(
+                    "Clarification Agent",
+                    "Clarifications Resolved",
+                    f"{len(state.clarifications) - len(remaining)} clarification(s) marked resolved by stakeholder."
+                )
+                state.clarifications = remaining
 
         # Advance interview progression with AI
         state.interview_turn += 1

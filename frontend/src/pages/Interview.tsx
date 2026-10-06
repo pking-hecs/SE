@@ -1,166 +1,39 @@
-import React, { useState, useEffect } from 'react';
-import { Layout, Input, Button, Card, List, Tag, Row, Col, Space, Typography, Spin, message } from 'antd';
-import { SendOutlined, FileTextOutlined, LoadingOutlined } from '@ant-design/icons';
+import React, { useEffect, useState } from 'react';
+import { Button, Input, message } from 'antd';
+import { ArrowRightOutlined, DeleteOutlined, HistoryOutlined, PlusOutlined, SendOutlined } from '@ant-design/icons';
 import axios from 'axios';
 
-const { Content, Sider } = Layout;
-const { Text } = Typography;
+const API = 'http://localhost:8000/api';
+type Chat = { role: string; text: string };
+type History = { id: string; title: string; updated_at: string; message_count: number };
+const makeId = () => globalThis.crypto?.randomUUID?.() || `chat-${Date.now()}-${Math.random().toString(36).slice(2)}`;
 
-// API Base URL
-const API_BASE = 'http://localhost:8000/api';
-
-const Interview = () => {
-  const [messages, setMessages] = useState<{ role: string, text: string }[]>([]);
-  const [input, setInput] = useState('');
-  const [requirements, setRequirements] = useState<any[]>([]);
-  const [findings, setFindings] = useState<any[]>([]);
-  const [loading, setLoading] = useState(false);
-
-  // Replace this with a real token from your auth system
+export default function Interview() {
+  const [view, setView] = useState<'chat' | 'history'>('chat');
+  const [chat, setChat] = useState<Chat[]>([]); const [input, setInput] = useState(''); const [history, setHistory] = useState<History[]>([]);
+  const [active, setActive] = useState<string | null>(null); const [loading, setLoading] = useState(false); const [stats, setStats] = useState({ requirements: 0, findings: 0 });
   const token = localStorage.getItem('token') || 'demo-token';
-
-  const handleSend = async () => {
-    if (!input.trim()) return;
-
-    const userMessage = { role: 'user', text: input };
-    setMessages(prev => [...prev, userMessage]);
-    const currentInput = input;
-    setInput('');
-    setLoading(true);
-
+  const loadHistory = async () => { try { setHistory((await axios.get(`${API}/history/`)).data.conversations || []); } catch { message.error('History service is unavailable. Restart the backend.'); } };
+  useEffect(() => { if (view === 'history') loadHistory(); }, [view]);
+  const newChat = () => { setActive(null); setChat([]); setStats({ requirements: 0, findings: 0 }); setView('chat'); };
+  const save = (id: string, role: string, text: string) => axios.post(`${API}/history/conversations/${id}/messages`, { role, text });
+  const send = async () => {
+    const text = input.trim(); if (!text || loading) return;
+    setInput(''); setChat(v => [...v, { role: 'user', text }]); setLoading(true);
     try {
-      // Call the REAL backend API
-      const response = await axios.post(
-        `${API_BASE}/projects/1/chat`,
-        { text: currentInput },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-
-      const { requirements, findings } = response.data;
-
-      // Update requirements and findings from the real AI
-      setRequirements(prev => {
-        // Avoid duplicates by ID
-        const existingIds = new Set(prev.map(r => r.requirement_id));
-        const uniqueNew = requirements.filter((r: any) => !existingIds.has(r.requirement_id));
-        return [...prev, ...uniqueNew];
-      });
-
-      setFindings(prev => [...prev, ...findings]);
-
-      // Add AI response to chat
-      setMessages(prev => [...prev, {
-        role: 'assistant',
-        text: `I've analyzed your input. I extracted ${requirements.length} new requirement(s) and found ${findings.length} analysis points.`
-      }]);
-
-    } catch (error: any) {
-      console.error("API Error:", error);
-      message.error("Failed to connect to AI Backend. Ensure the server is running on port 8000.");
-      setMessages(prev => [...prev, { role: 'assistant', text: "Sorry, I'm having trouble connecting to the brain. Please check if the backend is running." }]);
-    } finally {
-      setLoading(false);
-    }
+      let id = active;
+      if (!id) { id = makeId(); await axios.post(`${API}/history/conversations`, { id, title: text.slice(0, 70), project_id: 1 }); setActive(id); }
+      await save(id, 'user', text);
+      const result = (await axios.post(`${API}/projects/1/chat`, { text }, { headers: { Authorization: `Bearer ${token}` } })).data;
+      const reply = `Analysis complete: ${result.requirements.length} requirements extracted; ${result.findings.length} findings detected.`;
+      setStats({ requirements: result.requirements.length, findings: result.findings.length }); setChat(v => [...v, { role: 'assistant', text: reply }]); await save(id, 'assistant', reply);
+    } catch { setChat(v => [...v, { role: 'assistant', text: 'Processing failed. Check that the backend is running.' }]); message.error('Message could not be saved.'); }
+    finally { setLoading(false); }
   };
-
-  return (
-    <Layout style={{ height: 'calc(100vh - 64px)' }}>
-      <Content style={{ display: 'flex', padding: '24px', gap: '24px', background: '#f0f2f5' }}>
-        {/* Left: Chat Interface */}
-        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', background: '#fff', borderRadius: '8px', overflow: 'hidden', boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}>
-          <div style={{ padding: '16px', background: '#001529', color: 'white', fontWeight: 'bold', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <span>Stakeholder Interview</span>
-            {loading && <Spin size="small" />}
-          </div>
-          <div style={{ flex: 1, padding: '20px', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '16px' }}>
-            {messages.length === 0 && (
-              <div style={{ textAlign: 'center', color: '#999', marginTop: '50px' }}>
-                <FileTextOutlined style={{ fontSize: '48px', display: 'block', margin: '0 auto 16px' }} />
-                <p>Start the conversation to extract requirements.</p>
-              </div>
-            )}
-            {messages.map((m, i) => (
-              <div key={i} style={{
-                alignSelf: m.role === 'user' ? 'flex-end' : 'flex-start',
-                maxWidth: '80%',
-                padding: '12px',
-                borderRadius: '8px',
-                background: m.role === 'user' ? '#1890ff' : '#f0f2f5',
-                color: m.role === 'user' ? 'white' : 'black',
-                boxShadow: '0 1px 2px rgba(0,0,0,0.1)'
-              }}>
-                {m.text}
-              </div>
-            ))}
-          </div>
-          <div style={{ padding: '16px', borderTop: '1px solid #eee', display: 'flex', gap: '8px' }}>
-            <Input.TextArea
-              rows={2}
-              value={input}
-              onChange={e => setInput(e.target.value)}
-              placeholder="Describe the requirement..."
-              onKeyPress={(e) => e.key === 'Enter' && !e.shiftKey && (e.preventDefault(), handleSend())}
-            />
-            <Button
-              type="primary"
-              icon={loading ? <LoadingOutlined /> : <SendOutlined />}
-              onClick={handleSend}
-              loading={loading}
-            />
-          </div>
-        </div>
-
-        {/* Right: Live Extraction Panel */}
-        <Sider width={450} theme="light" style={{ background: '#fff', borderRadius: '8px', padding: '16px', boxShadow: '0 2px 8px rgba(0,0,0,0.1)', overflowY: 'auto' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '20px' }}>
-            <FileTextOutlined />
-            <Text strong>Live Analysis</Text>
-          </div>
-
-          <div style={{ marginBottom: '24px' }}>
-            <Text type="secondary" style={{ fontSize: '12px', display: 'block', marginBottom: '8px' }}>EXTRACTED REQUIREMENTS</Text>
-            <List
-              dataSource={requirements}
-              renderItem={req => (
-                <Card size="small" style={{ marginBottom: '12px', borderLeft: '4px solid #1890ff' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
-                    <Text strong style={{ fontSize: '12px' }}>{req.requirement_id}</Text>
-                    <Tag color={req.priority === 'HIGH' ? 'red' : 'blue'}>{req.priority}</Tag>
-                  </div>
-                  <Text style={{ fontSize: '13px' }}>{req.statement}</Text>
-                  <div style={{ marginTop: '8px', display: 'flex', gap: '4px', flexWrap: 'wrap' }}>
-                    {req.categories?.map((cat: string) => <Tag color="blue" key={cat}>{cat}</Tag>)}
-                    <Tag color="orange">{req.approval_status || 'DRAFT'}</Tag>
-                  </div>
-                </Card>
-              )}
-            />
-          </div>
-
-          <div>
-            <Text type="secondary" style={{ fontSize: '12px', display: 'block', marginBottom: '8px' }}>QUALITY & RISK FINDINGS</Text>
-            <List
-              dataSource={findings}
-              renderItem={finding => (
-                <Card size="small" style={{ marginBottom: '12px', borderLeft: '4px solid #faad14' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
-                    <Text strong style={{ fontSize: '12px' }}>{finding.issue_type}</Text>
-                    <Tag color={finding.severity === 'HIGH' ? 'red' : 'orange'}>{finding.severity}</Tag>
-                  </div>
-                  <Text style={{ fontSize: '13px' }}>{finding.description}</Text>
-                  {finding.suggested_question && (
-                    <div style={{ marginTop: '8px', fontStyle: 'italic', fontSize: '12px', color: '#666' }}>
-                      Question: {finding.suggested_question}
-                    </div>
-                  )}
-                </Card>
-              )}
-            />
-          </div>
-        </Sider>
-      </Content>
-    </Layout>
-  );
-};
-
-export default Interview;
+  const open = async (id: string) => { try { const c = (await axios.get(`${API}/history/conversations/${id}`)).data; setChat(c.messages || []); setActive(id); setView('chat'); } catch { message.error('Could not open chat.'); } };
+  const remove = async (id: string) => { try { await axios.delete(`${API}/history/conversations/${id}`); if (active === id) newChat(); loadHistory(); } catch { message.error('Could not delete chat.'); } };
+  return <><main className="threat-layout"><section className="threat-column"><span className="eyebrow">FINANCIAL REQUIREMENTS / 01</span><h1 className="threat-title">Adaptive<br />Risk<br />Guard</h1><hr className="hairline" /><p className="intro-copy">AI-assisted requirements analysis that detects ambiguity, identifies compliance gaps, and protects your financial platform before delivery.</p><p className="trust-line">● ● ● &nbsp; TRUSTED BY MODERN FINANCE TEAMS.</p><div><Button className="amber-button" type="primary" onClick={newChat}>Start analysis</Button><Button className="text-button">Explore platform <ArrowRightOutlined /></Button></div>
+    <div className="chat-console"><div className="console-tabs"><div><Button className={view === 'chat' ? 'selected' : ''} onClick={() => setView('chat')}>CHAT</Button><Button className={view === 'history' ? 'selected' : ''} onClick={() => setView('history')} icon={<HistoryOutlined />}>HISTORY</Button></div><Button icon={<PlusOutlined />} onClick={newChat}>NEW</Button></div>
+      {view === 'history' ? <div className="message-area">{history.length === 0 ? <span className="trust-line">NO SAVED CHATS. SEND A MESSAGE TO CREATE ONE.</span> : history.map(h => <div className="history-row" key={h.id}><strong>{h.title}</strong><small>{h.message_count} MESSAGES · {new Date(h.updated_at).toLocaleString()}</small><br /><Button size="small" type="primary" onClick={() => open(h.id)}>OPEN</Button><Button size="small" danger icon={<DeleteOutlined />} onClick={() => remove(h.id)}>DELETE</Button></div>)}</div> : <><div className="message-area">{chat.length === 0 ? <span className="trust-line">SYSTEM READY. START A SECURE INTERVIEW.</span> : chat.map((m, i) => <div className={`bubble ${m.role}`} key={i}>{m.text}</div>)}</div><Input.TextArea className="chat-input" value={input} onChange={e => setInput(e.target.value)} onPressEnter={e => { if (!e.shiftKey) { e.preventDefault(); send(); } }} placeholder="Describe the requirement…" autoSize={{ minRows: 2, maxRows: 3 }} /><Button className="amber-button" type="primary" loading={loading} onClick={send} style={{ marginTop: 8 }}>Send <SendOutlined /></Button></>}</div>
+  </section><section className="threat-column center-console"><div className="scan-panel" /><div className="console-footer"><span>STABLE_NODE_ACK &nbsp; SECURITY AT THE CORE</span><Button size="small">ABOUT US</Button></div></section><section className="threat-column"><span className="eyebrow">LIVE ENGINE / v2.4</span><div className="mode-stack">Detect<br />Track<br /><span className="active">Predict</span><br />Respond</div><hr className="hairline" /><div className="technical-box">TECHNICAL SIDE<br />◉ RISK_SIGNAL_TRACE_INIT<br />▣ REQUIREMENTS: {stats.requirements}<br />▣ FINDINGS: {stats.findings}<br />△ ANOMALY_DETECTED: NULL</div></section></main><footer className="bottom-status">FINREQ DEFENSE TRAINED TO DETECT AMBIGUITY BEFORE IT SPREADS.</footer></>;
+}

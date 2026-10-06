@@ -1,60 +1,33 @@
+/* ════════════════════════════════════════════
+   FinReq — Main Script (ArtSox Theme Edition)
+   ════════════════════════════════════════════ */
+
 let currentProjectId = null;
-let projectData = null;
+let projectData      = null;
 let currentRequirements = [];
-let editingReqId = null;
+let editingReqId     = null;
+let currentSessionTitle = null;
 
-// ---------------------------
-// THEME MANAGEMENT (LIGHT / DARK)
-// ---------------------------
-function initTheme() {
-    const saved = localStorage.getItem('finreq-theme') || 'dark';
-    applyTheme(saved);
-}
-
-function toggleTheme() {
-    const isLight = document.body.classList.contains('light-theme');
-    const newTheme = isLight ? 'dark' : 'light';
-    applyTheme(newTheme);
-    localStorage.setItem('finreq-theme', newTheme);
-}
-
-function applyTheme(theme) {
-    const icon = document.getElementById('theme-icon');
-    const text = document.getElementById('theme-text');
-    if (theme === 'light') {
-        document.body.classList.add('light-theme');
-        document.documentElement.classList.add('light-theme');
-        if (icon) icon.className = 'fas fa-moon text-blue-600 text-xs';
-        if (text) text.textContent = 'Dark';
-    } else {
-        document.body.classList.remove('light-theme');
-        document.documentElement.classList.remove('light-theme');
-        if (icon) icon.className = 'fas fa-sun text-amber-400 text-xs';
-        if (text) text.textContent = 'Light';
-    }
-}
-
-document.addEventListener('DOMContentLoaded', initTheme);
-
+// ─── PRESETS ───────────────────────────────────
 const PRESETS = {
     loan: {
         domain: "Loan Origination & Credit Assessment",
-        role: "Business Analyst",
+        role:   "Business Analyst",
         prompt: "An automated SME loan origination and risk assessment platform. The system shall evaluate borrower credit scores using credit bureau APIs, calculate debt-to-income ratios, enforce Basel III capital liquidity buffers, and disburse digital loan contracts with dual-authorization for loans exceeding $50,000."
     },
     kyc: {
         domain: "Customer Onboarding & KYC",
-        role: "Compliance Officer",
+        role:   "Compliance Officer",
         prompt: "A digital customer onboarding system for retail and SME banking. The system shall verify government identity documents using biometric liveness detection, screen applicants against OFAC and PEP sanction lists, adhere to GDPR Article 25 data protection by design, and notify compliance officers within 72 hours of any security incident."
     },
     payments: {
         domain: "Payment Processing & ISO 20022",
-        role: "Information-Security Team",
+        role:   "Information-Security Team",
         prompt: "A high-throughput cross-border payment gateway processing ISO 20022 messages. The system shall encrypt all cardholder and account data using AES-256 at rest and TLS 1.3 in transit, require step-up MFA for transfers exceeding $10,000, enforce sub-500ms transaction settlement, and maintain immutable WORM audit logs for 7 years."
     },
     fraud: {
         domain: "Fraud Detection & Real-Time AML",
-        role: "Risk-Management Team",
+        role:   "Risk-Management Team",
         prompt: "A real-time fraud detection and transaction monitoring engine. The system shall analyze card transactions with sub-100ms latency, generate automated Suspicious Activity Reports (SAR), screen transactions against AML thresholds, and block anomalous geographic withdrawal patterns."
     }
 };
@@ -63,104 +36,104 @@ function loadPreset(key) {
     const p = PRESETS[key];
     if (!p) return;
     document.getElementById('domain-select').value = p.domain;
-    document.getElementById('role-select').value = p.role;
-    document.getElementById('user-input').value = p.prompt;
+    document.getElementById('role-select').value   = p.role;
+    document.getElementById('user-input').value    = p.prompt;
     document.getElementById('user-input').focus();
 }
 
+// ─── HELPERS ───────────────────────────────────
 function escapeHTML(str) {
     return String(str ?? '').replace(/[&<>"']/g, c => ({
-        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+        '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
     }[c]));
 }
 
 function formatMarkdown(text) {
     if (!text) return '';
-    let safe = escapeHTML(text);
-    // Replace **bold** with <strong>bold</strong>
-    safe = safe.replace(/\*\*(.*?)\*\*/g, '<strong class="font-semibold text-inherit">$1</strong>');
-    // Replace *italic* with <em>italic</em>
-    safe = safe.replace(/\*(.*?)\*/g, '<em class="text-slate-400">$1</em>');
-    // Replace `code` with styled <code>
-    safe = safe.replace(/`([^`]+)`/g, '<code class="px-1.5 py-0.5 rounded badge-blue font-mono text-[11px]">$1</code>');
-    // Bullet points • or - at line start
-    safe = safe.replace(/^[•\-] (.*)$/gm, '<div class="flex items-start gap-2 my-1"><span class="text-blue-400 font-bold">•</span><span>$1</span></div>');
-    // Numbered items: 1.
-    safe = safe.replace(/^(\d+)\.\s+(.*)$/gm, '<div class="flex items-start gap-2 my-1"><span class="text-blue-400 font-mono font-semibold">$1.</span><span>$2</span></div>');
-    // Line breaks
-    safe = safe.replace(/\n/g, '<br>');
-    return safe;
+    let s = escapeHTML(text);
+    s = s.replace(/\*\*(.*?)\*\*/g, '<strong style="color:#fff;font-weight:800;">$1</strong>');
+    s = s.replace(/\*(.*?)\*/g,     '<em style="color:#a3a3a3;">$1</em>');
+    s = s.replace(/`([^`]+)`/g,     '<code style="background:rgba(245,158,11,0.12);border:1px solid rgba(245,158,11,0.25);color:#fbbf24;padding:2px 6px;border-radius:4px;font-family:\'JetBrains Mono\',monospace;font-size:14px;">$1</code>');
+    s = s.replace(/^[•\-] (.*)$/gm, '<div style="display:flex;align-items:flex-start;gap:8px;margin:4px 0;"><span style="color:#f59e0b;font-weight:900;flex-shrink:0;">•</span><span>$1</span></div>');
+    s = s.replace(/^(\d+)\.\s+(.*)$/gm, '<div style="display:flex;align-items:flex-start;gap:8px;margin:4px 0;"><span style="color:#f59e0b;font-family:\'JetBrains Mono\',monospace;font-weight:700;flex-shrink:0;">$1.</span><span>$2</span></div>');
+    s = s.replace(/\n/g, '<br>');
+    return s;
 }
 
 window.fillChatInput = function(text) {
-    const input = document.getElementById('user-input');
-    if (input) {
-        input.value = text;
-        input.focus();
-    }
+    const inp = document.getElementById('user-input');
+    if (inp) { inp.value = text; inp.focus(); }
 };
 
+// ─── TAB SWITCHING ─────────────────────────────
 function switchTab(tabId) {
-    const tabs = ['requirements', 'compliance', 'sdlc', 'risks', 'clarifications', 'artifacts', 'audit'];
-    tabs.forEach(t => {
+    ['requirements','compliance','sdlc','risks','clarifications','traceability','admin','artifacts','audit'].forEach(t => {
         const btn = document.getElementById(`tab-btn-${t}`);
-        const content = document.getElementById(`tab-content-${t}`);
+        const con = document.getElementById(`tab-content-${t}`);
         if (btn) btn.classList.toggle('active', t === tabId);
-        if (content) content.classList.toggle('hidden', t !== tabId);
+        if (con) con.classList.toggle('hidden', t !== tabId);
     });
+    if (tabId === 'traceability') {
+        fetchTraceabilityMatrix();
+    } else if (tabId === 'admin') {
+        fetchAdminMetrics();
+    }
 }
 
+// ─── AGENT ANIMATION ───────────────────────────
 function setAgentsActive(active) {
-    const agentIds = [
-        'coordinator', 'interaction', 'extraction', 'clarification',
-        'classification', 'conflict', 'compliance', 'security',
-        'risk', 'sdlc', 'doc', 'validator', 'approval'
-    ];
-    agentIds.forEach((id, index) => {
+    const ids = ['coordinator','interaction','extraction','clarification',
+                 'classification','conflict','compliance','security',
+                 'risk','sdlc','doc','validator','approval'];
+    ids.forEach((id, i) => {
         const el = document.getElementById(`agent-${id}`);
         if (!el) return;
         if (active) {
-            setTimeout(() => {
-                el.className = "p-2 rounded-lg agent-node active-agent font-medium text-xs transition-all";
-            }, index * 40);
+            setTimeout(() => el.classList.add('active-agent'), i * 40);
         } else {
-            el.className = "p-2 rounded-lg agent-node text-xs font-normal transition-all";
+            el.classList.remove('active-agent');
         }
     });
 }
 
+// ─── SEND MESSAGE ──────────────────────────────
 async function handleSend(e) {
     if (e) e.preventDefault();
-    const input = document.getElementById('user-input');
+    if (!currentAuthUser?.token) {
+        openAuthModal();
+        showToast('Please sign in before starting an analysis', 'err');
+        return;
+    }
+    const input  = document.getElementById('user-input');
     const prompt = input.value.trim();
     if (!prompt) return;
 
     input.value = '';
-    appendChatMessage('user', prompt);
+    appendChatMessage('user', escapeHTML(prompt));
 
     const loadingId = 'loading-' + Date.now();
-    appendChatMessage('assistant', '<div class="flex items-center gap-2 text-slate-400 text-xs font-mono"><i class="fas fa-circle-notch fa-spin text-blue-400"></i> Orchestrating 13 specialist agents...</div>', loadingId);
+    appendChatMessage('assistant',
+        '<div style="display:flex;align-items:center;gap:10px;color:#a3a3a3;font-family:\'JetBrains Mono\',monospace;font-size:15.5px;">' +
+        '<i class="fas fa-circle-notch fa-spin" style="color:#f59e0b;"></i> ORCHESTRATING_13_AGENTS...</div>',
+        loadingId
+    );
 
     setAgentsActive(true);
-    document.getElementById('pipeline-status').innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-blue-400 pulse-badge"></span> Multi-Agent Pipeline Executing...';
+    setPipelineStatus('running', 'PIPELINE_EXECUTING...');
 
     const domain = document.getElementById('domain-select').value;
-    const role = document.getElementById('role-select').value;
+    const role   = document.getElementById('role-select').value;
 
     try {
         let endpoint = '/session/chat';
-        let body = { project_id: currentProjectId, message: prompt, stakeholder_role: role };
+        let body     = { project_id: currentProjectId, message: prompt, stakeholder_role: role };
 
         if (!currentProjectId) {
             endpoint = '/session/start';
-            body = {
-                prompt: prompt,
-                domain: domain,
-                stakeholder_role: role
-            };
+            body     = { prompt, domain, stakeholder_role: role };
         }
 
-        const response = await fetch(endpoint, {
+        const response = await authorizedFetch(endpoint, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(body)
@@ -171,42 +144,45 @@ async function handleSend(e) {
         setAgentsActive(false);
 
         if (!response.ok || result.status !== 'success') {
-            const statusCode = response.status;
+            const code = response.status;
             let errMsg = escapeHTML(result.detail || 'Request failed');
-            if (statusCode === 429) {
-                errMsg = `⏳ <strong>Gemini API Rate Limit Reached.</strong><br>` +
-                    `The free-tier API allows ~15 requests/minute. Please wait <strong>30–60 seconds</strong> and try again.<br>` +
-                    `<span class="text-slate-400 text-xs">Tip: The compliance RAG and validation agents always work regardless of quota.</span>`;
-                document.getElementById('pipeline-status').innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span> Rate limited – please wait';
-            } else if (statusCode === 503) {
-                errMsg = `🔄 <strong>Gemini AI is temporarily overloaded.</strong><br>Please retry in a few seconds.`;
-                document.getElementById('pipeline-status').innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span> AI service busy – retrying';
+            if (code === 429) {
+                errMsg = '⏳ <strong style="color:#fff;">Rate Limit Reached.</strong> Wait 30–60s and retry.';
+                setPipelineStatus('warn', 'RATE_LIMITED — WAIT_30S');
+            } else if (code === 503) {
+                errMsg = '🔄 <strong style="color:#fff;">AI service overloaded.</strong> Retry in a few seconds.';
+                setPipelineStatus('warn', 'SERVICE_BUSY');
             } else {
-                document.getElementById('pipeline-status').innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span> Error encountered';
+                setPipelineStatus('err', 'ERROR_ENCOUNTERED');
             }
-            appendChatMessage('assistant', `<div class="space-y-1">${errMsg}</div>`);
+            appendChatMessage('assistant', `<div style="font-size:16.5px;line-height:1.6;">${errMsg}</div>`);
             return;
         }
 
-        document.getElementById('pipeline-status').innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> System Ready &bull; Pipeline Validated';
+        setPipelineStatus('ok', 'PIPELINE_VALIDATED :: READY');
 
         if (result.project_id && !currentProjectId) {
             currentProjectId = result.project_id;
-            document.getElementById('active-project-tag').textContent = currentProjectId;
+            currentSessionTitle = `${domain} — ${new Date().toLocaleDateString()}`;
+            const tag = document.getElementById('active-project-tag');
+            if (tag) {
+                tag.innerHTML = `<span style="color:#a78bfa;font-weight:700;"><i class="fas fa-folder-open mr-1"></i>${escapeHTML(currentSessionTitle)}</span>`;
+                tag.title = `Project ID: ${currentProjectId}`;
+            }
+            document.getElementById('session-action-btns').style.display = 'flex';
         }
 
-        // Render Initial Analysis
+        // ── Initial Analysis ──
         if (result.initial_analysis) {
             const data = result.initial_analysis;
             projectData = data;
             currentRequirements = data.structured_requirements || [];
 
-            // PII alert check
-            if (data.pii_masked_items && data.pii_masked_items.length > 0) {
-                const alertBar = document.getElementById('security-alert-bar');
-                const alertText = document.getElementById('security-alert-text');
-                alertText.innerHTML = `<i class="fas fa-shield-halved mr-1.5 text-amber-400"></i> Redacted Sensitive PII: <strong>${data.pii_masked_items.join(', ')}</strong> before agent processing.`;
-                alertBar.classList.remove('hidden');
+            if (data.pii_masked_items?.length) {
+                const bar  = document.getElementById('security-alert-bar');
+                const txt  = document.getElementById('security-alert-text');
+                txt.innerHTML = `<i class="fas fa-shield-halved" style="margin-right:8px;color:#f59e0b;"></i> PII REDACTED: <strong>${data.pii_masked_items.join(', ')}</strong>`;
+                bar.classList.remove('hidden');
             }
 
             renderRequirements(currentRequirements);
@@ -217,665 +193,1417 @@ async function handleSend(e) {
             renderArtifacts(data.srs_plan);
             renderAuditTrail(result.audit_trail || []);
 
-            // Build clarification & interview questions HTML
             let questions = data.interview_questions || [];
-            if (!questions || questions.length === 0) {
-                if (data.clarifications && data.clarifications.length > 0) {
-                    questions = data.clarifications.map(c => c.clarification_question || c);
-                }
+            if (!questions.length && data.clarifications?.length) {
+                questions = data.clarifications.map(c => c.clarification_question || c);
             }
-            if (!questions || questions.length === 0) {
-                const roleQuestions = {
+            if (!questions.length) {
+                const roleQ = {
                     "Business Analyst": [
-                        "What are the target peak Transactions Per Second (TPS) and 99th-percentile (p99) latency SLA targets?",
-                        "What is the maximum single-transaction limit, and what amount threshold triggers step-up MFA or dual four-eyes approval?",
-                        "Which specific messaging protocols or APIs (e.g. ISO 20022 PACS.008 over SWIFT, REST, IBM MQ) connect to legacy core banking?"
+                        "What are the target peak TPS and p99 latency SLA targets?",
+                        "What amount threshold triggers step-up MFA or dual four-eyes approval?",
+                        "Which protocols connect to legacy core banking (e.g. ISO 20022, IBM MQ)?"
                     ],
                     "Compliance Officer": [
-                        "Which regulatory jurisdictions apply (e.g., EU GDPR, US BSA/AML, UK FCA, Basel III/IV)?",
-                        "What specific customer due diligence (CDD) and Suspicious Activity Report (SAR) triggers are required?",
-                        "What are the statutory retention periods and immutable audit logging mandates?"
+                        "Which regulatory jurisdictions apply (EU GDPR, US BSA/AML, Basel III/IV)?",
+                        "What specific CDD and SAR triggers are required?",
+                        "What are the statutory retention periods and audit logging mandates?"
                     ],
                     "Information-Security Team": [
-                        "What encryption standards are required at rest (e.g. AES-256) and in transit (TLS 1.3)?",
-                        "What step-up authentication or Hardware Security Module (HSM) controls must be in place?",
+                        "What encryption standards are required (AES-256 at rest, TLS 1.3 in transit)?",
+                        "What step-up authentication or HSM controls must be in place?",
                         "What are the disaster recovery RTO and RPO SLA requirements?"
                     ],
                     "Risk-Management Team": [
-                        "What risk threshold determines mandatory four-eyes dual authorization?",
-                        "What are the operational risk limits and real-time fraud scoring tolerance levels?",
-                        "How should systemic liquidity and counterparty risk exposure be monitored?"
+                        "What risk threshold triggers mandatory four-eyes dual authorization?",
+                        "What are the operational risk limits and fraud scoring tolerance levels?",
+                        "How should systemic liquidity and counterparty risk be monitored?"
                     ]
                 };
-                questions = roleQuestions[role] || roleQuestions["Business Analyst"];
+                questions = roleQ[role] || roleQ["Business Analyst"];
             }
 
-            let questionsHtml = '';
-            if (questions && questions.length > 0) {
-                questionsHtml = `
-                    <div class="mt-3 p-3.5 rounded-lg inner-card space-y-2.5 border-blue-500/30">
-                        <div class="flex items-center justify-between">
-                            <div class="flex items-center gap-1.5 text-blue-400 font-semibold text-xs uppercase tracking-wider">
-                                <i class="fas fa-clipboard-question"></i>
-                                <span>Adaptive Clarification (${escapeHTML(role)})</span>
-                            </div>
-                            <span class="text-[10px] font-mono px-2 py-0.5 rounded badge-blue">Input Requested</span>
-                        </div>
-                        <p class="text-xs text-slate-400 leading-normal">
-                            The Clarification &amp; Interaction agents identified ambiguity bounds. Clarify the following items:
-                        </p>
-                        <div class="space-y-2">
-                            ${questions.slice(0, 3).map((q, idx) => `
-                                <div class="p-2.5 rounded bg-[var(--card-inner)] border border-[var(--card-border-subtle)] text-xs">
-                                    <div class="font-mono text-blue-400 mb-1 text-[11px] font-semibold flex items-center gap-1.5">
-                                        <i class="fas fa-circle-question text-xs"></i>
-                                        <span>Item ${idx + 1}:</span>
-                                    </div>
-                                    <div class="leading-relaxed theme-title">${escapeHTML(q)}</div>
+            let qHtml = '';
+            if (questions.length) {
+                qHtml = `
+                <div style="margin-top:14px;padding:16px;border-radius:8px;background:rgba(245,158,11,0.06);border:1px solid rgba(245,158,11,0.22);">
+                    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+                        <span style="font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:800;letter-spacing:0.06em;color:#f59e0b;">
+                            <i class="fas fa-clipboard-question" style="margin-right:7px;"></i>CLARIFICATION_REQUIRED
+                        </span>
+                        <span style="font-family:'JetBrains Mono',monospace;font-size:12px;background:rgba(245,158,11,0.15);border:1px solid rgba(245,158,11,0.3);color:#fbbf24;padding:3px 8px;border-radius:4px;">INPUT_NEEDED</span>
+                    </div>
+                    <div style="display:flex;flex-direction:column;gap:8px;">
+                        ${questions.slice(0,3).map((q, i) => `
+                            <div style="padding:12px 14px;border-radius:6px;background:rgba(0,0,0,0.4);border:1px solid #333;font-size:16px;">
+                                <div style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#f59e0b;font-weight:800;margin-bottom:5px;">
+                                    <i class="fas fa-circle-question" style="margin-right:6px;"></i>ITEM_${i+1}:
                                 </div>
-                            `).join('')}
-                        </div>
-                        <div class="pt-2 border-t border-[var(--card-border)]">
-                            <div class="text-[11px] text-slate-400 mb-1.5 flex items-center gap-1">
-                                <i class="fas fa-lightbulb text-amber-400 text-xs"></i>
-                                <span>Quick Answer Templates:</span>
+                                <div style="color:#f3f4f6;line-height:1.6;">${escapeHTML(q)}</div>
                             </div>
-                            <div class="flex flex-wrap gap-1.5">
-                                <button type="button" onclick="fillChatInput('Peak throughput is 5,000 TPS with p99 latency < 150ms. Step-up MFA threshold is $10,000. Core banking connects via IBM MQ using ISO 20022 PACS.008.')" class="preset-chip text-[11px] px-2.5 py-1 rounded transition text-left">
-                                    ⚡ <strong>Payment SLAs:</strong> 5,000 TPS, &lt;150ms, $10k MFA
-                                </button>
-                                <button type="button" onclick="fillChatInput('Statutory retention is 7 years immutable audit trail. Mandatory four-eyes dual authorization for transfers exceeding $50,000.')" class="preset-chip text-[11px] px-2.5 py-1 rounded transition text-left">
-                                    🛡️ <strong>Compliance:</strong> 7-yr retention, $50k dual auth
-                                </button>
-                            </div>
+                        `).join('')}
+                    </div>
+                    <div style="margin-top:12px;padding-top:10px;border-top:1px solid #2a2a2a;">
+                        <div style="font-size:13px;color:#737373;margin-bottom:8px;font-family:'JetBrains Mono',monospace;font-weight:700;">QUICK_TEMPLATES:</div>
+                        <div style="display:flex;flex-wrap:wrap;gap:8px;">
+                            <button type="button" onclick="fillChatInput('Peak throughput is 5,000 TPS with p99 latency < 150ms. Step-up MFA threshold is $10,000. Core banking connects via IBM MQ using ISO 20022 PACS.008.')" class="preset-chip" style="padding:8px 12px;font-size:14.5px;">
+                                ⚡ Payment SLAs: 5k TPS, &lt;150ms, $10k MFA
+                            </button>
+                            <button type="button" onclick="fillChatInput('Statutory retention is 7 years immutable audit trail. Mandatory four-eyes dual authorization for transfers exceeding $50,000.')" class="preset-chip" style="padding:8px 12px;font-size:14.5px;">
+                                🛡️ Compliance: 7yr retention, $50k dual-auth
+                            </button>
                         </div>
                     </div>
-                `;
+                </div>`;
             }
 
             appendChatMessage('assistant', `
-                <div class="space-y-2.5">
-                    <div class="p-2.5 rounded-lg badge-green text-xs font-medium flex items-center gap-2">
-                        <i class="fas fa-check-circle text-emerald-400"></i>
-                        <span><strong>Baseline Synthesized:</strong> Extracted <strong>${currentRequirements.length}</strong> requirements, mapped <strong>${data.compliance_mappings.length}</strong> regulatory citations, recommended <strong>${data.sdlc_info.recommended_model}</strong>.</span>
+                <div style="display:flex;flex-direction:column;gap:12px;">
+                    <div style="display:flex;align-items:center;gap:10px;padding:12px 14px;border-radius:6px;background:rgba(22,163,74,0.1);border:1px solid rgba(22,163,74,0.25);">
+                        <i class="fas fa-check-circle" style="color:#16a34a;font-size:19px;"></i>
+                        <span style="font-size:16.5px;color:#e5e5e5;line-height:1.55;">
+                            <strong style="color:#fff;">Baseline Synthesized:</strong>
+                            Extracted <strong style="color:#fbbf24;">${currentRequirements.length}</strong> requirements,
+                            mapped <strong style="color:#fbbf24;">${data.compliance_mappings.length}</strong> regulatory citations,
+                            recommended <strong style="color:#fbbf24;">${data.sdlc_info.recommended_model}</strong>.
+                        </span>
                     </div>
-                    <p class="text-xs leading-relaxed theme-title">
-                        Structured across financial domain (<strong>${escapeHTML(domain)}</strong>). Review requirements ledger in the right panel and answer clarification items below:
+                    <p style="font-size:16.5px;color:#d1d5db;line-height:1.6;">
+                        Structured for domain: <strong style="color:#fff;">${escapeHTML(domain)}</strong>. 
+                        Review the Requirements tab and answer clarifications below:
                     </p>
-                    ${questionsHtml}
+                    ${qHtml}
                 </div>
             `);
+
         } else if (result.response) {
-            appendChatMessage('assistant', `<div class="text-xs leading-relaxed theme-title">${formatMarkdown(result.response)}</div>`);
-            if (result.audit_trail) {
-                renderAuditTrail(result.audit_trail);
-            }
+            appendChatMessage('assistant', `<div style="font-size:17.5px;line-height:1.65;">${formatMarkdown(result.response)}</div>`);
+            if (result.audit_trail) renderAuditTrail(result.audit_trail);
             if (result.requirements) {
                 currentRequirements = Object.values(result.requirements);
                 renderRequirements(currentRequirements);
+            }
+            if (result.clarifications !== undefined || result.conflicts !== undefined) {
+                renderClarifications(result.clarifications || [], result.conflicts || []);
             }
         }
 
     } catch (err) {
         document.getElementById(loadingId)?.remove();
         setAgentsActive(false);
-        document.getElementById('pipeline-status').innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span> Connection error';
-        appendChatMessage('assistant', `❌ Connection failure: Could not reach the FinReq backend.`);
+        setPipelineStatus('err', 'CONNECTION_ERROR');
+        appendChatMessage('assistant', `<div style="font-size:16.5px;color:#f87171;">❌ Connection failure — backend unreachable.</div>`);
     }
 }
 
+// ─── CHAT MESSAGE APPEND ───────────────────────
 function appendChatMessage(role, htmlContent, id = null) {
-    const chatWindow = document.getElementById('chat-window');
-    const wrapper = document.createElement('div');
-    wrapper.className = `flex items-start gap-2.5 ${role === 'user' ? 'justify-end' : 'justify-start'}`;
-    if (id) wrapper.id = id;
+    const win = document.getElementById('chat-window');
+    const wrap = document.createElement('div');
+    wrap.style.cssText = `display:flex;align-items:flex-start;gap:12px;${role==='user'?'justify-content:flex-end;':''}`;
+    if (id) wrap.id = id;
 
     if (role === 'user') {
-        wrapper.innerHTML = `
-            <div class="inner-card p-3 max-w-lg text-xs leading-relaxed border-blue-500/20 bg-blue-950/20 text-slate-200">
-                ${escapeHTML(htmlContent)}
-            </div>
-            <div class="w-7 h-7 rounded-md bg-blue-600/30 border border-blue-500/30 flex-shrink-0 flex items-center justify-center text-blue-300 font-mono text-[11px] font-bold">
-                U
-            </div>
+        wrap.innerHTML = `
+            <div class="chat-bubble-user" style="background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.25);border-radius:8px;padding:14px 18px;max-width:540px;font-size:17.5px;line-height:1.6;color:#f3f4f6;">${htmlContent}</div>
+            <div style="width:38px;height:38px;border-radius:6px;background:rgba(245,158,11,0.15);border:1px solid rgba(245,158,11,0.3);flex-shrink:0;display:flex;align-items:center;justify-content:center;color:#fbbf24;font-family:'JetBrains Mono',monospace;font-weight:900;font-size:13px;">U</div>
         `;
     } else {
-        wrapper.innerHTML = `
-            <div class="w-7 h-7 rounded-md bg-slate-800 border border-slate-700 flex-shrink-0 flex items-center justify-center text-slate-300 font-mono text-[11px] font-bold">
-                FR
-            </div>
-            <div class="inner-card p-3 max-w-xl text-xs leading-relaxed space-y-2">
-                ${htmlContent}
-            </div>
+        wrap.innerHTML = `
+            <div style="width:38px;height:38px;border-radius:6px;background:rgba(245,158,11,0.15);border:1px solid rgba(245,158,11,0.3);flex-shrink:0;display:flex;align-items:center;justify-content:center;color:#fbbf24;font-family:'JetBrains Mono',monospace;font-weight:900;font-size:13px;">FR</div>
+            <div class="chat-bubble-assistant" style="background:#181818;border:1px solid #2a2a2a;border-radius:8px;padding:14px 18px;max-width:600px;font-size:17.5px;line-height:1.6;color:#f3f4f6;">${htmlContent}</div>
         `;
     }
 
-    chatWindow.appendChild(wrapper);
-    chatWindow.scrollTop = chatWindow.scrollHeight;
-
-    const countEl = document.getElementById('chat-count');
-    if (countEl) countEl.textContent = chatWindow.children.length;
+    win.appendChild(wrap);
+    win.scrollTop = win.scrollHeight;
+    const c = document.getElementById('chat-count');
+    if (c) c.textContent = win.children.length;
 }
 
-// ---------------------------
-// TAB RENDERING FUNCTIONS
-// ---------------------------
+// ─── PIPELINE STATUS ───────────────────────────
+function setPipelineStatus(state, text) {
+    const el = document.getElementById('pipeline-status');
+    if (!el) return;
+    const colors = { ok: '#16a34a', warn: '#f59e0b', err: '#dc2626', running: '#3b82f6' };
+    const col = colors[state] || '#525252';
+    el.innerHTML = `<span style="width:7px;height:7px;border-radius:50%;background:${col};flex-shrink:0;display:inline-block;margin-right:8px;"></span>${text}`;
+}
 
+// ─── RENDER: REQUIREMENTS ─────────────────────
 function renderRequirements(reqs) {
+    currentRequirements = reqs;
     document.getElementById('req-count').textContent = reqs.length;
-    const container = document.getElementById('requirements-list');
+    filterRequirements();
+}
+
+function filterRequirements() {
+    const q = (document.getElementById('req-search-input')?.value || '').toLowerCase();
+    const cat = (document.getElementById('req-category-filter')?.value || '').toLowerCase();
+    const prio = (document.getElementById('req-priority-filter')?.value || '').toLowerCase();
+    const stat = (document.getElementById('req-status-filter')?.value || '').toLowerCase();
+
+    const filtered = (currentRequirements || []).filter(r => {
+        const id = (r.id || r.req_id || '').toLowerCase();
+        const stmt = (r.statement || '').toLowerCase();
+        const rCat = (r.category || '').toLowerCase();
+        const rPrio = (r.priority || '').toLowerCase();
+        const rStat = (r.approval_status || r.status || '').toLowerCase();
+
+        if (q && !id.includes(q) && !stmt.includes(q)) return false;
+        if (cat && !rCat.includes(cat)) return false;
+        if (prio && !rPrio.includes(prio)) return false;
+        if (stat && !rStat.includes(stat)) return false;
+        return true;
+    });
+
+    renderFilteredRequirements(filtered);
+}
+
+function renderFilteredRequirements(reqs) {
+    const c = document.getElementById('requirements-list');
     if (!reqs.length) {
-        container.innerHTML = `<div class="text-center py-12 text-slate-400 text-xs font-medium">No requirements available in baseline.</div>`;
+        c.innerHTML = `<div style="text-align:center;padding:60px 0;color:#525252;font-size:15px;">No requirements matching current filter criteria.</div>`;
         return;
     }
-
-    container.innerHTML = reqs.map((r, idx) => {
-        const id = r.id || r.req_id || `REQ-${idx + 1}`;
-        const isApproved = r.approval_status === 'approved' || r.status === 'approved';
-        const isHighPrio = (r.priority || '').toLowerCase() === 'high';
-        const prioBadge = isHighPrio
-            ? '<span class="text-[10px] font-mono px-2 py-0.5 rounded badge-red font-semibold">High Priority</span>'
-            : '<span class="text-[10px] font-mono px-2 py-0.5 rounded badge-amber font-semibold">Medium Priority</span>';
-
-        const statusBadge = isApproved
-            ? '<span class="text-[10px] font-mono px-2 py-0.5 rounded badge-green font-semibold flex items-center gap-1"><i class="fas fa-check"></i> Approved</span>'
-            : '<span class="text-[10px] font-mono px-2 py-0.5 rounded badge-blue font-medium">Pending Review</span>';
+    c.innerHTML = reqs.map((r, idx) => {
+        const id  = r.id || r.req_id || `REQ-${idx+1}`;
+        const ok  = r.approval_status === 'approved' || r.status === 'approved';
+        const hi  = (r.priority || '').toLowerCase() === 'high';
 
         return `
-            <div class="p-3.5 rounded-lg inner-card ${isApproved ? '!border-emerald-500/40' : ''} space-y-2.5 transition">
-                <div class="flex items-center justify-between flex-wrap gap-2">
-                    <div class="flex items-center gap-1.5 flex-wrap">
-                        <span class="font-mono text-xs font-bold text-blue-400 bg-blue-500/10 px-2 py-0.5 rounded border border-blue-500/20">${escapeHTML(id)}</span>
-                        <span class="text-[10px] font-mono px-2 py-0.5 rounded badge-blue">${escapeHTML(r.category || 'Functional')}</span>
-                        ${prioBadge}
-                        ${statusBadge}
-                        <span class="text-[11px] text-slate-400">Risk: <strong class="${(r.risk || r.risk_level) === 'High' ? 'text-red-400' : 'text-amber-400'} font-medium">${escapeHTML(r.risk || r.risk_level || 'Medium')}</strong></span>
-                    </div>
-
-                    <!-- Action Buttons -->
-                    <div class="flex items-center gap-1.5">
-                        ${isApproved ? `
-                            <button onclick="approveSingleReq('${id}', 'draft')" class="text-xs px-2.5 py-1 rounded bg-emerald-700/30 border border-emerald-500/40 text-emerald-300 font-medium transition flex items-center gap-1 hover:bg-emerald-700/50" title="Click to undo approval">
-                                <i class="fas fa-check-double text-[11px]"></i> Approved
-                            </button>
-                        ` : `
-                            <button onclick="approveSingleReq('${id}', 'approved')" class="btn-approve text-xs px-2.5 py-1 rounded font-medium transition flex items-center gap-1" title="Approve requirement">
-                                <i class="fas fa-check text-[11px]"></i> Approve
-                            </button>
-                        `}
-                        <button onclick="removeSingleReq('${id}')" class="btn-remove text-xs px-2.5 py-1 rounded font-medium transition flex items-center gap-1" title="Remove requirement">
-                            <i class="fas fa-trash text-[11px]"></i>
-                        </button>
-                        <button onclick="openEditModal('${id}')" class="btn-secondary text-xs px-2 py-1 rounded transition" title="Modify requirement">
-                            <i class="fas fa-pen text-[11px]"></i>
-                        </button>
-                    </div>
+        <div style="padding:16px;border-radius:8px;background:#181818;border:1px solid ${ok?'rgba(22,163,74,0.3)':'#2a2a2a'};margin-bottom:10px;transition:border-color 0.15s;">
+            <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:10px;">
+                <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+                    <span class="font-mono cursor-pointer" onclick="openReqDetailModal('${id}')" title="Click to view full requirement details"
+                          style="font-size:14px;font-weight:800;color:#fbbf24;background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.25);padding:3px 10px;border-radius:4px;">${escapeHTML(id)}</span>
+                    <span style="font-size:13px;background:rgba(59,130,246,0.1);border:1px solid rgba(59,130,246,0.25);color:#93c5fd;padding:3px 8px;border-radius:4px;font-family:'JetBrains Mono',monospace;">${escapeHTML(r.category || 'Functional')}</span>
+                    <span style="font-size:13px;background:${hi?'rgba(220,38,38,0.1)':'rgba(245,158,11,0.08)'};border:1px solid ${hi?'rgba(220,38,38,0.3)':'rgba(245,158,11,0.2)'};color:${hi?'#fca5a5':'#fbbf24'};padding:3px 8px;border-radius:4px;font-family:'JetBrains Mono',monospace;font-weight:700;">${hi?'HIGH':'MEDIUM'}</span>
+                    ${ok
+                        ? `<span style="font-size:13px;background:rgba(22,163,74,0.1);border:1px solid rgba(22,163,74,0.3);color:#6ee7b7;padding:3px 8px;border-radius:4px;font-family:'JetBrains Mono',monospace;font-weight:700;display:flex;align-items:center;gap:5px;"><i class="fas fa-check" style="font-size:11px;"></i> APPROVED</span>`
+                        : `<span style="font-size:13px;background:rgba(59,130,246,0.08);border:1px solid rgba(59,130,246,0.2);color:#93c5fd;padding:3px 8px;border-radius:4px;font-family:'JetBrains Mono',monospace;">PENDING</span>`}
+                    <span style="font-size:13px;color:#525252;">Risk: <strong style="color:${(r.risk||r.risk_level)==='High'?'#f87171':'#fbbf24'};">${escapeHTML(r.risk||r.risk_level||'Medium')}</strong></span>
                 </div>
-
-                <p class="text-xs text-slate-200 leading-relaxed font-normal">${escapeHTML(r.statement)}</p>
-
-                ${r.acceptance_criteria ? `
-                    <div class="p-2.5 rounded bg-[var(--card-inner)] border border-[var(--card-border-subtle)] text-[11px] text-slate-300">
-                        <span class="text-blue-400 font-semibold font-mono text-[10px] uppercase tracking-wider block mb-0.5">Acceptance Criteria:</span>
-                        <span class="leading-relaxed">${escapeHTML(Array.isArray(r.acceptance_criteria) ? r.acceptance_criteria.join(' ') : r.acceptance_criteria)}</span>
-                    </div>
-                ` : ''}
-
-                ${(r.compliance_mapping || r.regulations) && (r.compliance_mapping?.length || r.regulations?.length) ? `
-                    <div class="flex items-center gap-1 text-[11px] text-slate-400 flex-wrap pt-0.5">
-                        <span class="text-[10px] font-mono text-slate-400 uppercase">Citations:</span>
-                        ${(r.compliance_mapping || r.regulations).map(reg => `
-                            <span class="font-mono text-[10px] px-1.5 py-0.2 rounded badge-blue">${escapeHTML(reg)}</span>
-                        `).join('')}
-                    </div>
-                ` : ''}
+                <div style="display:flex;align-items:center;gap:6px;">
+                    <button onclick="openReqDetailModal('${id}')" class="btn-secondary" style="padding:6px 10px;border-radius:5px;font-size:13px;cursor:pointer;" title="View Detail Modal">
+                        <i class="fas fa-eye text-amber-400 mr-1"></i> Details
+                    </button>
+                    ${ok
+                        ? `<button onclick="approveSingleReq('${id}','draft')" style="font-size:13px;padding:6px 12px;border-radius:5px;background:rgba(22,163,74,0.15);border:1px solid rgba(22,163,74,0.35);color:#6ee7b7;font-weight:800;cursor:pointer;display:flex;align-items:center;gap:6px;"><i class="fas fa-check-double"></i> Approved</button>`
+                        : `<button onclick="approveSingleReq('${id}','approved')" style="font-size:13px;padding:6px 12px;border-radius:5px;background:#16a34a;border:none;color:#fff;font-weight:800;cursor:pointer;display:flex;align-items:center;gap:6px;"><i class="fas fa-check"></i> Approve</button>`}
+                    <button onclick="removeSingleReq('${id}')" class="btn-remove" style="padding:6px 10px;border-radius:5px;font-size:13px;cursor:pointer;"><i class="fas fa-trash"></i></button>
+                    <button onclick="openEditModal('${id}')" class="btn-secondary" style="padding:6px 10px;border-radius:5px;font-size:13px;cursor:pointer;"><i class="fas fa-pen"></i></button>
+                </div>
             </div>
-        `;
+            <p onclick="openReqDetailModal('${id}')" class="cursor-pointer hover:text-white" style="font-size:15px;color:#e5e5e5;line-height:1.65;">${escapeHTML(r.statement)}</p>
+            ${r.acceptance_criteria ? `
+            <div style="margin-top:10px;padding:10px 12px;border-radius:5px;background:#111;border:1px solid #1f1f1f;font-size:14px;color:#a3a3a3;">
+                <span style="font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:800;color:#f59e0b;display:block;margin-bottom:4px;">ACCEPTANCE_CRITERIA:</span>
+                ${escapeHTML(Array.isArray(r.acceptance_criteria) ? r.acceptance_criteria.join(' ') : r.acceptance_criteria)}
+            </div>` : ''}
+            ${(r.compliance_mapping||r.regulations)?.length ? `
+            <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-top:8px;">
+                <span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#525252;">CITATIONS:</span>
+                ${(r.compliance_mapping||r.regulations).map(reg=>`<span style="font-family:'JetBrains Mono',monospace;font-size:12px;background:rgba(59,130,246,0.08);border:1px solid rgba(59,130,246,0.2);color:#93c5fd;padding:2px 7px;border-radius:3px;">${escapeHTML(reg)}</span>`).join('')}
+            </div>` : ''}
+        </div>`;
     }).join('');
 }
 
+// ─── RENDER: COMPLIANCE ────────────────────────
 function renderCompliance(mappings) {
-    const container = document.getElementById('compliance-list');
+    const c = document.getElementById('compliance-list');
     if (!mappings.length) {
-        container.innerHTML = `<div class="text-center py-16 text-slate-400 text-xs">No compliance mappings available.</div>`;
+        c.innerHTML = `<div style="text-align:center;padding:60px 0;color:#525252;font-size:15px;">No compliance mappings.</div>`;
         return;
     }
-
-    container.innerHTML = mappings.map(c => `
-        <div class="p-3.5 rounded-lg inner-card space-y-2">
-            <div class="flex items-center justify-between flex-wrap gap-2">
-                <div class="flex items-center gap-1.5">
-                    <span class="text-[10px] font-mono font-bold badge-blue px-2 py-0.5 rounded">${escapeHTML(c.req_id)}</span>
-                    <span class="text-[10px] font-mono px-2 py-0.5 rounded badge-red font-semibold">${escapeHTML(c.citation)}</span>
-                    <span class="text-[11px] text-slate-400 font-mono">${escapeHTML(c.source_doc)}:${c.line_number}</span>
-                </div>
-                <div class="flex items-center gap-1.5">
-                    <span class="text-[10px] font-mono px-2 py-0.5 rounded badge-green font-medium">Coverage: ${escapeHTML(c.coverage)}</span>
-                    <span class="text-[10px] font-mono px-2 py-0.5 rounded badge-blue font-medium">${Math.round(c.confidence * 100)}% Confidence</span>
-                </div>
+    c.innerHTML = mappings.map(m => `
+        <div style="padding:14px;border-radius:7px;background:#181818;border:1px solid #2a2a2a;margin-bottom:10px;">
+            <div style="display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:10px;">
+                <span style="font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:800;color:#fbbf24;background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.25);padding:3px 8px;border-radius:4px;">${escapeHTML(m.req_id)}</span>
+                <span style="font-size:13px;background:rgba(220,38,38,0.1);border:1px solid rgba(220,38,38,0.3);color:#fca5a5;padding:3px 8px;border-radius:4px;font-family:'JetBrains Mono',monospace;font-weight:700;">${escapeHTML(m.citation)}</span>
+                <span class="font-mono" style="font-size:13px;color:#525252;">${escapeHTML(m.source_doc)}:${m.line_number}</span>
+                <span style="font-size:13px;background:rgba(22,163,74,0.1);border:1px solid rgba(22,163,74,0.25);color:#6ee7b7;padding:3px 8px;border-radius:4px;font-family:'JetBrains Mono',monospace;font-weight:700;">${escapeHTML(m.coverage)}</span>
+                <span style="font-size:13px;background:rgba(59,130,246,0.1);border:1px solid rgba(59,130,246,0.25);color:#93c5fd;padding:3px 8px;border-radius:4px;font-family:'JetBrains Mono',monospace;">${Math.round(m.confidence*100)}% CONF</span>
             </div>
-            <p class="text-xs text-slate-300 italic p-2.5 rounded bg-[var(--card-inner)] border border-[var(--card-border-subtle)] leading-relaxed font-mono">
-                "${escapeHTML(c.evidence)}"
-            </p>
-        </div>
-    `).join('');
+            <p style="font-size:14px;color:#a3a3a3;font-family:'JetBrains Mono',monospace;line-height:1.6;padding:10px;background:#111;border-radius:4px;border:1px solid #1f1f1f;">"${escapeHTML(m.evidence)}"</p>
+        </div>`).join('');
 }
 
+// ─── RENDER: SDLC ─────────────────────────────
 function renderSDLC(info, workflow) {
     if (!info) return;
-    document.getElementById('sdlc-top-model').textContent = info.recommended_model;
-    document.getElementById('sdlc-rationale').textContent = info.justification;
+    if (typeof info === 'string') {
+        info = {
+            recommended_model: info,
+            justification: 'Selected baseline SDLC model for governance and compliance.',
+            ranked_scores: { [info]: 85, 'Agile': 10, 'Waterfall': 5 }
+        };
+    }
+    document.getElementById('sdlc-top-model').textContent = info.recommended_model || 'Agile–DevSecOps hybrid';
+    document.getElementById('sdlc-rationale').textContent = info.justification || 'Governed financial engineering model.';
 
-    // Normalize scores so the sum strictly equals 100%
     let scores = { ...(info.ranked_scores || {}) };
-    let totalScore = Object.values(scores).reduce((a, b) => a + b, 0);
-    if (totalScore > 0 && totalScore !== 100) {
-        let normalized = {};
-        for (let [m, s] of Object.entries(scores)) {
-            normalized[m] = Math.round((s / totalScore) * 100);
-        }
-        let currentTotal = Object.values(normalized).reduce((a, b) => a + b, 0);
-        let diff = 100 - currentTotal;
-        if (diff !== 0) {
-            let topKey = Object.keys(normalized)[0];
-            normalized[topKey] += diff;
-        }
-        scores = normalized;
+    let total  = Object.values(scores).reduce((a,b) => a+b, 0);
+    if (total > 0 && total !== 100) {
+        let norm = {};
+        for (let [m,s] of Object.entries(scores)) norm[m] = Math.round(s/total*100);
+        let diff = 100 - Object.values(norm).reduce((a,b)=>a+b,0);
+        if (diff) norm[Object.keys(norm)[0]] += diff;
+        scores = norm;
     }
 
-    // Sort descending by score
-    const entries = Object.entries(scores).sort((a, b) => b[1] - a[1]);
-    const topScore = entries.find(([m]) => m === info.recommended_model)?.[1] || entries[0]?.[1] || 0;
-    const badgeEl = document.getElementById('sdlc-top-badge');
-    if (badgeEl) {
-        badgeEl.textContent = `${topScore}% Weight (Rank #1)`;
-    }
+    const entries = Object.entries(scores).sort((a,b) => b[1]-a[1]);
+    const top     = entries.find(([m]) => m === info.recommended_model)?.[1] || entries[0]?.[1] || 0;
+    const badge   = document.getElementById('sdlc-top-badge');
+    if (badge) badge.textContent = `${top}% WEIGHT #1`;
 
-    // Render Ranking Bars
-    const barsContainer = document.getElementById('sdlc-ranking-bars');
-    const barsHtml = entries.map(([model, score]) => {
+    const bars = document.getElementById('sdlc-ranking-bars');
+    bars.innerHTML = entries.map(([model, score]) => {
         const isTop = model === info.recommended_model;
-        const barColor = isTop ? 'bg-emerald-500' : 'bg-slate-600';
         return `
-            <div>
-                <div class="flex justify-between items-center mb-1 text-xs">
-                    <span class="${isTop ? 'text-emerald-400 font-semibold' : 'text-slate-400'}">${escapeHTML(model)} ${isTop ? '★' : ''}</span>
-                    <span class="font-mono ${isTop ? 'text-emerald-400 font-semibold' : 'text-slate-400'}">${score}%</span>
-                </div>
-                <div class="w-full h-1.5 rounded-full bg-[var(--card-inner)] border border-[var(--card-border-subtle)] overflow-hidden">
-                    <div class="h-full rounded-full ${barColor} transition-all duration-500" style="width: ${Math.max(score, 4)}%"></div>
-                </div>
+        <div style="margin-bottom:10px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;font-size:15px;">
+                <span style="font-weight:${isTop?'800':'500'};color:${isTop?'#fbbf24':'#a3a3a3'};">${escapeHTML(model)}${isTop?' ★':''}</span>
+                <span style="font-family:'JetBrains Mono',monospace;font-weight:700;color:${isTop?'#fbbf24':'#525252'};">${score}%</span>
             </div>
-        `;
+            <div style="width:100%;height:6px;border-radius:3px;background:#1f1f1f;overflow:hidden;">
+                <div style="height:100%;border-radius:3px;background:${isTop?'#f59e0b':'#2a2a2a'};width:${Math.max(score,3)}%;transition:width 0.6s;"></div>
+            </div>
+        </div>`;
     }).join('');
 
-    const sumTotal = entries.reduce((acc, [, s]) => acc + s, 0);
-    barsContainer.innerHTML = barsHtml + `
-        <div class="pt-2 border-t border-[var(--card-border)] flex items-center justify-between text-xs">
-            <span class="text-slate-400 flex items-center gap-1">
-                <i class="fas fa-check-circle text-emerald-400 text-xs"></i> Total Weight:
-            </span>
-            <span class="font-mono font-semibold text-emerald-400">${sumTotal}%</span>
-        </div>
-    `;
-
-    // Render Custom 7-Phase Workflow
-    const workflowContainer = document.getElementById('sdlc-workflow-list');
-    workflowContainer.innerHTML = workflow.map(w => `
-        <div class="p-3 rounded-lg inner-card text-xs space-y-1.5">
-            <div class="flex items-center justify-between">
-                <span class="font-bold theme-title text-xs">${escapeHTML(w.phase)}</span>
-                <span class="text-[10px] font-mono px-2 py-0.5 rounded badge-purple">${escapeHTML(w.roles)}</span>
+    const wf = document.getElementById('sdlc-workflow-list');
+    wf.innerHTML = (workflow||[]).map((w, idx) => {
+        if (typeof w === 'string') {
+            const parts = w.split(':');
+            const title = parts[0] || `Phase ${idx+1}`;
+            const desc = parts.slice(1).join(':').trim() || w;
+            return `
+            <div style="padding:14px;border-radius:7px;background:#181818;border:1px solid #2a2a2a;margin-bottom:8px;font-size:15px;">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+                    <span style="font-weight:800;color:#fff;">${escapeHTML(title)}</span>
+                    <span style="font-family:'JetBrains Mono',monospace;font-size:13px;background:rgba(124,58,237,0.1);border:1px solid rgba(124,58,237,0.25);color:#c4b5fd;padding:3px 8px;border-radius:4px;">PHASE ${idx+1}</span>
+                </div>
+                <div style="color:#a3a3a3;line-height:1.6;">${escapeHTML(desc)}</div>
+            </div>`;
+        }
+        return `
+        <div style="padding:14px;border-radius:7px;background:#181818;border:1px solid #2a2a2a;margin-bottom:8px;font-size:15px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+                <span style="font-weight:800;color:#fff;">${escapeHTML(w.phase || `Phase ${idx+1}`)}</span>
+                <span style="font-family:'JetBrains Mono',monospace;font-size:13px;background:rgba(124,58,237,0.1);border:1px solid rgba(124,58,237,0.25);color:#c4b5fd;padding:3px 8px;border-radius:4px;">${escapeHTML(w.roles || 'Engineering')}</span>
             </div>
-            <div class="text-xs text-slate-300 leading-relaxed"><strong class="text-slate-400 font-normal">Activities:</strong> ${w.activities.map(a => escapeHTML(a)).join(', ')}</div>
-            <div class="flex items-center justify-between text-[11px] pt-1 text-slate-400 border-t border-[var(--card-border-subtle)]">
-                <span><i class="fas fa-shield-halved text-blue-400 mr-1"></i> ${escapeHTML(w.security_controls)}</span>
-                <span class="text-emerald-400 font-medium"><i class="fas fa-flag-checkered mr-1"></i> Gate: ${escapeHTML(w.validation_gate)}</span>
+            <div style="color:#a3a3a3;line-height:1.6;">Activities: ${Array.isArray(w.activities) ? w.activities.map(a=>escapeHTML(a)).join(', ') : escapeHTML(w.activities || '')}</div>
+            <div style="display:flex;justify-content:space-between;margin-top:8px;padding-top:8px;border-top:1px solid #1f1f1f;font-size:14px;">
+                <span style="color:#525252;"><i class="fas fa-shield-halved" style="color:#3b82f6;margin-right:5px;"></i>${escapeHTML(w.security_controls || 'Security Baseline')}</span>
+                <span style="color:#16a34a;font-weight:700;"><i class="fas fa-flag-checkered" style="margin-right:5px;"></i>Gate: ${escapeHTML(w.validation_gate || 'Quality Gate')}</span>
             </div>
-        </div>
-    `).join('');
+        </div>`;
+    }).join('');
 }
 
+// ─── RENDER: RISKS ─────────────────────────────
 function renderRisks(risks) {
     document.getElementById('risk-count').textContent = risks.length;
-    const container = document.getElementById('risk-list');
+    const c = document.getElementById('risk-list');
     if (!risks.length) {
-        container.innerHTML = `<div class="text-center py-16 text-slate-400 text-xs">No risks recorded.</div>`;
+        c.innerHTML = `<div style="text-align:center;padding:60px 0;color:#525252;font-size:15px;">No risks recorded.</div>`;
         return;
     }
-
-    container.innerHTML = risks.map(k => `
-        <div class="p-3.5 rounded-lg inner-card text-xs space-y-2">
-            <div class="flex items-center justify-between flex-wrap gap-2">
-                <div class="flex items-center gap-1.5">
-                    <span class="font-mono font-bold badge-amber px-2 py-0.5 rounded text-[10px]">${escapeHTML(k.id)}</span>
-                    <span class="font-semibold theme-title text-xs">${escapeHTML(k.category)}</span>
+    c.innerHTML = risks.map(k => `
+        <div style="padding:14px;border-radius:7px;background:#181818;border:1px solid #2a2a2a;margin-bottom:10px;font-size:15px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:10px;">
+                <div style="display:flex;align-items:center;gap:8px;">
+                    <span style="font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:800;background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.3);color:#fbbf24;padding:3px 8px;border-radius:4px;">${escapeHTML(k.id)}</span>
+                    <span style="font-weight:700;color:#fff;">${escapeHTML(k.category)}</span>
                 </div>
-                <div class="flex items-center gap-2 text-[11px]">
-                    <span class="text-slate-400">Likelihood: <strong class="text-slate-300">${escapeHTML(k.likelihood)}</strong></span>
-                    <span class="text-slate-400">Impact: <strong class="text-red-400">${escapeHTML(k.impact)}</strong></span>
-                    <span class="px-2 py-0.5 rounded badge-amber font-semibold font-mono text-[10px]">Score: ${k.score}/10</span>
+                <div style="display:flex;align-items:center;gap:10px;font-size:14px;color:#525252;">
+                    <span>Likelihood: <strong style="color:#e5e5e5;">${escapeHTML(k.likelihood)}</strong></span>
+                    <span>Impact: <strong style="color:#f87171;">${escapeHTML(k.impact)}</strong></span>
+                    <span style="font-family:'JetBrains Mono',monospace;font-weight:800;background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.3);color:#fbbf24;padding:2px 8px;border-radius:4px;">SCORE: ${k.score}/10</span>
                 </div>
             </div>
-            <p class="text-xs leading-relaxed text-slate-200">${escapeHTML(k.description)}</p>
-            <div class="p-2.5 rounded bg-[var(--card-inner)] border border-[var(--card-border-subtle)] text-[11px] text-emerald-400">
-                <strong class="font-semibold text-emerald-400"><i class="fas fa-shield-heart mr-1"></i> Mitigation:</strong> ${escapeHTML(k.mitigation)}
+            <p style="color:#e5e5e5;line-height:1.65;">${escapeHTML(k.description)}</p>
+            <div style="margin-top:10px;padding:10px 12px;border-radius:5px;background:#111;border:1px solid rgba(22,163,74,0.2);font-size:14px;color:#6ee7b7;">
+                <strong style="font-family:'JetBrains Mono',monospace;font-size:12px;display:block;margin-bottom:4px;"><i class="fas fa-shield-heart" style="margin-right:5px;"></i>MITIGATION:</strong>
+                ${escapeHTML(k.mitigation)}
             </div>
-        </div>
-    `).join('');
+        </div>`).join('');
 }
 
+// ─── RENDER: CLARIFICATIONS ────────────────────
 function renderClarifications(clarifications, conflicts) {
-    const container = document.getElementById('quality-findings-container');
+    const c = document.getElementById('quality-findings-container');
     let html = '';
 
-    if (conflicts && conflicts.length > 0) {
+    if (conflicts?.length) {
         html += `
-            <div class="space-y-2.5">
-                <h4 class="text-[11px] font-bold text-rose-400 uppercase tracking-wider flex items-center gap-1.5">
-                    <i class="fas fa-triangle-exclamation"></i> Contradictions &amp; Conflicts Detected (${conflicts.length})
-                </h4>
-        `;
-        conflicts.forEach(c => {
+        <div style="margin-bottom:16px;">
+            <h4 style="font-size:15px;font-weight:800;color:#f87171;letter-spacing:0.05em;font-family:'JetBrains Mono',monospace;margin-bottom:10px;">
+                <i class="fas fa-triangle-exclamation" style="margin-right:6px;"></i>CONTRADICTIONS_DETECTED (${conflicts.length})
+            </h4>`;
+        conflicts.forEach(cf => {
             html += `
-                <div class="p-3.5 rounded-lg inner-card !border-rose-500/40 text-xs space-y-1.5">
-                    <div class="font-bold text-rose-400 text-xs flex items-center gap-1.5">
-                        <span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span>
-                        ${escapeHTML(c.type || 'Requirement Contradiction')}
-                    </div>
-                    <p class="text-xs text-slate-200 leading-relaxed">${escapeHTML(c.description || c)}</p>
-                    ${c.resolution ? `<div class="p-2.5 rounded bg-[var(--card-inner)] border border-[var(--card-border-subtle)] text-[11px] text-blue-400"><strong class="font-semibold text-blue-400">Resolution:</strong> ${escapeHTML(c.resolution)}</div>` : ''}
+            <div style="padding:14px;border-radius:7px;background:#181818;border:1px solid rgba(220,38,38,0.3);margin-bottom:8px;font-size:15px;">
+                <div style="font-weight:800;color:#f87171;display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+                    <span style="width:8px;height:8px;border-radius:50%;background:#dc2626;flex-shrink:0;"></span>
+                    ${escapeHTML(cf.type || 'Requirement Contradiction')}
                 </div>
-            `;
+                <p style="color:#e5e5e5;line-height:1.65;">${escapeHTML(cf.description || cf)}</p>
+                ${cf.resolution?`<div style="margin-top:8px;padding:10px;border-radius:5px;background:#111;border:1px solid rgba(59,130,246,0.2);font-size:14px;color:#93c5fd;"><strong>Resolution:</strong> ${escapeHTML(cf.resolution)}</div>`:''}
+            </div>`;
         });
-        html += `</div>`;
+        html += '</div>';
     }
 
-    if (clarifications && clarifications.length > 0) {
+    if (clarifications?.length) {
         html += `
-            <div class="space-y-2.5 mt-3">
-                <h4 class="text-[11px] font-bold text-amber-400 uppercase tracking-wider flex items-center gap-1.5">
-                    <i class="fas fa-circle-question"></i> Ambiguity Clarification Questions (${clarifications.length})
-                </h4>
-        `;
+        <div>
+            <h4 style="font-size:15px;font-weight:800;color:#fbbf24;letter-spacing:0.05em;font-family:'JetBrains Mono',monospace;margin-bottom:10px;">
+                <i class="fas fa-circle-question" style="margin-right:6px;"></i>AMBIGUITY_FLAGS (${clarifications.length})
+            </h4>`;
         clarifications.forEach(q => {
-            const questionText = q.clarification_question || q;
+            const qText = q.clarification_question || q;
             html += `
-                <div class="p-3.5 rounded-lg inner-card !border-amber-500/40 text-xs flex items-start justify-between gap-3">
-                    <div class="space-y-1">
-                        <span class="text-[10px] font-mono uppercase font-bold badge-amber px-2 py-0.5 rounded inline-block">Subjective Term: ${escapeHTML(q.term || 'ambiguity')}</span>
-                        <p class="text-xs text-slate-200 leading-relaxed">${escapeHTML(questionText)}</p>
-                    </div>
-                    <button onclick="injectClarificationPrompt('${escapeHTML(questionText).replace(/'/g, "\\'")}')" class="px-2.5 py-1 rounded bg-amber-500/20 border border-amber-500/40 hover:bg-amber-500/30 text-amber-300 font-medium text-xs whitespace-nowrap transition">
-                        Answer
-                    </button>
+            <div style="padding:14px;border-radius:7px;background:#181818;border:1px solid rgba(245,158,11,0.25);margin-bottom:8px;font-size:15px;display:flex;align-items:flex-start;justify-content:space-between;gap:12px;">
+                <div>
+                    <span style="font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:800;background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.25);color:#fbbf24;padding:2px 8px;border-radius:4px;display:inline-block;margin-bottom:8px;">TERM: ${escapeHTML(q.term||'ambiguity')}</span>
+                    <p style="color:#e5e5e5;line-height:1.65;">${escapeHTML(qText)}</p>
                 </div>
-            `;
+                <button onclick="injectClarificationPrompt('${escapeHTML(qText).replace(/'/g,"\\'")}')"
+                    style="padding:8px 14px;border-radius:5px;background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.3);color:#fbbf24;font-weight:800;font-size:14px;cursor:pointer;white-space:nowrap;flex-shrink:0;">
+                    Answer
+                </button>
+            </div>`;
         });
-        html += `</div>`;
+        html += '</div>';
     }
 
     if (!html) {
         html = `
-            <div class="p-6 rounded-lg inner-card !border-emerald-500/40 text-center text-xs text-emerald-400">
-                <i class="fas fa-circle-check text-2xl mb-2 text-emerald-400 block"></i>
-                <p class="font-bold text-xs theme-title">Quality Gate Passed</p>
-                <p class="text-slate-400 text-[11px] mt-0.5">Zero contradictions or subjective ambiguities detected in current baseline.</p>
-            </div>
-        `;
+        <div style="padding:24px;border-radius:7px;background:#181818;border:1px solid rgba(22,163,74,0.3);text-align:center;">
+            <i class="fas fa-circle-check" style="font-size:32px;color:#16a34a;display:block;margin-bottom:12px;"></i>
+            <p style="font-size:16px;font-weight:800;color:#fff;">QUALITY_GATE_PASSED</p>
+            <p style="font-size:14px;color:#525252;margin-top:4px;">Zero contradictions or ambiguities detected.</p>
+        </div>`;
     }
 
-    container.innerHTML = html;
+    c.innerHTML = html;
 }
 
 function injectClarificationPrompt(question) {
-    const input = document.getElementById('user-input');
-    input.value = `Regarding clarification: "${question}" -> `;
-    input.focus();
+    const inp = document.getElementById('user-input');
+    inp.value = `Regarding: "${question}" → `;
+    inp.focus();
 }
 
+// ─── RENDER: ARTIFACTS ─────────────────────────
 function renderArtifacts(srsPlan) {
-    document.getElementById('srs-preview-box').textContent = srsPlan || "No SRS generated yet.";
+    document.getElementById('srs-preview-box').textContent = srsPlan || 'No SRS generated yet.';
 }
 
+// ─── RENDER: AUDIT TRAIL ───────────────────────
 function renderAuditTrail(trail) {
-    const container = document.getElementById('audit-trail-timeline');
-    if (!trail || !trail.length) {
-        container.innerHTML = `<div class="text-center py-10 text-slate-400 text-xs">No audit events recorded yet.</div>`;
+    const c = document.getElementById('audit-trail-timeline');
+    if (!trail?.length) {
+        c.innerHTML = `<div style="text-align:center;padding:60px 0;color:#525252;font-size:15px;">No audit events yet.</div>`;
         return;
     }
-
-    container.innerHTML = trail.map(ev => `
-        <div class="p-2.5 rounded-lg inner-card text-xs flex items-start gap-2.5">
-            <span class="font-mono text-slate-400 text-[10px] mt-0.5 whitespace-nowrap px-1.5 py-0.5 rounded bg-[var(--card-inner)] border border-[var(--card-border-subtle)]">${ev.timestamp.split('T')[1]?.split('.')[0] || 'UTC'}</span>
-            <div class="flex-1 space-y-0.5">
-                <div class="flex items-center gap-1.5">
-                    <span class="font-mono font-semibold text-blue-400 text-[11px]">${escapeHTML(ev.agent)}</span>
-                    <span class="text-slate-500 text-[10px]">➔</span>
-                    <span class="theme-title font-medium text-xs">${escapeHTML(ev.action)}</span>
+    c.innerHTML = [...trail].reverse().map(ev => `
+        <div style="padding:12px;border-radius:6px;background:#181818;border:1px solid #2a2a2a;margin-bottom:8px;display:flex;align-items:flex-start;gap:12px;font-size:15px;">
+            <span class="font-mono" style="font-size:13px;color:#525252;white-space:nowrap;background:#111;border:1px solid #1f1f1f;padding:4px 8px;border-radius:4px;flex-shrink:0;">
+                ${(ev.timestamp || ev.created_at || '').split('T')[1]?.split('.')[0] || 'UTC'}
+            </span>
+            <div>
+                <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
+                    <span class="font-mono" style="font-size:14px;font-weight:700;color:#fbbf24;">${escapeHTML(ev.agent)}</span>
+                    <span style="color:#2a2a2a;">→</span>
+                    <span style="font-weight:600;color:#e5e5e5;">${escapeHTML(ev.action)}</span>
                 </div>
-                <p class="text-[11px] text-slate-400">${escapeHTML(ev.detail)}</p>
+                <p style="font-size:14px;color:#525252;">${escapeHTML(ev.detail)}</p>
             </div>
-        </div>
-    `).reverse().join('');
+        </div>`).join('');
 }
 
-// ---------------------------
-// APPROVALS & EXPORT ACTIONS
-// ---------------------------
-
+// ─── APPROVALS ─────────────────────────────────
 async function approveSection(section) {
-    if (!currentProjectId) {
-        alert("Please start a project first.");
-        return;
-    }
-    const comments = prompt(`Enter remarks for approving section '${section}':`, "Approved by human compliance/architect sign-off");
+    if (!currentProjectId) { alert('Please start a project first.'); return; }
+    const comments = prompt(`Remarks for approving '${section}':`, 'Approved by stakeholder sign-off');
     if (comments === null) return;
-
     try {
-        const resp = await fetch('/session/approve', {
+        const r = await authorizedFetch('/session/approve', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                project_id: currentProjectId,
-                section: section,
-                status: 'approved',
-                comments: comments || "Approved by stakeholder"
-            })
+            body: JSON.stringify({ project_id: currentProjectId, section, status: 'approved', comments: comments||'Approved' })
         });
-        const res = await resp.json();
-        if (resp.ok) {
+        const res = await r.json();
+        if (r.ok) {
             if (section === 'requirements') {
-                currentRequirements.forEach(r => {
-                    r.approval_status = 'approved';
-                    r.status = 'approved';
-                });
+                currentRequirements.forEach(req => { req.approval_status='approved'; req.status='approved'; });
                 renderRequirements(currentRequirements);
             }
-            alert(`✅ Section '${section}' has been approved and logged into immutable audit trail.`);
+            showToast(`Section '${section}' approved ✓`);
             if (res.audit_trail) renderAuditTrail(res.audit_trail);
-            else reloadSessionState();
-        } else {
-            alert(`Approval failed: ${res.detail}`);
-        }
-    } catch (e) {
-        alert("Error connecting to server.");
-    }
+        } else { alert(`Approval failed: ${res.detail}`); }
+    } catch { alert('Error connecting to server.'); }
 }
 
 async function approveSingleReq(reqId, status) {
+    const r = currentRequirements.find(i => (i.id||i.req_id) === reqId);
     if (!currentProjectId) {
-        const r = currentRequirements.find(item => (item.id || item.req_id) === reqId);
-        if (r) {
-            r.approval_status = status;
-            r.status = status;
-            renderRequirements(currentRequirements);
-        }
+        if (r) { r.approval_status=status; r.status=status; renderRequirements(currentRequirements); }
         return;
     }
-
     try {
-        const resp = await fetch('/session/approve', {
+        const resp = await authorizedFetch('/session/approve', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                project_id: currentProjectId,
-                section: 'requirements',
-                req_id: reqId,
-                status: status,
-                comments: `Requirement ${reqId} marked as ${status} by stakeholder.`
-            })
+            body: JSON.stringify({ project_id: currentProjectId, section: 'requirements', req_id: reqId, status, comments: `${reqId} marked ${status}` })
         });
         const res = await resp.json();
         if (resp.ok) {
-            // Update local state
-            const r = currentRequirements.find(item => (item.id || item.req_id) === reqId);
-            if (r) {
-                r.approval_status = status;
-                r.status = status;
-            }
+            if (r) { r.approval_status=status; r.status=status; }
             renderRequirements(currentRequirements);
             if (res.audit_trail) renderAuditTrail(res.audit_trail);
-            else reloadSessionState();
-        } else {
-            alert(`Failed to update requirement: ${res.detail || 'Error'}`);
         }
-    } catch (e) {
-        alert("Failed to update requirement approval.");
-    }
+    } catch { alert('Failed to update.'); }
 }
 
 async function removeSingleReq(reqId) {
-    if (!confirm(`Are you sure you want to remove requirement ${reqId} from the baseline?`)) {
-        return;
-    }
-
+    if (!confirm(`Remove requirement ${reqId}?`)) return;
     if (!currentProjectId) {
-        currentRequirements = currentRequirements.filter(item => (item.id || item.req_id) !== reqId);
+        currentRequirements = currentRequirements.filter(i => (i.id||i.req_id) !== reqId);
         renderRequirements(currentRequirements);
         return;
     }
-
     try {
-        const resp = await fetch('/session/requirement/remove', {
+        const r = await authorizedFetch('/session/requirement/remove', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                project_id: currentProjectId,
-                req_id: reqId,
-                reason: "Stakeholder removed requirement via HITL dashboard"
-            })
+            body: JSON.stringify({ project_id: currentProjectId, req_id: reqId, reason: 'Removed via dashboard' })
         });
-        const result = await resp.json();
-        if (resp.ok && result.status === 'success') {
-            currentRequirements = currentRequirements.filter(item => (item.id || item.req_id) !== reqId);
+        const res = await r.json();
+        if (r.ok && res.status === 'success') {
+            currentRequirements = currentRequirements.filter(i => (i.id||i.req_id) !== reqId);
             renderRequirements(currentRequirements);
-            document.getElementById('req-count').textContent = currentRequirements.length;
-            if (result.audit_trail) renderAuditTrail(result.audit_trail);
-            else reloadSessionState();
-        } else {
-            alert(`Failed to remove requirement: ${result.detail || 'Error'}`);
+            if (res.audit_trail) renderAuditTrail(res.audit_trail);
         }
-    } catch (e) {
-        console.error(e);
-        alert("Failed to connect to server to remove requirement.");
-    }
+    } catch { alert('Failed to remove.'); }
 }
 
-async function approveAllReqs() {
-    approveSection('requirements');
-}
+function approveAllReqs() { approveSection('requirements'); }
 
+// ─── EDIT MODAL ────────────────────────────────
 function openEditModal(reqId) {
-    const r = currentRequirements.find(item => (item.id || item.req_id) === reqId);
+    const r = currentRequirements.find(i => (i.id||i.req_id) === reqId);
     if (!r) return;
     editingReqId = reqId;
     document.getElementById('modal-req-id').textContent = reqId;
-    document.getElementById('modal-statement').value = r.statement || '';
-    document.getElementById('modal-priority').value = r.priority || 'Medium';
-    document.getElementById('modal-status').value = r.status || r.approval_status || 'draft';
-    document.getElementById('modal-comments').value = '';
-    document.getElementById('edit-modal').classList.remove('hidden');
+    document.getElementById('modal-statement').value    = r.statement || '';
+    document.getElementById('modal-priority').value     = r.priority  || 'Medium';
+    document.getElementById('modal-status').value       = r.status    || r.approval_status || 'draft';
+    document.getElementById('modal-comments').value     = '';
+    const m = document.getElementById('edit-modal');
+    m.classList.remove('hidden');
+    m.style.display = 'flex';
 }
 
 function closeEditModal() {
-    document.getElementById('edit-modal').classList.add('hidden');
+    const m = document.getElementById('edit-modal');
+    m.classList.add('hidden');
+    m.style.display = 'none';
     editingReqId = null;
 }
 
 async function saveEditRequirement() {
-    if (!currentProjectId || !editingReqId) return;
+    if (!editingReqId) return;
     const stmt = document.getElementById('modal-statement').value.trim();
     const prio = document.getElementById('modal-priority').value;
     const stat = document.getElementById('modal-status').value;
     const comm = document.getElementById('modal-comments').value.trim();
 
-    try {
-        const resp = await fetch('/session/requirement/update', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                project_id: currentProjectId,
-                req_id: editingReqId,
-                statement: stmt,
-                priority: prio,
-                status: stat,
-                comments: comm
-            })
-        });
-        if (resp.ok) {
-            const r = currentRequirements.find(item => (item.id || item.req_id) === editingReqId);
-            if (r) {
-                r.statement = stmt;
-                r.priority = prio;
-                r.status = stat;
-                r.approval_status = stat;
-            }
-            closeEditModal();
-            renderRequirements(currentRequirements);
-            reloadSessionState();
-        } else {
-            alert("Error updating requirement.");
-        }
-    } catch (e) {
-        alert("Failed to connect to backend.");
+    if (currentProjectId) {
+        try {
+            await authorizedFetch('/session/requirement/update', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ project_id: currentProjectId, req_id: editingReqId, statement: stmt, priority: prio, status: stat, comments: comm })
+            });
+        } catch {}
     }
+    const r = currentRequirements.find(i => (i.id||i.req_id) === editingReqId);
+    if (r) { r.statement=stmt; r.priority=prio; r.status=stat; r.approval_status=stat; }
+    closeEditModal();
+    renderRequirements(currentRequirements);
 }
 
-function exportArtifact(artifactType) {
-    if (!currentProjectId) {
-        alert("Please generate a project before exporting artifacts.");
-        return;
-    }
-    window.open(`/session/${currentProjectId}/export/${artifactType}`, '_blank');
+// ─── EXPORT ────────────────────────────────────
+function exportArtifact(type) {
+    if (!currentProjectId) { alert('Generate a project first.'); return; }
+    window.open(`/session/${currentProjectId}/export/${type}`, '_blank');
 }
 
+// ─── SESSION ───────────────────────────────────
 async function reloadSessionState() {
     if (!currentProjectId) return;
     try {
-        const resp = await fetch(`/session/${currentProjectId}`);
-        const state = await resp.json();
-        if (state.audit_trail) renderAuditTrail(state.audit_trail);
-    } catch (e) {
-        console.error("Failed to refresh state:", e);
-    }
+        const r = await authorizedFetch(`/session/${currentProjectId}`);
+        const s = await r.json();
+        if (s.audit_trail) renderAuditTrail(s.audit_trail);
+    } catch {}
 }
 
 function resetSession() {
-    if (confirm("Reset current project and start a new session?")) {
-        currentProjectId = null;
-        projectData = null;
-        currentRequirements = [];
-        document.getElementById('active-project-tag').textContent = "No Active Session";
-        document.getElementById('chat-window').innerHTML = '';
-        document.getElementById('user-input').value = '';
-        document.getElementById('pipeline-status').innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-slate-500"></span> System Idle &bull; Ready for Input';
-        renderRequirements([]);
-        renderCompliance([]);
-        renderRisks([]);
-        renderClarifications([], []);
-        renderArtifacts('');
-        renderAuditTrail([]);
-        setAgentsActive(false);
+    if (!confirm('Reset current project and start a new session?')) return;
+    currentProjectId = null;
+    currentSessionTitle = null;
+    projectData = null;
+    currentRequirements = [];
+    document.getElementById('active-project-tag').innerHTML = 'NO ACTIVE SESSION';
+    document.getElementById('active-project-tag').removeAttribute('title');
+    document.getElementById('session-action-btns').style.display = 'none';
+    document.getElementById('chat-window').innerHTML = '';
+    document.getElementById('user-input').value = '';
+    setPipelineStatus('', 'SYSTEM_IDLE :: READY_FOR_INPUT');
+    renderRequirements([]);
+    renderCompliance([]);
+    renderRisks([]);
+    renderClarifications([], []);
+    renderArtifacts('');
+    renderAuditTrail([]);
+    setAgentsActive(false);
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// CHAT HISTORY & RESTORATION MANAGEMENT
+// ─────────────────────────────────────────────────────────────────────────────
+let cachedHistorySessions = [];
+
+function openHistoryModal() {
+    const m = document.getElementById('history-modal');
+    if (!m) return;
+    m.classList.remove('hidden');
+    m.style.display = 'flex';
+    refreshHistoryList();
+}
+
+function closeHistoryModal() {
+    const m = document.getElementById('history-modal');
+    if (!m) return;
+    m.classList.add('hidden');
+    m.style.display = 'none';
+}
+
+async function refreshHistoryList() {
+    const listEl = document.getElementById('history-list');
+    const badge = document.getElementById('history-count-badge');
+    if (!listEl) return;
+
+    listEl.innerHTML = `
+        <div style="text-align:center;padding:36px;color:#a3a3a3;font-family:'JetBrains Mono',monospace;">
+            <i class="fas fa-circle-notch fa-spin text-purple-400 mr-2"></i> Loading saved chats...
+        </div>`;
+
+    try {
+        const res = await fetch('/history');
+        const data = await res.json();
+        if (!res.ok || data.status !== 'success') {
+            listEl.innerHTML = `<div style="text-align:center;padding:30px;color:#f87171;">Failed to load saved history: ${escapeHTML(data.detail || 'Server error')}</div>`;
+            return;
+        }
+
+        cachedHistorySessions = data.sessions || [];
+        if (badge) badge.textContent = `${cachedHistorySessions.length} session${cachedHistorySessions.length === 1 ? '' : 's'}`;
+        filterHistoryList();
+    } catch (err) {
+        listEl.innerHTML = `<div style="text-align:center;padding:30px;color:#f87171;">Error connecting to server.</div>`;
     }
 }
+
+function filterHistoryList() {
+    const q = (document.getElementById('history-search-input')?.value || '').trim().toLowerCase();
+    const filtered = cachedHistorySessions.filter(s => {
+        if (!q) return true;
+        const title = (s.title || '').toLowerCase();
+        const domain = (s.domain || '').toLowerCase();
+        const role = (s.role || '').toLowerCase();
+        const id = (s.id || '').toLowerCase();
+        return title.includes(q) || domain.includes(q) || role.includes(q) || id.includes(q);
+    });
+    renderHistoryItems(filtered);
+}
+
+function renderHistoryItems(sessions) {
+    const listEl = document.getElementById('history-list');
+    if (!listEl) return;
+
+    if (!sessions || sessions.length === 0) {
+        listEl.innerHTML = `
+            <div style="text-align:center;padding:48px 20px;border-radius:8px;background:#141414;border:1px dashed #333;">
+                <i class="fas fa-box-open" style="font-size:36px;color:#525252;margin-bottom:12px;display:block;"></i>
+                <div style="font-size:16px;font-weight:700;color:#e5e5e5;">No Saved Chats Found</div>
+                <div style="font-size:13px;color:#737373;margin-top:6px;max-width:400px;margin-left:auto;margin-right:auto;">
+                    Start a project in the workspace, run your interview or analysis, and click <strong>Save Chat</strong> to preserve everything under a custom name.
+                </div>
+            </div>`;
+        return;
+    }
+
+    listEl.innerHTML = sessions.map(s => {
+        const isActive = (s.id === currentProjectId);
+        const title = s.title || `${s.domain || 'Project'} — ${s.id}`;
+        const updated = s.updated_at ? new Date(s.updated_at).toLocaleString() : (s.created_at ? new Date(s.created_at).toLocaleString() : 'N/A');
+        const msgs = s.message_count || 0;
+        const reqs = s.requirement_count !== undefined ? s.requirement_count : null;
+
+        return `
+        <div style="padding:16px 18px;border-radius:8px;background:${isActive ? 'rgba(124,58,237,0.08)' : '#161616'};border:1px solid ${isActive ? 'rgba(124,58,237,0.45)' : '#262626'};display:flex;flex-direction:column;gap:12px;transition:all 0.15s;">
+            <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap;">
+                <div style="flex:1;min-width:240px;">
+                    <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:6px;">
+                        <span style="font-size:16px;font-weight:800;color:#fff;display:flex;align-items:center;gap:8px;">
+                            <i class="fas fa-comments" style="color:#a78bfa;"></i>
+                            ${escapeHTML(title)}
+                        </span>
+                        ${isActive ? `<span style="font-size:11px;font-family:'JetBrains Mono',monospace;background:rgba(22,163,74,0.18);border:1px solid rgba(22,163,74,0.4);color:#4ade80;padding:2px 7px;border-radius:4px;font-weight:700;">CURRENT ACTIVE</span>` : ''}
+                    </div>
+                    <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:12.5px;">
+                        <span style="background:rgba(59,130,246,0.12);border:1px solid rgba(59,130,246,0.3);color:#93c5fd;padding:2px 8px;border-radius:4px;font-family:'JetBrains Mono',monospace;">
+                            <i class="fas fa-briefcase mr-1"></i>${escapeHTML(s.domain || 'General')}
+                        </span>
+                        <span style="background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.25);color:#fbbf24;padding:2px 8px;border-radius:4px;font-family:'JetBrains Mono',monospace;">
+                            <i class="fas fa-user-tag mr-1"></i>${escapeHTML(s.role || 'Analyst')}
+                        </span>
+                        <span style="color:#888;font-family:'JetBrains Mono',monospace;font-size:12px;">
+                            <i class="fas fa-comment-dots mr-1 text-purple-400"></i>${msgs} message${msgs === 1 ? '' : 's'}
+                        </span>
+                        ${reqs !== null ? `
+                        <span style="color:#888;font-family:'JetBrains Mono',monospace;font-size:12px;">
+                            <i class="fas fa-list-check mr-1 text-amber-400"></i>${reqs} reqs
+                        </span>` : ''}
+                        <span style="color:#666;font-size:12px;margin-left:auto;">
+                            <i class="fas fa-calendar-day mr-1"></i>${escapeHTML(updated)}
+                        </span>
+                    </div>
+                </div>
+                <div style="display:flex;align-items:center;gap:8px;flex-shrink:0;">
+                    <button onclick="loadHistorySession('${s.id}')" 
+                            style="background:#7c3aed;color:#fff;border:none;padding:7px 14px;border-radius:5px;font-size:13.5px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:6px;transition:opacity 0.15s;"
+                            title="Load all chat messages, requirements, and compliance records">
+                        <i class="fas fa-folder-open"></i> Load Workspace
+                    </button>
+                    <button onclick="openRenameModal('${s.id}', '${escapeHTML(title).replace(/'/g, "\\'")}')" 
+                            class="theme-btn px-2.5 py-1.5 rounded" style="font-size:13px;" title="Rename Chat">
+                        <i class="fas fa-pen text-purple-300"></i>
+                    </button>
+                    <button onclick="deleteHistorySession('${s.id}', '${escapeHTML(title).replace(/'/g, "\\'")}')" 
+                            class="theme-btn px-2.5 py-1.5 rounded" style="font-size:13px;" title="Delete Chat">
+                        <i class="fas fa-trash text-red-400"></i>
+                    </button>
+                </div>
+            </div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#525252;display:flex;justify-content:space-between;">
+                <span>ID: ${escapeHTML(s.id)}</span>
+            </div>
+        </div>`;
+    }).join('');
+}
+
+async function loadHistorySession(sessionId) {
+    if (!sessionId) return;
+    showToast('Loading saved chat workspace...');
+    
+    try {
+        const res = await fetch(`/history/${sessionId}`);
+        const data = await res.json();
+        if (!res.ok || data.status !== 'success') {
+            showToast(data.detail || 'Failed to load chat session', 'err');
+            return;
+        }
+
+        const session = data.session;
+        if (!session) {
+            showToast('Session data not found', 'err');
+            return;
+        }
+
+        currentProjectId = session.id;
+        currentSessionTitle = session.title || session.id;
+
+        // Update Header Session Display
+        const tag = document.getElementById('active-project-tag');
+        if (tag) {
+            tag.innerHTML = `<span style="color:#a78bfa;font-weight:700;"><i class="fas fa-folder-open mr-1"></i>${escapeHTML(currentSessionTitle)}</span>`;
+            tag.title = `Project ID: ${session.id}`;
+        }
+        const actionBtns = document.getElementById('session-action-btns');
+        if (actionBtns) actionBtns.style.display = 'flex';
+
+        // Restore Selectors
+        if (session.domain) {
+            const domSelect = document.getElementById('domain-select');
+            if (domSelect) domSelect.value = session.domain;
+        }
+        if (session.role) {
+            const roleSelect = document.getElementById('role-select');
+            if (roleSelect) roleSelect.value = session.role;
+        }
+
+        // Restore Chat Window Messages
+        const win = document.getElementById('chat-window');
+        if (win) {
+            win.innerHTML = '';
+            const messages = session.messages || [];
+            if (messages.length > 0) {
+                messages.forEach(m => {
+                    const content = m.html || formatMarkdown(m.content || m.text || '');
+                    appendChatMessage(m.role || 'assistant', content);
+                });
+            } else if (session.snapshot?.initial_prompt) {
+                appendChatMessage('user', escapeHTML(session.snapshot.initial_prompt));
+                appendChatMessage('assistant', `
+                    <div style="display:flex;flex-direction:column;gap:10px;">
+                        <div style="display:flex;align-items:center;gap:10px;padding:12px 14px;border-radius:6px;background:rgba(22,163,74,0.1);border:1px solid rgba(22,163,74,0.25);">
+                            <i class="fas fa-check-circle" style="color:#16a34a;font-size:19px;"></i>
+                            <span style="font-size:16.5px;color:#e5e5e5;">
+                                <strong style="color:#fff;">Restored Workspace:</strong> Loaded saved chat 
+                                <strong style="color:#fbbf24;">${escapeHTML(currentSessionTitle)}</strong>.
+                            </span>
+                        </div>
+                    </div>
+                `);
+            }
+            const chatCount = document.getElementById('chat-count');
+            if (chatCount) chatCount.textContent = win.children.length;
+        }
+
+        // Snapshot and Data Extraction
+        const snapshot = session.snapshot || {};
+        projectData = snapshot;
+
+        // Restore Requirements
+        let reqs = session.requirements || snapshot.requirements || [];
+        if (reqs && !Array.isArray(reqs) && typeof reqs === 'object') {
+            reqs = Object.values(reqs);
+        }
+        reqs = (reqs || []).map(r => ({
+            ...r,
+            id: r.id || r.req_id || 'REQ-?',
+            statement: r.statement || r.description || '',
+            category: r.category || 'Functional',
+            priority: r.priority || 'Medium',
+            approval_status: r.approval_status || r.status || 'draft',
+            risk_level: r.risk_level || r.risk || 'Medium',
+        }));
+        currentRequirements = reqs;
+        renderRequirements(currentRequirements);
+
+        // Restore Compliance
+        const compliance = session.compliance_mappings || snapshot.compliance_mappings || snapshot.compliance || [];
+        renderCompliance(compliance);
+
+        // Restore SDLC
+        const sdlcInfo = snapshot.sdlc_info || snapshot.sdlc;
+        const sdlcWorkflow = snapshot.sdlc_workflow || [];
+        renderSDLC(sdlcInfo, sdlcWorkflow);
+
+        // Restore Risks
+        const risks = session.risks || snapshot.risk_register || snapshot.risks || [];
+        renderRisks(risks);
+
+        // Restore Clarifications & Conflicts
+        const clarifications = snapshot.clarifications || [];
+        const conflicts = session.conflicts || snapshot.conflicts || [];
+        renderClarifications(clarifications, conflicts);
+
+        // Restore Artifacts
+        const srsPlan = snapshot.final_srs || snapshot.srs || snapshot.srs_plan || '';
+        renderArtifacts(srsPlan);
+
+        // Restore Audit Trail
+        const audit = session.audit_logs || snapshot.audit_trail || [];
+        renderAuditTrail(audit);
+
+        // Close History Modal and Notify
+        closeHistoryModal();
+        setPipelineStatus('ok', `WORKSPACE_LOADED :: ${currentSessionTitle}`);
+        showToast(`Loaded chat "${currentSessionTitle}" with ${currentRequirements.length} requirements! ✓`);
+        switchTab('requirements');
+
+    } catch (err) {
+        showToast('Error loading chat session', 'err');
+    }
+}
+
+// ─── SAVE CHAT WORKSPACE ──────────────────────
+function saveChatSession() {
+    if (!currentProjectId) { showToast('No active session to save', 'err'); return; }
+    const m = document.getElementById('save-chat-modal');
+    const input = document.getElementById('save-chat-title-input');
+    if (!m || !input) return;
+
+    const defaultTitle = currentSessionTitle || `${document.getElementById('domain-select').value} — ${new Date().toLocaleDateString()}`;
+    input.value = defaultTitle;
+    m.classList.remove('hidden');
+    m.style.display = 'flex';
+    input.focus();
+    input.select();
+}
+
+function closeSaveChatModal() {
+    const m = document.getElementById('save-chat-modal');
+    if (!m) return;
+    m.classList.add('hidden');
+    m.style.display = 'none';
+}
+
+async function confirmSaveChatSession() {
+    if (!currentProjectId) { showToast('No active session', 'err'); return; }
+    const input = document.getElementById('save-chat-title-input');
+    const title = (input?.value || '').trim() || `${document.getElementById('domain-select').value} — ${new Date().toLocaleDateString()}`;
+
+    const win = document.getElementById('chat-window');
+    const messages = [];
+    if (win) {
+        win.querySelectorAll('div[style*="display:flex"]').forEach(wrap => {
+            const userBubble = wrap.querySelector('.chat-bubble-user');
+            const asstBubble = wrap.querySelector('.chat-bubble-assistant');
+            if (userBubble) {
+                messages.push({ role: 'user', html: userBubble.innerHTML, created_at: new Date().toISOString() });
+            } else if (asstBubble) {
+                messages.push({ role: 'assistant', html: asstBubble.innerHTML, created_at: new Date().toISOString() });
+            }
+        });
+    }
+
+    try {
+        const res = await authorizedFetch('/history/save', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ project_id: currentProjectId, title, messages })
+        });
+        const data = await res.json();
+        if (res.ok) {
+            currentSessionTitle = title;
+            const tag = document.getElementById('active-project-tag');
+            if (tag) {
+                tag.innerHTML = `<span style="color:#a78bfa;font-weight:700;"><i class="fas fa-folder-open mr-1"></i>${escapeHTML(title)}</span>`;
+            }
+            closeSaveChatModal();
+            showToast(`Chat "${title}" saved ✓`);
+            const btn = document.getElementById('save-chat-btn');
+            if (btn) {
+                btn.innerHTML = '<i class="fas fa-check"></i> Saved';
+                setTimeout(() => { btn.innerHTML = '<i class="fas fa-floppy-disk"></i> Save Chat'; }, 2500);
+            }
+        } else {
+            showToast(data.detail || 'Save failed', 'err');
+        }
+    } catch {
+        showToast('Server unreachable', 'err');
+    }
+}
+
+// ─── RENAME CHAT ──────────────────────────────
+function openRenameModal(sessionId, currentTitle) {
+    const m = document.getElementById('rename-chat-modal');
+    const idInput = document.getElementById('rename-session-id');
+    const titleInput = document.getElementById('rename-title-input');
+    if (!m || !idInput || !titleInput) return;
+
+    idInput.value = sessionId;
+    titleInput.value = currentTitle;
+    m.classList.remove('hidden');
+    m.style.display = 'flex';
+    titleInput.focus();
+    titleInput.select();
+}
+
+function closeRenameModal() {
+    const m = document.getElementById('rename-chat-modal');
+    if (!m) return;
+    m.classList.add('hidden');
+    m.style.display = 'none';
+}
+
+async function confirmRenameSession() {
+    const sessionId = document.getElementById('rename-session-id')?.value;
+    const newTitle = (document.getElementById('rename-title-input')?.value || '').trim();
+    if (!sessionId || !newTitle) { showToast('Please enter a valid title', 'err'); return; }
+
+    try {
+        const res = await fetch(`/history/${sessionId}`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ title: newTitle })
+        });
+        const data = await res.json();
+        if (res.ok) {
+            closeRenameModal();
+            showToast('Chat renamed ✓');
+            if (currentProjectId === sessionId) {
+                currentSessionTitle = newTitle;
+                const tag = document.getElementById('active-project-tag');
+                if (tag) {
+                    tag.innerHTML = `<span style="color:#a78bfa;font-weight:700;"><i class="fas fa-folder-open mr-1"></i>${escapeHTML(newTitle)}</span>`;
+                }
+            }
+            refreshHistoryList();
+        } else {
+            showToast(data.detail || 'Rename failed', 'err');
+        }
+    } catch {
+        showToast('Server unreachable', 'err');
+    }
+}
+
+// ─── DELETE CHAT ──────────────────────────────
+async function deleteHistorySession(sessionId, title) {
+    if (!confirm(`Delete saved chat "${title || sessionId}"?\nThis cannot be undone.`)) return;
+
+    try {
+        const res = await fetch(`/history/${sessionId}`, { method: 'DELETE' });
+        const data = await res.json();
+        if (res.ok) {
+            showToast('Saved chat deleted ✓');
+            refreshHistoryList();
+        } else {
+            showToast(data.detail || 'Delete failed', 'err');
+        }
+    } catch {
+        showToast('Server unreachable', 'err');
+    }
+}
+
+function discardChatSession() {
+    if (!confirm('Discard this chat? It will NOT be saved.')) return;
+    resetSession();
+    showToast('Chat discarded.');
+}
+
+// ─── TOAST ─────────────────────────────────────
+function showToast(msg, type = 'ok') {
+    const el = document.getElementById('toast-msg');
+    if (!el) return;
+    el.textContent = msg;
+    el.style.background = type === 'err' ? 'rgba(220,38,38,0.95)' : 'rgba(22,163,74,0.95)';
+    el.style.opacity = '1';
+    el.style.pointerEvents = 'auto';
+    setTimeout(() => { el.style.opacity = '0'; el.style.pointerEvents = 'none'; }, 3000);
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// AUTHENTICATION, RBAC & MFA STATE
+// ─────────────────────────────────────────────────────────────────────────────
+let currentAuthUser = (() => {
+    try { return JSON.parse(sessionStorage.getItem('finreq.authUser') || 'null'); }
+    catch { return null; }
+})();
+let pendingLoginEmail = '';
+let selectedUploadFile = null;
+let detailActiveReqId = null;
+let activeConflictId = null;
+
+function openAuthModal() {
+    const m = document.getElementById('auth-modal');
+    if (!m) return;
+    m.classList.remove('hidden');
+    m.style.display = 'flex';
+    document.getElementById('auth-login-view').classList.remove('hidden');
+    document.getElementById('auth-mfa-view').classList.add('hidden');
+}
+
+function closeAuthModal() {
+    const m = document.getElementById('auth-modal');
+    if (!m) return;
+    m.classList.add('hidden');
+    m.style.display = 'none';
+}
+
+function quickLogin(email, role) {
+    document.getElementById('auth-email-input').value = email;
+    // Demo personas use the seeded development password shown in the form.
+    document.getElementById('auth-password-input').value = 'FinReq2026!';
+    submitLogin(email);
+}
+
+async function authorizedFetch(url, options = {}) {
+    if (!currentAuthUser?.token) {
+        openAuthModal();
+        throw new Error('Sign in required');
+    }
+    const headers = new Headers(options.headers || {});
+    headers.set('Authorization', `Bearer ${currentAuthUser.token}`);
+    const response = await fetch(url, { ...options, headers });
+    if (response.status === 401) {
+        currentAuthUser = null;
+        sessionStorage.removeItem('finreq.authUser');
+        openAuthModal();
+        showToast('Your session expired. Please sign in again.', 'err');
+    }
+    return response;
+}
+
+async function submitLogin(forcedEmail = null) {
+    const email = forcedEmail || document.getElementById('auth-email-input').value.trim();
+    const password = document.getElementById('auth-password-input').value.trim();
+    if (!email || !password) {
+        showToast('Please enter email and password', 'err');
+        return;
+    }
+    try {
+        const res = await fetch('/api/auth/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password })
+        });
+        const data = await res.json();
+        if (!res.ok) {
+            showToast(data.detail || 'Authentication failed', 'err');
+            return;
+        }
+
+        if (data.status === 'mfa_required') {
+            pendingLoginEmail = data.email;
+            document.getElementById('auth-login-view').classList.add('hidden');
+            document.getElementById('auth-mfa-view').classList.remove('hidden');
+            document.getElementById('auth-mfa-code').focus();
+            showToast('MFA code required', 'ok');
+        } else if (data.status === 'success') {
+            setAuthenticatedUser(data.user, data.token);
+            closeAuthModal();
+            showToast(`Logged in as ${data.user.role}`, 'ok');
+        }
+    } catch (e) {
+        showToast('Auth server unreachable', 'err');
+    }
+}
+
+async function submitMFA() {
+    const code = document.getElementById('auth-mfa-code').value.trim();
+    if (!code) {
+        showToast('Enter 6-digit TOTP code', 'err');
+        return;
+    }
+    try {
+        const res = await fetch('/api/auth/mfa/verify', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email: pendingLoginEmail, code })
+        });
+        const data = await res.json();
+        if (!res.ok) {
+            showToast(data.detail || 'Invalid MFA code', 'err');
+            return;
+        }
+        setAuthenticatedUser(data.user, data.token);
+        closeAuthModal();
+        showToast(`MFA Verified: Logged in as ${data.user.role}`, 'ok');
+    } catch (e) {
+        showToast('MFA verification error', 'err');
+    }
+}
+
+function setAuthenticatedUser(user, token) {
+    currentAuthUser = { ...user, token };
+    // Keep the bearer token only for this browser tab. It is restored after a
+    // refresh, but disappears when the tab/session is closed.
+    sessionStorage.setItem('finreq.authUser', JSON.stringify(currentAuthUser));
+    const label = document.getElementById('current-user-label');
+    if (label) {
+        const roleName = user.role.replace('_', ' ');
+        label.textContent = `${roleName} (MFA Active)`;
+    }
+    // Also align persona selector
+    const roleSelect = document.getElementById('role-select');
+    if (roleSelect) {
+        const roleMap = {
+            'ANALYST': 'Business Analyst',
+            'COMPLIANCE_OFFICER': 'Compliance Officer',
+            'SECURITY_LEAD': 'Information-Security Team',
+            'APPROVER': 'Software Architect',
+            'STAKEHOLDER': 'Customer',
+            'ADMIN': 'Product Owner'
+        };
+        if (roleMap[user.role]) roleSelect.value = roleMap[user.role];
+    }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// DOCUMENT UPLOAD HANDLING
+// ─────────────────────────────────────────────────────────────────────────────
+function openUploadModal() {
+    const m = document.getElementById('upload-modal');
+    if (!m) return;
+    m.classList.remove('hidden');
+    m.style.display = 'flex';
+    document.getElementById('upload-status').classList.add('hidden');
+    selectedUploadFile = null;
+    document.getElementById('upload-submit-btn').disabled = true;
+    const dz = document.getElementById('drop-zone');
+    if (dz) {
+        dz.onclick = () => document.getElementById('file-upload-input').click();
+    }
+}
+
+function closeUploadModal() {
+    const m = document.getElementById('upload-modal');
+    if (!m) return;
+    m.classList.add('hidden');
+    m.style.display = 'none';
+}
+
+function handleFileSelect(e) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    selectedUploadFile = file;
+    const dz = document.getElementById('drop-zone');
+    if (dz) {
+        dz.innerHTML = `
+            <i class="fas fa-file-check text-3xl text-emerald-400 mb-2"></i>
+            <p class="text-sm font-bold text-white">${escapeHTML(file.name)}</p>
+            <p class="text-xs text-neutral-400 mt-1">${(file.size / 1024).toFixed(1)} KB — Ready to Ingest</p>
+        `;
+    }
+    document.getElementById('upload-submit-btn').disabled = false;
+}
+
+async function executeUpload() {
+    if (!selectedUploadFile) return;
+    const btn = document.getElementById('upload-submit-btn');
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i> Ingesting...';
+
+    const statusEl = document.getElementById('upload-status');
+    statusEl.classList.remove('hidden');
+    statusEl.innerHTML = '<span class="text-amber-400">Extracting text & computing pgvector embeddings...</span>';
+
+    const formData = new FormData();
+    formData.append('file', selectedUploadFile);
+    if (currentProjectId) formData.append('project_id', currentProjectId);
+
+    try {
+        const res = await authorizedFetch('/api/documents/upload', {
+            method: 'POST',
+            body: formData
+        });
+        const data = await res.json();
+        if (!res.ok) {
+            statusEl.innerHTML = `<span class="text-red-400">Error: ${escapeHTML(data.detail || 'Upload failed')}</span>`;
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fas fa-upload mr-1"></i> Ingest Document';
+            return;
+        }
+
+        statusEl.innerHTML = `<span class="text-emerald-400">✓ Ingested: ${data.characters_extracted} chars, ${data.chunks_indexed} vectors embedded into pgvector.</span>`;
+        showToast('Document indexed into pgvector knowledge base ✓');
+
+        // Populate prompt input with document preview if empty
+        const input = document.getElementById('user-input');
+        if (input && !input.value.trim() && data.preview) {
+            input.value = `Analysis based on uploaded document ${data.filename}:\n${data.preview}`;
+        }
+
+        setTimeout(() => {
+            closeUploadModal();
+        }, 1500);
+    } catch (e) {
+        statusEl.innerHTML = '<span class="text-red-400">Upload connection failed.</span>';
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-upload mr-1"></i> Ingest Document';
+    }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// REQUIREMENT DETAIL MODAL & GOVERNANCE
+// ─────────────────────────────────────────────────────────────────────────────
+function openReqDetailModal(reqId) {
+    const req = (currentRequirements || []).find(r => (r.id || r.req_id) === reqId);
+    if (!req) return;
+    detailActiveReqId = reqId;
+
+    document.getElementById('detail-req-id').textContent = reqId;
+    document.getElementById('detail-category').textContent = req.category || 'Functional';
+    document.getElementById('detail-statement').textContent = req.statement || '';
+    document.getElementById('detail-source').textContent = req.source || 'Business Analyst';
+    document.getElementById('detail-risk').textContent = req.risk || req.risk_level || 'Medium';
+    document.getElementById('detail-confidence').textContent = `${Math.round((req.confidence || 0.94) * 100)}%`;
+
+    const ac = req.acceptance_criteria;
+    const acText = Array.isArray(ac) ? ac.join(' ') : (ac || 'Given standard preconditions When processed Then verify state transition.');
+    document.getElementById('detail-acceptance').textContent = acText;
+
+    const regs = req.compliance_mapping || req.regulations || ['KB-REG-ISO-27001'];
+    const regContainer = document.getElementById('detail-regulations');
+    regContainer.innerHTML = regs.map(r => `
+        <span class="badge-amber text-xs font-mono px-2 py-0.5 rounded">${escapeHTML(r)}</span>
+    `).join('');
+
+    const modal = document.getElementById('req-detail-modal');
+    modal.classList.remove('hidden');
+    modal.style.display = 'flex';
+}
+
+function closeReqDetailModal() {
+    const m = document.getElementById('req-detail-modal');
+    if (!m) return;
+    m.classList.add('hidden');
+    m.style.display = 'none';
+}
+
+function handleDetailAction(status) {
+    if (!detailActiveReqId) return;
+    approveSingleReq(detailActiveReqId, status);
+    closeReqDetailModal();
+}
+
+function openEditFromDetail() {
+    if (!detailActiveReqId) return;
+    const reqId = detailActiveReqId;
+    closeReqDetailModal();
+    openEditModal(reqId);
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// CONFLICT RESOLUTION MODAL
+// ─────────────────────────────────────────────────────────────────────────────
+function openConflictModal(conflictId, req1, req2, desc) {
+    activeConflictId = conflictId;
+    document.getElementById('conflict-modal-desc').textContent = desc || `Conflict between requirements ${req1} and ${req2}`;
+    const m = document.getElementById('conflict-modal');
+    m.classList.remove('hidden');
+    m.style.display = 'flex';
+}
+
+function closeConflictModal() {
+    const m = document.getElementById('conflict-modal');
+    if (!m) return;
+    m.classList.add('hidden');
+    m.style.display = 'none';
+}
+
+async function submitConflictResolution() {
+    const resolution = document.getElementById('conflict-resolution-text').value.trim();
+    if (!resolution) {
+        showToast('Please enter resolution explanation', 'err');
+        return;
+    }
+    try {
+        const res = await authorizedFetch('/api/conflicts/resolve', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                project_id: currentProjectId || 'DEFAULT',
+                conflict_id: activeConflictId,
+                resolution
+            })
+        });
+        if (res.ok) {
+            showToast('Conflict resolved and logged to audit trail ✓');
+            closeConflictModal();
+            refreshAuditTrail();
+        } else {
+            showToast('Conflict resolution failed', 'err');
+        }
+    } catch {
+        showToast('Server unreachable', 'err');
+    }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// TRACEABILITY MATRIX (RTM)
+// ─────────────────────────────────────────────────────────────────────────────
+async function fetchTraceabilityMatrix() {
+    const tbody = document.getElementById('rtm-table-body');
+    if (!currentProjectId) {
+        tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:40px;color:#525252;">No active session. Submit requirements to generate RTM.</td></tr>`;
+        return;
+    }
+    tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:24px;color:#a3a3a3;"><i class="fas fa-spinner fa-spin mr-2"></i> Loading Traceability Matrix...</td></tr>`;
+
+    try {
+        const res = await authorizedFetch(`/session/${currentProjectId}/rtm_matrix`);
+        const data = await res.json();
+        if (!res.ok || !data.matrix?.length) {
+            tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:30px;color:#525252;">No matrix rows found.</td></tr>`;
+            return;
+        }
+
+        tbody.innerHTML = data.matrix.map((row, idx) => {
+            const isApproved = row.approval_status === 'approved';
+            return `
+                <tr style="border-bottom:1px solid #1f1f1f;background:${idx%2===0?'transparent':'#0f0f0f'};">
+                    <td style="padding:10px 8px;color:#fbbf24;font-weight:700;">${escapeHTML(row.req_id)}</td>
+                    <td style="padding:10px 8px;color:#e5e5e5;max-width:240px;line-height:1.4;">${escapeHTML(row.statement)}</td>
+                    <td style="padding:10px 8px;color:#93c5fd;">${escapeHTML(row.source_stakeholder)}</td>
+                    <td style="padding:10px 8px;color:#fca5a5;">${escapeHTML(row.regulation)}</td>
+                    <td style="padding:10px 8px;color:#c084fc;">${escapeHTML(row.control)}</td>
+                    <td style="padding:10px 8px;color:#a3a3a3;max-width:200px;">${escapeHTML(row.test_scenario)}</td>
+                    <td style="padding:10px 8px;">
+                        <span style="font-size:11px;padding:2px 6px;border-radius:3px;background:${isApproved?'rgba(22,163,74,0.15)':'rgba(245,158,11,0.1)'};color:${isApproved?'#6ee7b7':'#fbbf24'};border:1px solid ${isApproved?'rgba(22,163,74,0.3)':'rgba(245,158,11,0.3)'};">
+                            ${isApproved ? 'APPROVED' : 'PENDING'}
+                        </span>
+                    </td>
+                </tr>
+            `;
+        }).join('');
+    } catch {
+        tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:30px;color:#f87171;">Failed to load traceability matrix.</td></tr>`;
+    }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// ADMIN & MONITORING TELEMETRY
+// ─────────────────────────────────────────────────────────────────────────────
+async function fetchAdminMetrics() {
+    try {
+        const res = await authorizedFetch('/api/admin/metrics');
+        const data = await res.json();
+        if (!res.ok || !data.metrics) return;
+        const m = data.metrics;
+
+        document.getElementById('metric-db').textContent = m.database || 'PostgreSQL + pgvector';
+        const redisStatus = m.cache?.status === 'connected' ? 'Connected (6379)' : 'In-Memory Fallback';
+        document.getElementById('metric-redis').textContent = redisStatus;
+        document.getElementById('metric-reqs').textContent = m.total_requirements || '0';
+        document.getElementById('metric-runs').textContent = m.agent_executions || '0';
+
+        const runsTbody = document.getElementById('admin-runs-body');
+        if (m.recent_agent_runs && m.recent_agent_runs.length) {
+            runsTbody.innerHTML = m.recent_agent_runs.map((run, idx) => `
+                <tr style="border-bottom:1px solid #1f1f1f;background:${idx%2===0?'transparent':'#0f0f0f'};">
+                    <td style="padding:8px;color:#fff;font-weight:700;">${escapeHTML(run.agent)}</td>
+                    <td style="padding:8px;"><span class="text-emerald-400">✓ ${escapeHTML(run.status)}</span></td>
+                    <td style="padding:8px;color:#fbbf24;">${run.duration_ms} ms</td>
+                    <td style="padding:8px;color:#525252;">${escapeHTML(run.time)}</td>
+                </tr>
+            `).join('');
+        }
+    } catch (e) {
+        console.error('Failed to load admin telemetry:', e);
+    }
+}
+
+// The workspace remains visible for orientation, but no action can be taken
+// until the user completes the login + MFA flow.
+window.addEventListener('DOMContentLoaded', () => {
+    if (currentAuthUser?.token) {
+        setAuthenticatedUser(currentAuthUser, currentAuthUser.token);
+    } else {
+        openAuthModal();
+    }
+});
+
+window.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+        closeHistoryModal();
+        closeSaveChatModal();
+        closeRenameModal();
+        if (typeof closeUploadModal === 'function') closeUploadModal();
+        if (typeof closeReqDetailModal === 'function') closeReqDetailModal();
+        if (typeof closeConflictModal === 'function') closeConflictModal();
+        if (currentAuthUser?.token && typeof closeAuthModal === 'function') closeAuthModal();
+    }
+});
+

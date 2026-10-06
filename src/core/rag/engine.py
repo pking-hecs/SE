@@ -100,9 +100,58 @@ class FinancialRAG:
 
     def retrieve_context(self, query: str, top_k: int = 4) -> List[Dict[str, Any]]:
         """
-        Retrieve top-k relevant FKB entries via TF-IDF cosine similarity.
-        Falls back to returning all documents if the index is empty.
+        Retrieve top-k relevant FKB entries using PostgreSQL pgvector cosine similarity,
+        accelerated by Redis caching, falling back to TF-IDF if PostgreSQL is unreachable.
         """
+        import hashlib
+        q_hash = hashlib.md5(f"{query}:{top_k}".encode()).hexdigest()
+
+        # 1. Check Redis cache
+        try:
+            import cache as _cache
+            cached = _cache.get_cached_rag_result(q_hash)
+            if cached:
+                return cached
+        except Exception:
+            pass
+
+        # 2. Try PostgreSQL pgvector search
+        try:
+            import db as _db
+            if getattr(_db, "_use_postgres", False):
+                pg_results = _db.search_knowledge_vector(query, top_k=top_k)
+                if pg_results:
+                    formatted = []
+                    for doc in pg_results:
+                        # Extract citation [ID] if present
+                        cit = doc.get("title", "")
+                        m = re.search(r"\[(.*?)\]", doc.get("content", ""))
+                        if m:
+                            cit = m.group(1)
+                        formatted.append({
+                            "id": cit,
+                            "citation": cit,
+                            "title": doc.get("title"),
+                            "content": doc.get("content"),
+                            "category": doc.get("category", "Regulatory"),
+                            "jurisdiction": doc.get("jurisdiction", "Global"),
+                            "effective_date": doc.get("effective_date", "2024-01-01"),
+                            "version": doc.get("version", "1.0"),
+                            "applicability": doc.get("applicability", ""),
+                            "similarity_score": round(float(doc.get("confidence", 0.5)), 4),
+                            "vector_engine": "pgvector"
+                        })
+                    try:
+                        import cache as _cache
+                        _cache.cache_rag_result(q_hash, formatted)
+                    except Exception:
+                        pass
+                    return formatted
+        except Exception as e:
+            # Silently fall back to TF-IDF
+            pass
+
+        # 3. Fallback: In-memory TF-IDF cosine similarity
         if not self.documents:
             return []
 
@@ -115,7 +164,6 @@ class FinancialRAG:
         norm = math.sqrt(sum(v ** 2 for v in q_vec.values())) or 1.0
         q_vec = {k: v / norm for k, v in q_vec.items()}
 
-        # Cosine similarity: dot product (vectors are already L2-normalised)
         scores: List[float] = []
         for doc_vec in self._doc_vectors:
             score = sum(q_vec.get(term, 0) * weight for term, weight in doc_vec.items())
@@ -129,7 +177,6 @@ class FinancialRAG:
                 doc["similarity_score"] = round(score, 4)
                 results.append(doc)
 
-        # Guarantee at least one result for grounding
         if not results and self.documents:
             results = [dict(self.documents[0])]
             results[0]["similarity_score"] = 0.1

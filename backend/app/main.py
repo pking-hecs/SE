@@ -2,7 +2,8 @@ from fastapi import FastAPI, Depends, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from backend.app.core.config import settings
 from backend.app.services.gemini_service import gemini_service
-from backend.app.api.routes import auth, projects, analysis, approvals
+from backend.app.api.routes import auth, projects, analysis, approvals, history
+from backend.app import history_store
 from backend.app.models.schema import Base, Project, User
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
@@ -26,12 +27,14 @@ app.include_router(auth.router)
 app.include_router(projects.router)
 app.include_router(analysis.router)
 app.include_router(approvals.router)
+app.include_router(history.router, prefix="/api")
 
 @app.on_event("startup")
 async def startup_event():
     """
     Ensures that a default project exists so users can start chatting immediately.
     """
+    history_store.initialize()
     db = SessionLocal()
     try:
         # 1. Ensure a default admin user exists

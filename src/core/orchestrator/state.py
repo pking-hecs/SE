@@ -81,6 +81,7 @@ class ProjectState:
     def to_dict(self):
         return {
             "project_id": self.project_id,
+            "initial_prompt": self.initial_prompt,
             "domain": self.domain,
             "stakeholder_role": self.stakeholder_role,
             "current_phase": self.current_phase,
@@ -95,6 +96,34 @@ class ProjectState:
             "clarifications": self.clarifications,
             "conflicts": self.conflicts,
             "approved_baseline": self.approved_baseline,
+            "interview_turn": self.interview_turn,
+            "answered_topics": self.answered_topics,
             "created_at": self.created_at
         }
 
+    @classmethod
+    def from_dict(cls, data: Dict[str, Any]) -> "ProjectState":
+        """Rebuild a usable session from a database snapshot."""
+        state = cls(data.get("project_id", ""), data.get("initial_prompt", ""))
+        for key in (
+            "domain", "stakeholder_role", "current_phase", "chat_history",
+            "audit_trail", "sdlc_workflow", "final_srs", "rtm", "risk_register",
+            "clarifications", "conflicts", "approved_baseline", "interview_turn",
+            "answered_topics", "created_at",
+        ):
+            snapshot_key = {"final_srs": "srs", "sdlc_recommendation": "sdlc"}.get(key, key)
+            if snapshot_key in data:
+                setattr(state, key, data[snapshot_key])
+
+        state.sdlc_recommendation = data.get("sdlc")
+        for req_id, req_data in (data.get("requirements") or {}).items():
+            if not isinstance(req_data, dict):
+                continue
+            allowed = set(Requirement.__dataclass_fields__)
+            values = {k: v for k, v in req_data.items() if k in allowed}
+            values.setdefault("req_id", req_data.get("req_id") or req_id)
+            try:
+                state.requirements_baseline[req_id] = Requirement(**values)
+            except TypeError:
+                continue
+        return state
