@@ -269,39 +269,39 @@ select.floating-input option { background: var(--bg-3); color: var(--white); }
     border-radius: 2px;
 }
 
-/* ─── CHAT BUBBLES & CONSOLE (REFINED SIZING) ─── */
+/* ─── CHAT BUBBLES & CONSOLE (MAX SIZED) ─── */
 #chat-window {
-    font-size: 17.5px !important;
-    line-height: 1.6 !important;
+    font-size: 20px !important;
+    line-height: 1.7 !important;
 }
 
 #chat-window .inner-card {
-    font-size: 17px !important;
-    line-height: 1.6 !important;
+    font-size: 20px !important;
+    line-height: 1.7 !important;
 }
 
 #chat-window p {
-    font-size: 17px !important;
-    line-height: 1.6 !important;
+    font-size: 20px !important;
+    line-height: 1.7 !important;
 }
 
 .chat-bubble-user {
-    font-size: 17.5px !important;
-    line-height: 1.6 !important;
+    font-size: 20px !important;
+    line-height: 1.7 !important;
 }
 
 .chat-bubble-assistant {
-    font-size: 17.5px !important;
-    line-height: 1.6 !important;
+    font-size: 20px !important;
+    line-height: 1.7 !important;
 }
 
 #user-input {
-    font-size: 17.5px !important;
-    line-height: 1.55 !important;
+    font-size: 20px !important;
+    line-height: 1.6 !important;
 }
 
 #user-input::placeholder {
-    font-size: 15.5px !important;
+    font-size: 18px !important;
 }
 
 /* ─── ANIMATIONS ─── */

@@ -282,12 +282,13 @@ class AgentOrchestrator:
             for c in compliance_mappings
         )
 
+        top_sdlc_score = sdlc_info["ranked_scores"].get(sdlc_info["recommended_model"], 88)
         sdlc_summary = (
-            f"★ Recommended Model: {sdlc_info['recommended_model']}\n"
+            f"★ Recommended Model: {sdlc_info['recommended_model']} ({top_sdlc_score}% MCDA Fit)\n"
             f"Rationale: {sdlc_info['justification']}\n\n"
-            f"Multi-Criteria Model Ranking (Normalized Score Distribution, Total = 100%):\n" +
-            "\n".join(f"  - {model}: {score}%" for model, score in sdlc_info["ranked_scores"].items()) +
-            f"\n  (Total = {sum(sdlc_info['ranked_scores'].values())}%)\n\n"
+            f"Multi-Criteria Model Suitability Ranking (MCDA Fit Scores out of 100%):\n" +
+            "\n".join(f"  - {model}: {score}% Suitability" for model, score in sdlc_info["ranked_scores"].items()) +
+            "\n\n"
             f"Customised 7-Phase Financial Workflow:\n" +
             "\n".join(f"  {w['phase']} ➔ Gate: {w['validation_gate']}" for w in sdlc_workflow)
         )
@@ -310,7 +311,8 @@ class AgentOrchestrator:
             "conflicts": conflicts,
             "security_profile": security_profile,
             "validation": validation_report,
-            "pii_masked_items": masked_items
+            "pii_masked_items": masked_items,
+            "safe_prompt": safe_prompt,
         }
 
     async def handle_interaction(self, state: ProjectState, message: str) -> str:
@@ -329,6 +331,8 @@ class AgentOrchestrator:
             return warning
 
         safe_message, masked_items = self.security_guard.mask_pii(message)
+        state.latest_masked_items = masked_items
+        state.latest_safe_message = safe_message
         if masked_items:
             state.log_event("Security Guard", "PII Redacted", f"Redacted: {', '.join(masked_items)}")
 

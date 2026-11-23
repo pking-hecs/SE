@@ -8,7 +8,9 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
 </head>
@@ -21,30 +23,38 @@
 
             <!-- Brand -->
             <div class="flex items-center gap-3">
-                <div class="brand-logo w-10 h-10 rounded flex items-center justify-center text-sm font-mono font-black">FR</div>
+                <div class="brand-logo w-10 h-10 rounded flex items-center justify-center text-sm font-mono font-black">
+                    FR</div>
                 <div>
                     <div class="flex items-center gap-2">
                         <h1 style="font-size:18px; font-weight:900; letter-spacing:-0.04em; color:#fff;">FINREQ</h1>
                         <span class="badge-amber px-2 py-0.5 rounded font-mono" style="font-size:12px;">v2.5</span>
                     </div>
-                    <p style="font-size:13px; color:#525252; font-family:'JetBrains Mono',monospace; margin-top:1px;">AUTONOMOUS FINANCIAL REQUIREMENTS ENGINE</p>
+                    <p style="font-size:13px; color:#525252; font-family:'JetBrains Mono',monospace; margin-top:1px;">
+                        AUTONOMOUS FINANCIAL REQUIREMENTS ENGINE</p>
                 </div>
             </div>
 
             <!-- Controls -->
             <div class="flex items-center gap-2 flex-wrap">
                 <!-- User Profile / RBAC & MFA badge -->
-                <div id="user-badge" onclick="openAuthModal()" class="theme-tag flex items-center gap-2 px-3 py-2 rounded cursor-pointer hover:border-amber-500 transition-all" style="font-size:13px;border:1px solid #333;" title="Click to Switch Role or Re-authenticate">
+                <div id="user-badge" onclick="openAuthModal()"
+                    class="theme-tag flex items-center gap-2 px-3 py-2 rounded cursor-pointer hover:border-amber-500 transition-all"
+                    style="font-size:13px;border:1px solid #333;" title="Click to Switch Role or Re-authenticate">
                     <i class="fas fa-user-shield" style="color:#f59e0b;"></i>
                     <span id="current-user-label" class="font-mono text-amber-400 font-bold">Sign in required</span>
                 </div>
 
                 <!-- Document Upload button -->
-                <button onclick="openUploadModal()" class="theme-btn px-3 py-2 rounded flex items-center gap-2" style="font-size:14px;background:rgba(59,130,246,0.12);border:1px solid rgba(59,130,246,0.35);color:#60a5fa;" title="Upload PDF, DOCX, or Policy documents">
+                <button onclick="openUploadModal()" class="theme-btn px-3 py-2 rounded flex items-center gap-2"
+                    style="font-size:14px;background:rgba(59,130,246,0.12);border:1px solid rgba(59,130,246,0.35);color:#60a5fa;"
+                    title="Upload PDF, DOCX, or Policy documents">
                     <i class="fas fa-file-arrow-up"></i> Upload Docs
                 </button>
 
-                <button onclick="openHistoryModal()" class="theme-btn px-3 py-2 rounded flex items-center gap-2" style="font-size:14px;background:rgba(124,58,237,0.12);border:1px solid rgba(124,58,237,0.35);color:#c4b5fd;" title="Load a saved chat">
+                <button onclick="openHistoryModal()" class="theme-btn px-3 py-2 rounded flex items-center gap-2"
+                    style="font-size:14px;background:rgba(124,58,237,0.12);border:1px solid rgba(124,58,237,0.35);color:#c4b5fd;"
+                    title="Load a saved chat">
                     <i class="fas fa-clock-rotate-left"></i> History
                 </button>
 
@@ -66,7 +76,8 @@
                     </button>
                 </div>
 
-                <button onclick="resetSession()" class="theme-btn px-4 py-2 rounded flex items-center gap-2" style="font-size:15px;">
+                <button onclick="resetSession()" class="theme-btn px-4 py-2 rounded flex items-center gap-2"
+                    style="font-size:15px;">
                     <i class="fas fa-rotate-right"></i> Reset
                 </button>
             </div>
@@ -80,10 +91,12 @@
         <section class="floating-card p-4">
             <div class="flex items-center justify-between mb-3">
                 <div class="flex items-center gap-3">
-                    <span style="font-size:13px;font-weight:800;letter-spacing:0.08em;color:#525252;font-family:'JetBrains Mono',monospace;">
+                    <span
+                        style="font-size:13px;font-weight:800;letter-spacing:0.08em;color:#525252;font-family:'JetBrains Mono',monospace;">
                         <i class="fas fa-microchip" style="color:#f59e0b;margin-right:6px;"></i>MULTI-AGENT PIPELINE
                     </span>
-                    <span class="badge-amber px-2 py-0.5 rounded font-mono" style="font-size:12px;font-weight:800;">13 NODES</span>
+                    <span class="badge-amber px-2 py-0.5 rounded font-mono" style="font-size:12px;font-weight:800;">13
+                        NODES</span>
                 </div>
                 <div id="pipeline-status" class="terminal-line flex items-center gap-2" style="font-size:13px;">
                     <span style="width:7px;height:7px;border-radius:50%;background:#2a2a2a;flex-shrink:0;"></span>
@@ -93,7 +106,8 @@
 
             <!-- Agent Grid -->
             <div class="grid gap-2" style="grid-template-columns:repeat(13,1fr);">
-                <div id="agent-coordinator" class="agent-node p-2 text-center" title="Controls workflow & orchestrates state">
+                <div id="agent-coordinator" class="agent-node p-2 text-center"
+                    title="Controls workflow & orchestrates state">
                     <i class="fas fa-sitemap block mb-1" style="font-size:14px;color:#525252;"></i>
                     <div style="font-size:11px;">Coord</div>
                 </div>
@@ -105,11 +119,13 @@
                     <i class="fas fa-file-export block mb-1" style="font-size:14px;color:#3b82f6;"></i>
                     <div style="font-size:11px;">Extract</div>
                 </div>
-                <div id="agent-clarification" class="agent-node p-2 text-center" title="Detects ambiguity & missing bounds">
+                <div id="agent-clarification" class="agent-node p-2 text-center"
+                    title="Detects ambiguity & missing bounds">
                     <i class="fas fa-circle-question block mb-1" style="font-size:14px;color:#f59e0b;"></i>
                     <div style="font-size:11px;">Clarify</div>
                 </div>
-                <div id="agent-classification" class="agent-node p-2 text-center" title="13-dimension financial taxonomy">
+                <div id="agent-classification" class="agent-node p-2 text-center"
+                    title="13-dimension financial taxonomy">
                     <i class="fas fa-tags block mb-1" style="font-size:14px;color:#7c3aed;"></i>
                     <div style="font-size:11px;">Classify</div>
                 </div>
@@ -117,7 +133,8 @@
                     <i class="fas fa-code-compare block mb-1" style="font-size:14px;color:#dc2626;"></i>
                     <div style="font-size:11px;">Conflict</div>
                 </div>
-                <div id="agent-compliance" class="agent-node p-2 text-center" title="RAG mapping to GDPR, PCI-DSS, Basel III/IV">
+                <div id="agent-compliance" class="agent-node p-2 text-center"
+                    title="RAG mapping to GDPR, PCI-DSS, Basel III/IV">
                     <i class="fas fa-scale-balanced block mb-1" style="font-size:14px;color:#dc2626;"></i>
                     <div style="font-size:11px;">Comply</div>
                 </div>
@@ -151,23 +168,29 @@
         <!-- ── DOMAIN & PRESETS ── -->
         <section class="floating-card p-3 flex items-center justify-between gap-4 flex-wrap">
             <div class="flex items-center gap-3">
-                <label for="domain-select" style="font-size:13px;font-weight:800;letter-spacing:0.08em;color:#525252;font-family:'JetBrains Mono',monospace;">
+                <label for="domain-select"
+                    style="font-size:13px;font-weight:800;letter-spacing:0.08em;color:#525252;font-family:'JetBrains Mono',monospace;">
                     <i class="fas fa-layer-group" style="color:#f59e0b;margin-right:5px;"></i>DOMAIN:
                 </label>
-                <select id="domain-select" class="floating-input font-mono px-3 py-2" style="min-width:300px;font-size:15px;">
+                <select id="domain-select" class="floating-input font-mono px-3 py-2"
+                    style="min-width:300px;font-size:15px;">
                     <option value="Digital Banking &amp; Mobile Payments">Digital Banking &amp; Mobile Payments</option>
-                    <option value="Loan Origination &amp; Credit Assessment">Loan Origination &amp; Credit Assessment</option>
-                    <option value="Payment Processing &amp; ISO 20022">Payment Processing &amp; ISO 20022 Gateway</option>
+                    <option value="Loan Origination &amp; Credit Assessment">Loan Origination &amp; Credit Assessment
+                    </option>
+                    <option value="Payment Processing &amp; ISO 20022">Payment Processing &amp; ISO 20022 Gateway
+                    </option>
                     <option value="Fraud Detection &amp; Real-Time AML">Fraud Detection &amp; Real-Time AML</option>
                     <option value="Customer Onboarding &amp; KYC">Customer Onboarding &amp; Biometric KYC</option>
                     <option value="Insurance &amp; Wealth Management">Insurance &amp; Wealth Management</option>
-                    <option value="Regulatory Reporting &amp; Basel III/IV">Regulatory Reporting &amp; Basel III/IV</option>
+                    <option value="Regulatory Reporting &amp; Basel III/IV">Regulatory Reporting &amp; Basel III/IV
+                    </option>
                     <option value="Financial Data Analytics">Financial Data Analytics &amp; Lakehouse</option>
                 </select>
             </div>
 
             <div class="flex items-center gap-2 flex-wrap">
-                <span style="font-size:13px;font-weight:800;letter-spacing:0.06em;color:#525252;font-family:'JetBrains Mono',monospace;">TEMPLATES:</span>
+                <span
+                    style="font-size:13px;font-weight:800;letter-spacing:0.06em;color:#525252;font-family:'JetBrains Mono',monospace;">TEMPLATES:</span>
                 <button onclick="loadPreset('loan')" class="preset-chip px-3 py-2 flex items-center gap-2">
                     <i class="fas fa-building-columns" style="color:#3b82f6;"></i> SME Lending
                 </button>
@@ -187,15 +210,20 @@
         <main class="grid gap-4" style="grid-template-columns: 5fr 7fr;">
 
             <!-- LEFT: CHAT CONSOLE -->
-            <div class="floating-card flex flex-col overflow-hidden" style="height:calc(100vh - 270px); min-height:600px;">
+            <div class="floating-card flex flex-col overflow-hidden"
+                style="height:calc(100vh - 270px); min-height:600px;">
 
                 <!-- Console Header -->
                 <div class="px-5 py-4 flex items-center justify-between" style="border-bottom:1px solid #2a2a2a;">
                     <div class="flex items-center gap-3">
-                        <div style="width:10px;height:10px;border-radius:50%;background:#16a34a;animation:subtle-pulse 2s infinite;"></div>
-                        <h2 style="font-size:16px;font-weight:800;letter-spacing:0.05em;color:#fff;font-family:'JetBrains Mono',monospace;">STAKEHOLDER_CONSOLE</h2>
+                        <div
+                            style="width:12px;height:12px;border-radius:50%;background:#16a34a;animation:subtle-pulse 2s infinite;">
+                        </div>
+                        <h2
+                            style="font-size:18px;font-weight:800;letter-spacing:0.05em;color:#fff;font-family:'JetBrains Mono',monospace;">
+                            STAKEHOLDER_CONSOLE</h2>
                     </div>
-                    <span class="terminal-line" style="font-size:14px !important;">
+                    <span class="terminal-line" style="font-size:15px !important;">
                         <span id="chat-count" style="color:#f59e0b;font-weight:800;">0</span> MESSAGES
                     </span>
                 </div>
@@ -204,36 +232,45 @@
                 <div style="height:2px;background:linear-gradient(90deg,#f59e0b 0%,transparent 60%);"></div>
 
                 <!-- Chat Window -->
-                <div id="chat-window" class="flex-1 overflow-y-auto custom-scrollbar" style="padding:20px; display:flex; flex-direction:column; gap:16px; font-size:17.5px;">
+                <div id="chat-window" class="flex-1 overflow-y-auto custom-scrollbar"
+                    style="padding:24px; display:flex; flex-direction:column; gap:20px; font-size:20px;">
                     <!-- Welcome -->
-                    <div class="flex items-start gap-3">
-                        <div style="width:38px;height:38px;border-radius:6px;background:rgba(245,158,11,0.15);border:1px solid rgba(245,158,11,0.3);flex-shrink:0;display:flex;align-items:center;justify-content:center;color:#fbbf24;font-family:'JetBrains Mono',monospace;font-weight:900;font-size:13px;">FR</div>
-                        <div class="inner-card" style="padding:18px 20px;max-width:560px;font-size:17px;line-height:1.65;">
-                            <p style="font-weight:800;color:#fff;font-size:19px;margin-bottom:8px;">FinReq Engine — Online</p>
-                            <p style="color:#d4d4d4;font-size:16.5px;line-height:1.6;">Describe your financial project. 13 specialist agents will synthesize an IEEE-compliant requirements baseline with RAG regulatory grounding.</p>
-                            <div style="margin-top:14px;padding-top:12px;border-top:1px solid #2a2a2a;display:flex;flex-direction:column;gap:8px;">
-                                <div style="font-size:15px;color:#a3a3a3;display:flex;align-items:center;gap:10px;"><i class="fas fa-shield-check" style="color:#16a34a;font-size:16px;"></i> PII Redaction &amp; Prompt Injection Guard</div>
-                                <div style="font-size:15px;color:#a3a3a3;display:flex;align-items:center;gap:10px;"><i class="fas fa-scale-balanced" style="color:#f59e0b;font-size:16px;"></i> RAG: GDPR, PCI-DSS, Basel III/IV</div>
-                                <div style="font-size:15px;color:#a3a3a3;display:flex;align-items:center;gap:10px;"><i class="fas fa-diagram-project" style="color:#7c3aed;font-size:16px;"></i> Multi-Criteria SDLC &amp; RTM Matrix</div>
+                    <div class="flex items-start gap-4">
+                        <div
+                            style="width:44px;height:44px;border-radius:6px;background:rgba(245,158,11,0.15);border:1px solid rgba(245,158,11,0.3);flex-shrink:0;display:flex;align-items:center;justify-content:center;color:#fbbf24;font-family:'JetBrains Mono',monospace;font-weight:900;font-size:14px;">
+                            FR</div>
+                        <div class="inner-card"
+                            style="padding:20px 22px;max-width:620px;font-size:20px;line-height:1.7;">
+                            <p style="font-weight:800;color:#fff;font-size:22px;margin-bottom:10px;">FinReq Engine —
+                                Online</p>
+                            <p style="color:#d4d4d4;font-size:19px;line-height:1.65;">Describe your financial project.
+                                13 specialist agents will synthesize an IEEE-compliant requirements baseline with RAG
+                                regulatory grounding.</p>
+                            <div
+                                style="margin-top:16px;padding-top:14px;border-top:1px solid #2a2a2a;display:flex;flex-direction:column;gap:10px;">
+                                <div style="font-size:17px;color:#a3a3a3;display:flex;align-items:center;gap:10px;"><i
+                                        class="fas fa-shield-check" style="color:#16a34a;font-size:18px;"></i> PII
+                                    Redaction &amp; Prompt Injection Guard</div>
+                                <div style="font-size:17px;color:#a3a3a3;display:flex;align-items:center;gap:10px;"><i
+                                        class="fas fa-scale-balanced" style="color:#f59e0b;font-size:18px;"></i> RAG:
+                                    GDPR, PCI-DSS, Basel III/IV</div>
+                                <div style="font-size:17px;color:#a3a3a3;display:flex;align-items:center;gap:10px;"><i
+                                        class="fas fa-diagram-project" style="color:#7c3aed;font-size:18px;"></i>
+                                    Multi-Criteria SDLC &amp; RTM Matrix</div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Security Alert Bar -->
-                <div id="security-alert-bar" class="hidden px-5 py-2" style="background:rgba(245,158,11,0.08);border-top:1px solid rgba(245,158,11,0.2);border-bottom:1px solid rgba(245,158,11,0.2);">
-                    <span id="security-alert-text" class="font-mono" style="font-size:14px;color:#fbbf24;display:flex;align-items:center;gap:8px;">
-                        <i class="fas fa-shield-virus"></i> Security Guard Active
-                    </span>
-                </div>
-
                 <!-- Persona Selector -->
-                <div class="px-5 py-3 flex items-center justify-between gap-3" style="border-top:1px solid #2a2a2a;background:#111;">
+                <div class="px-5 py-3 flex items-center justify-between gap-3"
+                    style="border-top:1px solid #2a2a2a;background:#111;">
                     <div class="flex items-center gap-3">
-                        <label for="role-select" style="font-size:14px;font-weight:800;letter-spacing:0.06em;color:#737373;font-family:'JetBrains Mono',monospace;">
+                        <label for="role-select"
+                            style="font-size:15px;font-weight:800;letter-spacing:0.06em;color:#737373;font-family:'JetBrains Mono',monospace;">
                             <i class="fas fa-user" style="color:#f59e0b;margin-right:6px;"></i>PERSONA:
                         </label>
-                        <select id="role-select" class="floating-input px-3 py-2" style="font-size:15px;">
+                        <select id="role-select" class="floating-input px-3 py-2" style="font-size:17px;">
                             <option value="Business Analyst">Business Analyst</option>
                             <option value="Compliance Officer">Compliance Officer</option>
                             <option value="Information-Security Team">Information-Security Team</option>
@@ -252,47 +289,60 @@
                         <textarea id="user-input" rows="3"
                             placeholder="Enter financial project requirements or clarification answers..."
                             class="floating-input custom-scrollbar w-full focus:outline-none"
-                            style="padding:14px 58px 14px 16px;resize:none;font-size:17.5px;line-height:1.55;"></textarea>
+                            style="padding:16px 64px 16px 18px;resize:none;font-size:20px;line-height:1.6;"></textarea>
                         <button type="submit" id="send-btn"
-                            style="position:absolute;right:10px;bottom:12px;width:38px;height:38px;border-radius:6px;background:#f59e0b;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.15s;">
-                            <i class="fas fa-arrow-up" style="color:#000;font-size:17px;font-weight:900;"></i>
+                            style="position:absolute;right:12px;bottom:14px;width:44px;height:44px;border-radius:6px;background:#f59e0b;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.15s;">
+                            <i class="fas fa-arrow-up" style="color:#000;font-size:20px;font-weight:900;"></i>
                         </button>
                     </form>
                 </div>
             </div>
 
             <!-- RIGHT: SPEC PANEL -->
-            <div class="floating-card flex flex-col overflow-hidden" style="height:calc(100vh - 270px); min-height:600px;">
+            <div class="floating-card flex flex-col overflow-hidden"
+                style="height:calc(100vh - 270px); min-height:600px;">
 
                 <!-- Tab Strip -->
-                <div class="px-3 py-2 flex items-center gap-1 overflow-x-auto custom-scrollbar" style="border-bottom:1px solid #2a2a2a;background:#111;">
-                    <button onclick="switchTab('requirements')" id="tab-btn-requirements" class="tab-btn active px-4 py-2 flex items-center gap-2 whitespace-nowrap">
+                <div class="px-3 py-2 flex items-center gap-1 overflow-x-auto custom-scrollbar"
+                    style="border-bottom:1px solid #2a2a2a;background:#111;">
+                    <button onclick="switchTab('requirements')" id="tab-btn-requirements"
+                        class="tab-btn active px-4 py-2 flex items-center gap-2 whitespace-nowrap">
                         <i class="fas fa-list-check" style="color:#f59e0b;"></i> Requirements
-                        <span id="req-count" class="badge-amber px-2 py-0.5 rounded font-mono" style="font-size:12px;">0</span>
+                        <span id="req-count" class="badge-amber px-2 py-0.5 rounded font-mono"
+                            style="font-size:12px;">0</span>
                     </button>
-                    <button onclick="switchTab('compliance')" id="tab-btn-compliance" class="tab-btn px-4 py-2 flex items-center gap-2 whitespace-nowrap">
+                    <button onclick="switchTab('compliance')" id="tab-btn-compliance"
+                        class="tab-btn px-4 py-2 flex items-center gap-2 whitespace-nowrap">
                         <i class="fas fa-scale-balanced" style="color:#dc2626;"></i> Compliance
                     </button>
-                    <button onclick="switchTab('sdlc')" id="tab-btn-sdlc" class="tab-btn px-4 py-2 flex items-center gap-2 whitespace-nowrap">
+                    <button onclick="switchTab('sdlc')" id="tab-btn-sdlc"
+                        class="tab-btn px-4 py-2 flex items-center gap-2 whitespace-nowrap">
                         <i class="fas fa-diagram-project" style="color:#16a34a;"></i> SDLC
                     </button>
-                    <button onclick="switchTab('risks')" id="tab-btn-risks" class="tab-btn px-4 py-2 flex items-center gap-2 whitespace-nowrap">
+                    <button onclick="switchTab('risks')" id="tab-btn-risks"
+                        class="tab-btn px-4 py-2 flex items-center gap-2 whitespace-nowrap">
                         <i class="fas fa-shield-virus" style="color:#f59e0b;"></i> Risk Register
-                        <span id="risk-count" class="badge-amber px-2 py-0.5 rounded font-mono" style="font-size:12px;">0</span>
+                        <span id="risk-count" class="badge-amber px-2 py-0.5 rounded font-mono"
+                            style="font-size:12px;">0</span>
                     </button>
-                    <button onclick="switchTab('clarifications')" id="tab-btn-clarifications" class="tab-btn px-4 py-2 flex items-center gap-2 whitespace-nowrap">
+                    <button onclick="switchTab('clarifications')" id="tab-btn-clarifications"
+                        class="tab-btn px-4 py-2 flex items-center gap-2 whitespace-nowrap">
                         <i class="fas fa-circle-nodes" style="color:#7c3aed;"></i> Quality &amp; Gaps
                     </button>
-                    <button onclick="switchTab('traceability')" id="tab-btn-traceability" class="tab-btn px-4 py-2 flex items-center gap-2 whitespace-nowrap">
+                    <button onclick="switchTab('traceability')" id="tab-btn-traceability"
+                        class="tab-btn px-4 py-2 flex items-center gap-2 whitespace-nowrap">
                         <i class="fas fa-table-cells" style="color:#0ea5e9;"></i> Traceability (RTM)
                     </button>
-                    <button onclick="switchTab('admin')" id="tab-btn-admin" class="tab-btn px-4 py-2 flex items-center gap-2 whitespace-nowrap">
+                    <button onclick="switchTab('admin')" id="tab-btn-admin"
+                        class="tab-btn px-4 py-2 flex items-center gap-2 whitespace-nowrap">
                         <i class="fas fa-chart-line" style="color:#10b981;"></i> Admin &amp; Telemetry
                     </button>
-                    <button onclick="switchTab('artifacts')" id="tab-btn-artifacts" class="tab-btn px-4 py-2 flex items-center gap-2 whitespace-nowrap">
+                    <button onclick="switchTab('artifacts')" id="tab-btn-artifacts"
+                        class="tab-btn px-4 py-2 flex items-center gap-2 whitespace-nowrap">
                         <i class="fas fa-box-archive" style="color:#3b82f6;"></i> Artifacts
                     </button>
-                    <button onclick="switchTab('audit')" id="tab-btn-audit" class="tab-btn px-4 py-2 flex items-center gap-2 whitespace-nowrap">
+                    <button onclick="switchTab('audit')" id="tab-btn-audit"
+                        class="tab-btn px-4 py-2 flex items-center gap-2 whitespace-nowrap">
                         <i class="fas fa-receipt" style="color:#525252;"></i> Audit Trail
                     </button>
                 </div>
@@ -304,23 +354,30 @@
                     <div id="tab-content-requirements" class="space-y-3">
                         <div class="flex items-center justify-between pb-3" style="border-bottom:1px solid #2a2a2a;">
                             <div>
-                                <h3 style="font-size:16px;font-weight:800;color:#fff;letter-spacing:-0.02em;">Requirements Baseline Ledger</h3>
-                                <p style="font-size:14px;color:#525252;margin-top:2px;">Classified across 13 financial dimensions with acceptance criteria</p>
+                                <h3 style="font-size:16px;font-weight:800;color:#fff;letter-spacing:-0.02em;">
+                                    Requirements Baseline Ledger</h3>
+                                <p style="font-size:14px;color:#525252;margin-top:2px;">Classified across 13 financial
+                                    dimensions with acceptance criteria</p>
                             </div>
-                            <button onclick="approveAllReqs()" class="btn-approve px-4 py-2 flex items-center gap-2" style="font-size:15px;">
+                            <button onclick="approveAllReqs()" class="btn-approve px-4 py-2 flex items-center gap-2"
+                                style="font-size:15px;">
                                 <i class="fas fa-check-double"></i> Approve All
                             </button>
                         </div>
 
                         <!-- Search and Filter Bar -->
-                        <div class="grid grid-cols-1 md:grid-cols-5 gap-2 pb-3 pt-1" style="border-bottom:1px solid #222;">
+                        <div class="grid grid-cols-1 md:grid-cols-5 gap-2 pb-3 pt-1"
+                            style="border-bottom:1px solid #222;">
                             <div class="col-span-2 relative">
-                                <i class="fas fa-search absolute left-3 top-3 text-neutral-500" style="font-size:11px;"></i>
-                                <input type="text" id="req-search-input" oninput="filterRequirements()" placeholder="Search requirements, statement, ID..."
-                                       class="floating-input w-full pl-8 pr-3 py-1.5 text-xs">
+                                <i class="fas fa-search absolute left-3 top-3 text-neutral-500"
+                                    style="font-size:11px;"></i>
+                                <input type="text" id="req-search-input" oninput="filterRequirements()"
+                                    placeholder="Search requirements, statement, ID..."
+                                    class="floating-input w-full pl-8 pr-3 py-1.5 text-xs">
                             </div>
                             <div>
-                                <select id="req-category-filter" onchange="filterRequirements()" class="floating-input w-full py-1.5 px-2 text-xs">
+                                <select id="req-category-filter" onchange="filterRequirements()"
+                                    class="floating-input w-full py-1.5 px-2 text-xs">
                                     <option value="">All Categories</option>
                                     <option value="Functional">Functional</option>
                                     <option value="Security">Security</option>
@@ -332,7 +389,8 @@
                                 </select>
                             </div>
                             <div>
-                                <select id="req-priority-filter" onchange="filterRequirements()" class="floating-input w-full py-1.5 px-2 text-xs">
+                                <select id="req-priority-filter" onchange="filterRequirements()"
+                                    class="floating-input w-full py-1.5 px-2 text-xs">
                                     <option value="">All Priorities</option>
                                     <option value="High">High</option>
                                     <option value="Medium">Medium</option>
@@ -340,7 +398,8 @@
                                 </select>
                             </div>
                             <div>
-                                <select id="req-status-filter" onchange="filterRequirements()" class="floating-input w-full py-1.5 px-2 text-xs">
+                                <select id="req-status-filter" onchange="filterRequirements()"
+                                    class="floating-input w-full py-1.5 px-2 text-xs">
                                     <option value="">All Statuses</option>
                                     <option value="approved">Approved</option>
                                     <option value="validated">Validated</option>
@@ -351,9 +410,12 @@
                         </div>
                         <div id="requirements-list">
                             <div style="text-align:center;padding:80px 0;color:#525252;">
-                                <i class="fas fa-folder-open" style="font-size:32px;display:block;margin-bottom:12px;color:#2a2a2a;"></i>
-                                <p style="font-size:16px;font-weight:700;color:#3a3a3a;">No requirements extracted yet.</p>
-                                <p style="font-size:14px;color:#2a2a2a;margin-top:4px;">Submit project requirements to initiate the pipeline.</p>
+                                <i class="fas fa-folder-open"
+                                    style="font-size:32px;display:block;margin-bottom:12px;color:#2a2a2a;"></i>
+                                <p style="font-size:16px;font-weight:700;color:#3a3a3a;">No requirements extracted yet.
+                                </p>
+                                <p style="font-size:14px;color:#2a2a2a;margin-top:4px;">Submit project requirements to
+                                    initiate the pipeline.</p>
                             </div>
                         </div>
                     </div>
@@ -362,16 +424,20 @@
                     <div id="tab-content-compliance" class="hidden space-y-3">
                         <div class="flex items-center justify-between pb-3" style="border-bottom:1px solid #2a2a2a;">
                             <div>
-                                <h3 style="font-size:16px;font-weight:800;color:#fff;">Regulatory Grounding &amp; Citations</h3>
-                                <p style="font-size:14px;color:#525252;margin-top:2px;">Retrieved from authoritative Knowledge Base (GDPR, PCI-DSS, Basel III/IV, AML)</p>
+                                <h3 style="font-size:16px;font-weight:800;color:#fff;">Regulatory Grounding &amp;
+                                    Citations</h3>
+                                <p style="font-size:14px;color:#525252;margin-top:2px;">Retrieved from authoritative
+                                    Knowledge Base (GDPR, PCI-DSS, Basel III/IV, AML)</p>
                             </div>
-                            <button onclick="approveSection('compliance')" class="btn-primary px-4 py-2 flex items-center gap-2" style="font-size:15px;">
+                            <button onclick="approveSection('compliance')"
+                                class="btn-primary px-4 py-2 flex items-center gap-2" style="font-size:15px;">
                                 <i class="fas fa-stamp"></i> Sign Off
                             </button>
                         </div>
                         <div id="compliance-list">
                             <div style="text-align:center;padding:80px 0;color:#525252;">
-                                <i class="fas fa-scale-balanced" style="font-size:32px;display:block;margin-bottom:12px;color:#2a2a2a;"></i>
+                                <i class="fas fa-scale-balanced"
+                                    style="font-size:32px;display:block;margin-bottom:12px;color:#2a2a2a;"></i>
                                 <p style="font-size:16px;color:#3a3a3a;">No regulatory mappings yet.</p>
                             </div>
                         </div>
@@ -381,35 +447,46 @@
                     <div id="tab-content-sdlc" class="hidden space-y-4">
                         <div class="flex items-center justify-between pb-3" style="border-bottom:1px solid #2a2a2a;">
                             <div>
-                                <h3 style="font-size:16px;font-weight:800;color:#fff;">Multi-Criteria SDLC Recommendation</h3>
-                                <p style="font-size:14px;color:#525252;margin-top:2px;">Weighted by regulatory criticality, architecture complexity &amp; release tempo</p>
+                                <h3 style="font-size:16px;font-weight:800;color:#fff;">Multi-Criteria SDLC
+                                    Recommendation</h3>
+                                <p style="font-size:14px;color:#525252;margin-top:2px;">Weighted by regulatory
+                                    criticality, architecture complexity &amp; release tempo</p>
                             </div>
-                            <button onclick="approveSection('sdlc')" class="btn-approve px-4 py-2 flex items-center gap-2" style="font-size:15px;">
+                            <button onclick="approveSection('sdlc')"
+                                class="btn-approve px-4 py-2 flex items-center gap-2" style="font-size:15px;">
                                 <i class="fas fa-check"></i> Approve SDLC
                             </button>
                         </div>
 
                         <div class="inner-card" style="padding:16px;space-y:8px;">
                             <div class="flex items-center justify-between" style="margin-bottom:8px;">
-                                <span style="font-size:13px;font-weight:800;letter-spacing:0.08em;color:#f59e0b;font-family:'JetBrains Mono',monospace;">
+                                <span
+                                    style="font-size:13px;font-weight:800;letter-spacing:0.08em;color:#f59e0b;font-family:'JetBrains Mono',monospace;">
                                     <i class="fas fa-award" style="margin-right:5px;"></i>OPTIMAL MATCH
                                 </span>
-                                <span id="sdlc-top-badge" class="badge-amber px-3 py-1 rounded font-mono" style="font-size:13px;font-weight:800;">91% WEIGHT</span>
+                                <span id="sdlc-top-badge" class="badge-amber px-3 py-1 rounded font-mono"
+                                    style="font-size:13px;font-weight:800;">88% FIT</span>
                             </div>
-                            <h4 id="sdlc-top-model" style="font-size:18px;font-weight:800;color:#fff;margin-bottom:6px;">Agile–DevSecOps Hybrid</h4>
-                            <p id="sdlc-rationale" style="font-size:15px;color:#a3a3a3;line-height:1.6;">Selected based on regulatory gating combined with continuous delivery constraints.</p>
+                            <h4 id="sdlc-top-model"
+                                style="font-size:18px;font-weight:800;color:#fff;margin-bottom:6px;">Agile–DevSecOps
+                                Hybrid</h4>
+                            <p id="sdlc-rationale" style="font-size:15px;color:#a3a3a3;line-height:1.6;">Selected based
+                                on regulatory gating combined with continuous delivery constraints.</p>
                         </div>
 
                         <div class="inner-card" style="padding:16px;">
                             <div class="flex items-center justify-between" style="margin-bottom:12px;">
-                                <h4 style="font-size:14px;font-weight:800;letter-spacing:0.06em;color:#525252;font-family:'JetBrains Mono',monospace;">EVALUATION DISTRIBUTION</h4>
-                                <span class="badge-amber px-2 py-0.5 rounded font-mono" style="font-size:12px;">SUM: 100%</span>
+                                <h4
+                                    style="font-size:14px;font-weight:800;letter-spacing:0.06em;color:#525252;font-family:'JetBrains Mono',monospace;">
+                                    MCDA SUITABILITY SCORES (OUT OF 100%)</h4>
+                                <span class="badge-amber px-2 py-0.5 rounded font-mono" style="font-size:12px;">INDEPENDENT FIT</span>
                             </div>
                             <div id="sdlc-ranking-bars" class="space-y-3"></div>
                         </div>
 
                         <div>
-                            <h4 style="font-size:14px;font-weight:800;letter-spacing:0.06em;color:#525252;font-family:'JetBrains Mono',monospace;margin-bottom:8px;">
+                            <h4
+                                style="font-size:14px;font-weight:800;letter-spacing:0.06em;color:#525252;font-family:'JetBrains Mono',monospace;margin-bottom:8px;">
                                 <i class="fas fa-timeline" style="color:#3b82f6;margin-right:6px;"></i>GOVERNANCE PHASES
                             </h4>
                             <div id="sdlc-workflow-list" class="space-y-2"></div>
@@ -420,16 +497,20 @@
                     <div id="tab-content-risks" class="hidden space-y-3">
                         <div class="flex items-center justify-between pb-3" style="border-bottom:1px solid #2a2a2a;">
                             <div>
-                                <h3 style="font-size:16px;font-weight:800;color:#fff;">Financial Threat &amp; Risk Register</h3>
-                                <p style="font-size:14px;color:#525252;margin-top:2px;">STRIDE threat modeling, likelihood, impact &amp; compensating controls</p>
+                                <h3 style="font-size:16px;font-weight:800;color:#fff;">Financial Threat &amp; Risk
+                                    Register</h3>
+                                <p style="font-size:14px;color:#525252;margin-top:2px;">STRIDE threat modeling,
+                                    likelihood, impact &amp; compensating controls</p>
                             </div>
-                            <button onclick="approveSection('risk')" class="btn-primary px-4 py-2 flex items-center gap-2" style="font-size:15px;">
+                            <button onclick="approveSection('risk')"
+                                class="btn-primary px-4 py-2 flex items-center gap-2" style="font-size:15px;">
                                 <i class="fas fa-stamp"></i> Approve Matrix
                             </button>
                         </div>
                         <div id="risk-list">
                             <div style="text-align:center;padding:80px 0;color:#525252;">
-                                <i class="fas fa-shield-virus" style="font-size:32px;display:block;margin-bottom:12px;color:#2a2a2a;"></i>
+                                <i class="fas fa-shield-virus"
+                                    style="font-size:32px;display:block;margin-bottom:12px;color:#2a2a2a;"></i>
                                 <p style="font-size:16px;color:#3a3a3a;">No risk entries yet.</p>
                             </div>
                         </div>
@@ -438,12 +519,15 @@
                     <!-- TAB 5: QUALITY & GAPS -->
                     <div id="tab-content-clarifications" class="hidden space-y-3">
                         <div class="pb-3" style="border-bottom:1px solid #2a2a2a;">
-                            <h3 style="font-size:16px;font-weight:800;color:#fff;">Specification Quality &amp; Contradiction Audit</h3>
-                            <p style="font-size:14px;color:#525252;margin-top:2px;">Clarification Agent and Conflict Detection Agent findings</p>
+                            <h3 style="font-size:16px;font-weight:800;color:#fff;">Specification Quality &amp;
+                                Contradiction Audit</h3>
+                            <p style="font-size:14px;color:#525252;margin-top:2px;">Clarification Agent and Conflict
+                                Detection Agent findings</p>
                         </div>
                         <div id="quality-findings-container">
                             <div style="text-align:center;padding:80px 0;">
-                                <i class="fas fa-circle-check" style="font-size:32px;display:block;margin-bottom:12px;color:#16a34a;"></i>
+                                <i class="fas fa-circle-check"
+                                    style="font-size:32px;display:block;margin-bottom:12px;color:#16a34a;"></i>
                                 <p style="font-size:16px;color:#3a3a3a;">No ambiguity or conflict analysis yet.</p>
                             </div>
                         </div>
@@ -453,41 +537,52 @@
                     <div id="tab-content-artifacts" class="hidden space-y-4">
                         <div class="flex items-center justify-between pb-3" style="border-bottom:1px solid #2a2a2a;">
                             <div>
-                                <h3 style="font-size:16px;font-weight:800;color:#fff;">Engineered Specification Artifacts</h3>
-                                <p style="font-size:14px;color:#525252;margin-top:2px;">ISO/IEC/IEEE 29148 SRS, RTM &amp; Gherkin User Stories</p>
+                                <h3 style="font-size:16px;font-weight:800;color:#fff;">Engineered Specification
+                                    Artifacts</h3>
+                                <p style="font-size:14px;color:#525252;margin-top:2px;">ISO/IEC/IEEE 29148 SRS, RTM
+                                    &amp; Gherkin User Stories</p>
                             </div>
-                            <button onclick="approveSection('srs')" class="btn-primary px-4 py-2 flex items-center gap-2" style="font-size:15px;">
+                            <button onclick="approveSection('srs')"
+                                class="btn-primary px-4 py-2 flex items-center gap-2" style="font-size:15px;">
                                 <i class="fas fa-signature"></i> Sign-Off SRS
                             </button>
                         </div>
 
                         <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;">
-                            <button onclick="exportArtifact('srs')" class="inner-card" style="padding:16px;text-align:left;cursor:pointer;border:none;">
-                                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+                            <button onclick="exportArtifact('srs')" class="inner-card"
+                                style="padding:16px;text-align:left;cursor:pointer;border:none;">
+                                <div
+                                    style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
                                     <i class="fas fa-file-lines" style="color:#3b82f6;font-size:20px;"></i>
                                     <i class="fas fa-download" style="color:#525252;font-size:14px;"></i>
                                 </div>
                                 <div style="font-size:15px;font-weight:800;color:#fff;">Full SRS</div>
                                 <div class="font-mono" style="font-size:13px;color:#525252;">IEEE Std 830</div>
                             </button>
-                            <button onclick="exportArtifact('rtm')" class="inner-card" style="padding:16px;text-align:left;cursor:pointer;border:none;">
-                                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+                            <button onclick="exportArtifact('rtm')" class="inner-card"
+                                style="padding:16px;text-align:left;cursor:pointer;border:none;">
+                                <div
+                                    style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
                                     <i class="fas fa-table" style="color:#16a34a;font-size:20px;"></i>
                                     <i class="fas fa-download" style="color:#525252;font-size:14px;"></i>
                                 </div>
                                 <div style="font-size:15px;font-weight:800;color:#fff;">RTM Matrix</div>
                                 <div class="font-mono" style="font-size:13px;color:#525252;">Traceability</div>
                             </button>
-                            <button onclick="exportArtifact('user_stories')" class="inner-card" style="padding:16px;text-align:left;cursor:pointer;border:none;">
-                                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+                            <button onclick="exportArtifact('user_stories')" class="inner-card"
+                                style="padding:16px;text-align:left;cursor:pointer;border:none;">
+                                <div
+                                    style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
                                     <i class="fas fa-user-check" style="color:#7c3aed;font-size:20px;"></i>
                                     <i class="fas fa-download" style="color:#525252;font-size:14px;"></i>
                                 </div>
                                 <div style="font-size:15px;font-weight:800;color:#fff;">User Stories</div>
                                 <div class="font-mono" style="font-size:13px;color:#525252;">Gherkin BDD</div>
                             </button>
-                            <button onclick="exportArtifact('risk_register')" class="inner-card" style="padding:16px;text-align:left;cursor:pointer;border:none;">
-                                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+                            <button onclick="exportArtifact('risk_register')" class="inner-card"
+                                style="padding:16px;text-align:left;cursor:pointer;border:none;">
+                                <div
+                                    style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
                                     <i class="fas fa-shield-virus" style="color:#f59e0b;font-size:20px;"></i>
                                     <i class="fas fa-download" style="color:#525252;font-size:14px;"></i>
                                 </div>
@@ -497,8 +592,11 @@
                         </div>
 
                         <div>
-                            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-                                <span style="font-size:14px;font-weight:800;letter-spacing:0.06em;color:#525252;font-family:'JetBrains Mono',monospace;">SRS PREVIEW</span>
+                            <div
+                                style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+                                <span
+                                    style="font-size:14px;font-weight:800;letter-spacing:0.06em;color:#525252;font-family:'JetBrains Mono',monospace;">SRS
+                                    PREVIEW</span>
                                 <span class="font-mono" style="font-size:13px;color:#525252;">IEEE 29148</span>
                             </div>
                             <pre id="srs-preview-box" class="inner-card custom-scrollbar font-mono"
@@ -509,12 +607,15 @@
                     <!-- TAB 7: AUDIT TRAIL -->
                     <div id="tab-content-audit" class="hidden space-y-3">
                         <div class="pb-3" style="border-bottom:1px solid #2a2a2a;">
-                            <h3 style="font-size:16px;font-weight:800;color:#fff;">Immutable Governance &amp; Action Ledger</h3>
-                            <p style="font-size:14px;color:#525252;margin-top:2px;">Append-only audit log of all autonomous agent actions and stakeholder decisions</p>
+                            <h3 style="font-size:16px;font-weight:800;color:#fff;">Immutable Governance &amp; Action
+                                Ledger</h3>
+                            <p style="font-size:14px;color:#525252;margin-top:2px;">Append-only audit log of all
+                                autonomous agent actions and stakeholder decisions</p>
                         </div>
                         <div id="audit-trail-timeline">
                             <div style="text-align:center;padding:80px 0;color:#525252;">
-                                <i class="fas fa-clipboard-list" style="font-size:32px;display:block;margin-bottom:12px;color:#2a2a2a;"></i>
+                                <i class="fas fa-clipboard-list"
+                                    style="font-size:32px;display:block;margin-bottom:12px;color:#2a2a2a;"></i>
                                 <p style="font-size:16px;color:#3a3a3a;">No audit events recorded yet.</p>
                             </div>
                         </div>
@@ -524,10 +625,13 @@
                     <div id="tab-content-traceability" class="hidden space-y-3">
                         <div class="flex items-center justify-between pb-3" style="border-bottom:1px solid #2a2a2a;">
                             <div>
-                                <h3 style="font-size:16px;font-weight:800;color:#fff;">Requirements Traceability Matrix (RTM)</h3>
-                                <p style="font-size:14px;color:#525252;margin-top:2px;">End-to-End lineage: Statement ➔ Requirement ➔ Regulation ➔ Control ➔ Test ➔ Approval</p>
+                                <h3 style="font-size:16px;font-weight:800;color:#fff;">Requirements Traceability Matrix
+                                    (RTM)</h3>
+                                <p style="font-size:14px;color:#525252;margin-top:2px;">End-to-End lineage: Statement ➔
+                                    Requirement ➔ Regulation ➔ Control ➔ Test ➔ Approval</p>
                             </div>
-                            <button onclick="fetchTraceabilityMatrix()" class="theme-btn px-3 py-1.5 rounded text-xs flex items-center gap-2">
+                            <button onclick="fetchTraceabilityMatrix()"
+                                class="theme-btn px-3 py-1.5 rounded text-xs flex items-center gap-2">
                                 <i class="fas fa-arrows-rotate"></i> Refresh Matrix
                             </button>
                         </div>
@@ -546,7 +650,8 @@
                                 </thead>
                                 <tbody id="rtm-table-body">
                                     <tr>
-                                        <td colspan="7" style="text-align:center;padding:40px;color:#525252;">No requirements baseline extracted yet.</td>
+                                        <td colspan="7" style="text-align:center;padding:40px;color:#525252;">No
+                                            requirements baseline extracted yet.</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -557,10 +662,13 @@
                     <div id="tab-content-admin" class="hidden space-y-4">
                         <div class="flex items-center justify-between pb-3" style="border-bottom:1px solid #2a2a2a;">
                             <div>
-                                <h3 style="font-size:16px;font-weight:800;color:#fff;">Platform Administration &amp; Telemetry</h3>
-                                <p style="font-size:14px;color:#525252;margin-top:2px;">PostgreSQL pgvector, Redis state cache, 13-agent executions, and compliance gap monitoring</p>
+                                <h3 style="font-size:16px;font-weight:800;color:#fff;">Platform Administration &amp;
+                                    Telemetry</h3>
+                                <p style="font-size:14px;color:#525252;margin-top:2px;">PostgreSQL pgvector, Redis state
+                                    cache, 13-agent executions, and compliance gap monitoring</p>
                             </div>
-                            <button onclick="fetchAdminMetrics()" class="theme-btn px-3 py-1.5 rounded text-xs flex items-center gap-2">
+                            <button onclick="fetchAdminMetrics()"
+                                class="theme-btn px-3 py-1.5 rounded text-xs flex items-center gap-2">
                                 <i class="fas fa-arrows-rotate"></i> Refresh Stats
                             </button>
                         </div>
@@ -568,11 +676,13 @@
                         <div id="admin-metrics-cards" class="grid grid-cols-2 md:grid-cols-4 gap-3">
                             <div class="inner-card p-3">
                                 <div class="text-xs text-neutral-500 font-mono">DATABASE ENGINE</div>
-                                <div id="metric-db" class="text-base font-bold text-amber-400 mt-1">PostgreSQL + pgvector</div>
+                                <div id="metric-db" class="text-base font-bold text-amber-400 mt-1">PostgreSQL +
+                                    pgvector</div>
                             </div>
                             <div class="inner-card p-3">
                                 <div class="text-xs text-neutral-500 font-mono">REDIS CACHE</div>
-                                <div id="metric-redis" class="text-base font-bold text-green-400 mt-1">Connected (6379)</div>
+                                <div id="metric-redis" class="text-base font-bold text-green-400 mt-1">Connected (6379)
+                                </div>
                             </div>
                             <div class="inner-card p-3">
                                 <div class="text-xs text-neutral-500 font-mono">TOTAL REQS STORED</div>
@@ -586,7 +696,8 @@
 
                         <!-- Telemetry Table -->
                         <div class="mt-4">
-                            <h4 style="font-size:14px;font-weight:700;color:#fff;margin-bottom:8px;">Recent Specialist Agent Execution Telemetry</h4>
+                            <h4 style="font-size:14px;font-weight:700;color:#fff;margin-bottom:8px;">Recent Specialist
+                                Agent Execution Telemetry</h4>
                             <div class="overflow-x-auto">
                                 <table class="w-full text-left text-xs font-mono" style="border-collapse:collapse;">
                                     <thead>
@@ -599,7 +710,8 @@
                                     </thead>
                                     <tbody id="admin-runs-body">
                                         <tr>
-                                            <td colspan="4" style="text-align:center;padding:24px;color:#525252;">No agent executions recorded yet.</td>
+                                            <td colspan="4" style="text-align:center;padding:24px;color:#525252;">No
+                                                agent executions recorded yet.</td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -613,28 +725,39 @@
     </div><!-- /main content -->
 
     <!-- ── SAVED CHAT HISTORY ── -->
-    <div id="history-modal" class="fixed inset-0 z-50 hidden" style="background:rgba(0,0,0,0.85);backdrop-filter:blur(6px);align-items:center;justify-content:center;padding:20px;">
-        <div class="floating-card custom-scrollbar" style="padding:24px;max-width:780px;width:100%;max-height:85vh;overflow-y:auto;">
+    <div id="history-modal" class="fixed inset-0 z-50 hidden"
+        style="background:rgba(0,0,0,0.85);backdrop-filter:blur(6px);align-items:center;justify-content:center;padding:20px;">
+        <div class="floating-card custom-scrollbar"
+            style="padding:24px;max-width:780px;width:100%;max-height:85vh;overflow-y:auto;">
             <div class="flex items-center justify-between pb-3" style="border-bottom:1px solid #2a2a2a;">
                 <div>
                     <h3 style="font-size:18px;font-weight:800;color:#fff;display:flex;align-items:center;gap:10px;">
                         <i class="fas fa-clock-rotate-left" style="color:#a78bfa;"></i>
                         <span>Saved Chats History</span>
-                        <span id="history-count-badge" style="font-size:12px;font-family:'JetBrains Mono',monospace;background:rgba(124,58,237,0.18);border:1px solid rgba(124,58,237,0.4);color:#c4b5fd;padding:2px 8px;border-radius:12px;">0 sessions</span>
+                        <span id="history-count-badge"
+                            style="font-size:12px;font-family:'JetBrains Mono',monospace;background:rgba(124,58,237,0.18);border:1px solid rgba(124,58,237,0.4);color:#c4b5fd;padding:2px 8px;border-radius:12px;">0
+                            sessions</span>
                     </h3>
-                    <p style="font-size:13px;color:#888;margin-top:4px;">Access your saved workspaces with their custom chat names, full conversations, extracted requirements, compliance mappings, and audit trails.</p>
+                    <p style="font-size:13px;color:#888;margin-top:4px;">Access your saved workspaces with their custom
+                        chat names, full conversations, extracted requirements, compliance mappings, and audit trails.
+                    </p>
                 </div>
-                <button onclick="closeHistoryModal()" style="color:#737373;background:none;border:none;cursor:pointer;font-size:20px;"><i class="fas fa-xmark"></i></button>
+                <button onclick="closeHistoryModal()"
+                    style="color:#737373;background:none;border:none;cursor:pointer;font-size:20px;"><i
+                        class="fas fa-xmark"></i></button>
             </div>
 
             <!-- Search and Controls bar -->
             <div class="mt-4 flex items-center gap-3">
                 <div class="relative flex-1">
                     <i class="fas fa-magnifying-glass absolute left-3 top-3 text-neutral-500 text-sm"></i>
-                    <input type="text" id="history-search-input" oninput="filterHistoryList()" placeholder="Search saved chats by name, domain, or ID..."
-                           style="width:100%;padding:8px 12px 8px 36px;border-radius:6px;background:#141414;border:1px solid #333;color:#f3f4f6;font-size:14px;outline:none;" />
+                    <input type="text" id="history-search-input" oninput="filterHistoryList()"
+                        placeholder="Search saved chats by name, domain, or ID..."
+                        style="width:100%;padding:8px 12px 8px 36px;border-radius:6px;background:#141414;border:1px solid #333;color:#f3f4f6;font-size:14px;outline:none;" />
                 </div>
-                <button onclick="refreshHistoryList()" class="theme-btn px-3 py-2 rounded text-sm text-neutral-300 flex items-center gap-1.5" title="Refresh List">
+                <button onclick="refreshHistoryList()"
+                    class="theme-btn px-3 py-2 rounded text-sm text-neutral-300 flex items-center gap-1.5"
+                    title="Refresh List">
                     <i class="fas fa-rotate-right"></i> Refresh
                 </button>
             </div>
@@ -647,23 +770,32 @@
     </div>
 
     <!-- ── SAVE CHAT MODAL ── -->
-    <div id="save-chat-modal" class="fixed inset-0 z-50 hidden" style="background:rgba(0,0,0,0.85);backdrop-filter:blur(6px);align-items:center;justify-content:center;padding:20px;">
+    <div id="save-chat-modal" class="fixed inset-0 z-50 hidden"
+        style="background:rgba(0,0,0,0.85);backdrop-filter:blur(6px);align-items:center;justify-content:center;padding:20px;">
         <div class="floating-card" style="padding:24px;max-width:520px;width:100%;">
             <div class="flex items-center justify-between pb-3" style="border-bottom:1px solid #2a2a2a;">
                 <h3 style="font-size:16px;font-weight:800;color:#fff;display:flex;align-items:center;gap:8px;">
                     <i class="fas fa-floppy-disk" style="color:#fbbf24;"></i> Save Chat Workspace
                 </h3>
-                <button onclick="closeSaveChatModal()" style="color:#737373;background:none;border:none;cursor:pointer;font-size:20px;"><i class="fas fa-xmark"></i></button>
+                <button onclick="closeSaveChatModal()"
+                    style="color:#737373;background:none;border:none;cursor:pointer;font-size:20px;"><i
+                        class="fas fa-xmark"></i></button>
             </div>
             <div class="mt-4 space-y-3">
-                <label style="font-size:13.5px;color:#d1d5db;display:block;font-weight:600;">Chat Workspace Name:</label>
-                <input type="text" id="save-chat-title-input" onkeydown="if(event.key==='Enter')confirmSaveChatSession()"
-                       style="width:100%;padding:10px 14px;border-radius:6px;background:#141414;border:1px solid #f59e0b;color:#fff;font-size:14.5px;outline:none;"
-                       placeholder="e.g. SME Loan Origination & Credit Assessment" />
-                <p style="font-size:12.5px;color:#888;line-height:1.5;">Give this chat a meaningful name. It will be saved into History with all messages, requirements, risk analyses, regulatory compliance citations, and governance records.</p>
+                <label style="font-size:13.5px;color:#d1d5db;display:block;font-weight:600;">Chat Workspace
+                    Name:</label>
+                <input type="text" id="save-chat-title-input"
+                    onkeydown="if(event.key==='Enter')confirmSaveChatSession()"
+                    style="width:100%;padding:10px 14px;border-radius:6px;background:#141414;border:1px solid #f59e0b;color:#fff;font-size:14.5px;outline:none;"
+                    placeholder="e.g. SME Loan Origination & Credit Assessment" />
+                <p style="font-size:12.5px;color:#888;line-height:1.5;">Give this chat a meaningful name. It will be
+                    saved into History with all messages, requirements, risk analyses, regulatory compliance citations,
+                    and governance records.</p>
                 <div class="flex justify-end gap-2 pt-3" style="border-top:1px solid #222;">
-                    <button onclick="closeSaveChatModal()" class="theme-btn px-4 py-2 rounded text-sm text-neutral-300">Cancel</button>
-                    <button onclick="confirmSaveChatSession()" style="padding:8px 16px;border-radius:6px;font-size:14px;font-weight:800;background:#f59e0b;color:#000;border:none;cursor:pointer;display:flex;align-items:center;gap:6px;">
+                    <button onclick="closeSaveChatModal()"
+                        class="theme-btn px-4 py-2 rounded text-sm text-neutral-300">Cancel</button>
+                    <button onclick="confirmSaveChatSession()"
+                        style="padding:8px 16px;border-radius:6px;font-size:14px;font-weight:800;background:#f59e0b;color:#000;border:none;cursor:pointer;display:flex;align-items:center;gap:6px;">
                         <i class="fas fa-check"></i> Save Chat
                     </button>
                 </div>
@@ -672,22 +804,27 @@
     </div>
 
     <!-- ── RENAME CHAT MODAL ── -->
-    <div id="rename-chat-modal" class="fixed inset-0 z-50 hidden" style="background:rgba(0,0,0,0.85);backdrop-filter:blur(6px);align-items:center;justify-content:center;padding:20px;">
+    <div id="rename-chat-modal" class="fixed inset-0 z-50 hidden"
+        style="background:rgba(0,0,0,0.85);backdrop-filter:blur(6px);align-items:center;justify-content:center;padding:20px;">
         <div class="floating-card" style="padding:24px;max-width:480px;width:100%;">
             <div class="flex items-center justify-between pb-3" style="border-bottom:1px solid #2a2a2a;">
                 <h3 style="font-size:16px;font-weight:800;color:#fff;display:flex;align-items:center;gap:8px;">
                     <i class="fas fa-pen" style="color:#a78bfa;"></i> Rename Saved Chat
                 </h3>
-                <button onclick="closeRenameModal()" style="color:#737373;background:none;border:none;cursor:pointer;font-size:20px;"><i class="fas fa-xmark"></i></button>
+                <button onclick="closeRenameModal()"
+                    style="color:#737373;background:none;border:none;cursor:pointer;font-size:20px;"><i
+                        class="fas fa-xmark"></i></button>
             </div>
             <div class="mt-4 space-y-3">
                 <input type="hidden" id="rename-session-id" value="" />
                 <label style="font-size:13.5px;color:#d1d5db;display:block;font-weight:600;">New Chat Name:</label>
                 <input type="text" id="rename-title-input" onkeydown="if(event.key==='Enter')confirmRenameSession()"
-                       style="width:100%;padding:10px 14px;border-radius:6px;background:#141414;border:1px solid #7c3aed;color:#fff;font-size:14.5px;outline:none;" />
+                    style="width:100%;padding:10px 14px;border-radius:6px;background:#141414;border:1px solid #7c3aed;color:#fff;font-size:14.5px;outline:none;" />
                 <div class="flex justify-end gap-2 pt-3" style="border-top:1px solid #222;">
-                    <button onclick="closeRenameModal()" class="theme-btn px-4 py-2 rounded text-sm text-neutral-300">Cancel</button>
-                    <button onclick="confirmRenameSession()" style="padding:8px 16px;border-radius:6px;font-size:14px;font-weight:800;background:#7c3aed;color:#fff;border:none;cursor:pointer;display:flex;align-items:center;gap:6px;">
+                    <button onclick="closeRenameModal()"
+                        class="theme-btn px-4 py-2 rounded text-sm text-neutral-300">Cancel</button>
+                    <button onclick="confirmRenameSession()"
+                        style="padding:8px 16px;border-radius:6px;font-size:14px;font-weight:800;background:#7c3aed;color:#fff;border:none;cursor:pointer;display:flex;align-items:center;gap:6px;">
                         <i class="fas fa-check"></i> Update Name
                     </button>
                 </div>
@@ -696,34 +833,41 @@
     </div>
 
     <!-- ── AUTH & RBAC & MFA MODAL ── -->
-    <div id="auth-modal" class="fixed inset-0 z-50 hidden" style="background:rgba(0,0,0,0.85);backdrop-filter:blur(6px);align-items:center;justify-content:center;padding:20px;">
+    <div id="auth-modal" class="fixed inset-0 z-50 hidden"
+        style="background:rgba(0,0,0,0.85);backdrop-filter:blur(6px);align-items:center;justify-content:center;padding:20px;">
         <div class="floating-card" style="padding:24px;max-width:480px;width:100%;space-y:16px;">
             <div class="flex items-center justify-between pb-3" style="border-bottom:1px solid #2a2a2a;">
                 <h3 style="font-size:16px;font-weight:800;color:#fff;display:flex;align-items:center;gap:8px;">
                     <i class="fas fa-shield-halved" style="color:#f59e0b;"></i> Identity &amp; RBAC Access
                 </h3>
-                <button onclick="closeAuthModal()" style="color:#525252;background:none;border:none;cursor:pointer;font-size:20px;">
+                <button onclick="closeAuthModal()"
+                    style="color:#525252;background:none;border:none;cursor:pointer;font-size:20px;">
                     <i class="fas fa-xmark"></i>
                 </button>
             </div>
 
             <!-- Login View -->
             <div id="auth-login-view">
-                <p style="font-size:13px;color:#a3a3a3;margin-bottom:12px;">Quick switch demo persona or enter credentials:</p>
+                <p style="font-size:13px;color:#a3a3a3;margin-bottom:12px;">Quick switch demo persona or enter
+                    credentials:</p>
                 <div class="grid grid-cols-2 gap-2 mb-3">
-                    <button onclick="quickLogin('analyst@finreq.bank', 'ANALYST')" class="theme-btn py-1.5 px-2 text-xs text-left">
+                    <button onclick="quickLogin('analyst@finreq.bank', 'ANALYST')"
+                        class="theme-btn py-1.5 px-2 text-xs text-left">
                         <div class="font-bold text-amber-400">Lead Analyst</div>
                         <div class="text-neutral-500 text-[11px]">Requirements writing</div>
                     </button>
-                    <button onclick="quickLogin('compliance@finreq.bank', 'COMPLIANCE_OFFICER')" class="theme-btn py-1.5 px-2 text-xs text-left">
+                    <button onclick="quickLogin('compliance@finreq.bank', 'COMPLIANCE_OFFICER')"
+                        class="theme-btn py-1.5 px-2 text-xs text-left">
                         <div class="font-bold text-red-400">Compliance Officer</div>
                         <div class="text-neutral-500 text-[11px]">Regulatory sign-off</div>
                     </button>
-                    <button onclick="quickLogin('security@finreq.bank', 'SECURITY_LEAD')" class="theme-btn py-1.5 px-2 text-xs text-left">
+                    <button onclick="quickLogin('security@finreq.bank', 'SECURITY_LEAD')"
+                        class="theme-btn py-1.5 px-2 text-xs text-left">
                         <div class="font-bold text-emerald-400">Security Lead</div>
                         <div class="text-neutral-500 text-[11px]">Threat &amp; SDLC gate</div>
                     </button>
-                    <button onclick="quickLogin('approver@finreq.bank', 'APPROVER')" class="theme-btn py-1.5 px-2 text-xs text-left">
+                    <button onclick="quickLogin('approver@finreq.bank', 'APPROVER')"
+                        class="theme-btn py-1.5 px-2 text-xs text-left">
                         <div class="font-bold text-blue-400">Architecture Approver</div>
                         <div class="text-neutral-500 text-[11px]">Final baseline sign-off</div>
                     </button>
@@ -732,11 +876,13 @@
                 <div class="space-y-3 pt-2" style="border-top:1px solid #222;">
                     <div>
                         <label class="block text-xs font-mono text-neutral-400 mb-1">EMAIL ADDRESS:</label>
-                        <input type="email" id="auth-email-input" value="analyst@finreq.bank" class="floating-input w-full text-xs py-2 px-3">
+                        <input type="email" id="auth-email-input" value="analyst@finreq.bank"
+                            class="floating-input w-full text-xs py-2 px-3">
                     </div>
                     <div>
                         <label class="block text-xs font-mono text-neutral-400 mb-1">PASSWORD:</label>
-                        <input type="password" id="auth-password-input" value="FinReq2026!" class="floating-input w-full text-xs py-2 px-3">
+                        <input type="password" id="auth-password-input" value="FinReq2026!"
+                            class="floating-input w-full text-xs py-2 px-3">
                     </div>
                     <button onclick="submitLogin()" class="btn-primary w-full py-2 text-sm font-bold mt-2">
                         <i class="fas fa-right-to-bracket mr-1"></i> Authenticate
@@ -746,12 +892,15 @@
 
             <!-- MFA Code Verification View -->
             <div id="auth-mfa-view" class="hidden space-y-3">
-                <div class="p-3 rounded" style="background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.3);">
+                <div class="p-3 rounded"
+                    style="background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.3);">
                     <i class="fas fa-lock text-amber-400 mr-2"></i>
                     <span class="text-xs text-amber-200">TOTP Multi-Factor Authentication Required</span>
                 </div>
-                <p class="text-xs text-neutral-300">Enter the 6-digit verification code from your authenticator app (Demo bypass: <strong class="text-amber-400 font-mono">123456</strong>):</p>
-                <input type="text" id="auth-mfa-code" maxlength="6" placeholder="123456" class="floating-input w-full text-center text-lg font-mono tracking-widest py-2">
+                <p class="text-xs text-neutral-300">Enter the 6-digit verification code from your authenticator app
+                    (Demo bypass: <strong class="text-amber-400 font-mono">123456</strong>):</p>
+                <input type="text" id="auth-mfa-code" maxlength="6" placeholder="123456"
+                    class="floating-input w-full text-center text-lg font-mono tracking-widest py-2">
                 <button onclick="submitMFA()" class="btn-primary w-full py-2 text-sm font-bold">
                     <i class="fas fa-shield-check mr-1"></i> Verify &amp; Establish Session
                 </button>
@@ -760,30 +909,36 @@
     </div>
 
     <!-- ── DOCUMENT UPLOAD MODAL ── -->
-    <div id="upload-modal" class="fixed inset-0 z-50 hidden" style="background:rgba(0,0,0,0.85);backdrop-filter:blur(6px);align-items:center;justify-content:center;padding:20px;">
+    <div id="upload-modal" class="fixed inset-0 z-50 hidden"
+        style="background:rgba(0,0,0,0.85);backdrop-filter:blur(6px);align-items:center;justify-content:center;padding:20px;">
         <div class="floating-card" style="padding:24px;max-width:520px;width:100%;space-y:16px;">
             <div class="flex items-center justify-between pb-3" style="border-bottom:1px solid #2a2a2a;">
                 <h3 style="font-size:16px;font-weight:800;color:#fff;display:flex;align-items:center;gap:8px;">
                     <i class="fas fa-file-arrow-up" style="color:#3b82f6;"></i> Upload Stakeholder Documents
                 </h3>
-                <button onclick="closeUploadModal()" style="color:#525252;background:none;border:none;cursor:pointer;font-size:20px;">
+                <button onclick="closeUploadModal()"
+                    style="color:#525252;background:none;border:none;cursor:pointer;font-size:20px;">
                     <i class="fas fa-xmark"></i>
                 </button>
             </div>
-            <p class="text-xs text-neutral-400">Upload policies, requirements specifications, legacy docs, or meeting notes. The system will extract text, chunk, and index into PostgreSQL pgvector.</p>
+            <p class="text-xs text-neutral-400">Upload policies, requirements specifications, legacy docs, or meeting
+                notes. The system will extract text, chunk, and index into PostgreSQL pgvector.</p>
 
-            <div id="drop-zone" class="p-6 border-2 border-dashed border-neutral-700 rounded-lg text-center cursor-pointer hover:border-amber-500 transition-all bg-neutral-900/50">
+            <div id="drop-zone"
+                class="p-6 border-2 border-dashed border-neutral-700 rounded-lg text-center cursor-pointer hover:border-amber-500 transition-all bg-neutral-900/50">
                 <i class="fas fa-cloud-arrow-up text-3xl text-neutral-500 mb-2"></i>
                 <p class="text-sm font-bold text-neutral-300">Choose file or drag &amp; drop</p>
                 <p class="text-xs text-neutral-500 mt-1">PDF, DOCX, TXT, MD up to 25MB</p>
-                <input type="file" id="file-upload-input" onchange="handleFileSelect(event)" class="hidden" accept=".pdf,.docx,.txt,.md">
+                <input type="file" id="file-upload-input" onchange="handleFileSelect(event)" class="hidden"
+                    accept=".pdf,.docx,.txt,.md">
             </div>
 
             <div id="upload-status" class="hidden p-3 rounded text-xs font-mono"></div>
 
             <div class="flex justify-end gap-2 pt-2">
                 <button onclick="closeUploadModal()" class="btn-secondary px-4 py-1.5 text-xs">Cancel</button>
-                <button id="upload-submit-btn" onclick="executeUpload()" class="btn-primary px-4 py-1.5 text-xs font-bold" disabled>
+                <button id="upload-submit-btn" onclick="executeUpload()"
+                    class="btn-primary px-4 py-1.5 text-xs font-bold" disabled>
                     <i class="fas fa-upload mr-1"></i> Ingest Document
                 </button>
             </div>
@@ -791,14 +946,18 @@
     </div>
 
     <!-- ── REQUIREMENT DETAIL MODAL ── -->
-    <div id="req-detail-modal" class="fixed inset-0 z-50 hidden" style="background:rgba(0,0,0,0.85);backdrop-filter:blur(6px);align-items:center;justify-content:center;padding:20px;">
-        <div class="floating-card custom-scrollbar" style="padding:24px;max-width:680px;width:100%;max-height:85vh;overflow-y:auto;space-y:14px;">
+    <div id="req-detail-modal" class="fixed inset-0 z-50 hidden"
+        style="background:rgba(0,0,0,0.85);backdrop-filter:blur(6px);align-items:center;justify-content:center;padding:20px;">
+        <div class="floating-card custom-scrollbar"
+            style="padding:24px;max-width:680px;width:100%;max-height:85vh;overflow-y:auto;space-y:14px;">
             <div class="flex items-center justify-between pb-3" style="border-bottom:1px solid #2a2a2a;">
                 <div class="flex items-center gap-2">
-                    <span id="detail-req-id" class="badge-amber font-mono font-bold px-2 py-0.5 rounded text-sm">REQ-001</span>
+                    <span id="detail-req-id"
+                        class="badge-amber font-mono font-bold px-2 py-0.5 rounded text-sm">REQ-001</span>
                     <span id="detail-category" class="font-mono text-xs text-neutral-400">Functional</span>
                 </div>
-                <button onclick="closeReqDetailModal()" style="color:#525252;background:none;border:none;cursor:pointer;font-size:20px;">
+                <button onclick="closeReqDetailModal()"
+                    style="color:#525252;background:none;border:none;cursor:pointer;font-size:20px;">
                     <i class="fas fa-xmark"></i>
                 </button>
             </div>
@@ -829,20 +988,24 @@
             </div>
 
             <div>
-                <label class="text-[11px] font-mono text-neutral-500 uppercase">Applicable Regulations &amp; Controls</label>
+                <label class="text-[11px] font-mono text-neutral-500 uppercase">Applicable Regulations &amp;
+                    Controls</label>
                 <div id="detail-regulations" class="flex flex-wrap gap-1 mt-1"></div>
             </div>
 
             <!-- Governance Action Buttons -->
             <div class="flex items-center justify-between pt-3" style="border-top:1px solid #2a2a2a;">
                 <div class="flex gap-2">
-                    <button onclick="handleDetailAction('approved')" class="btn-approve px-3 py-1.5 text-xs flex items-center gap-1">
+                    <button onclick="handleDetailAction('approved')"
+                        class="btn-approve px-3 py-1.5 text-xs flex items-center gap-1">
                         <i class="fas fa-check"></i> Accept
                     </button>
-                    <button onclick="handleDetailAction('rejected')" class="theme-btn px-3 py-1.5 text-xs text-red-400 flex items-center gap-1 border-red-900/50">
+                    <button onclick="handleDetailAction('rejected')"
+                        class="theme-btn px-3 py-1.5 text-xs text-red-400 flex items-center gap-1 border-red-900/50">
                         <i class="fas fa-xmark"></i> Reject
                     </button>
-                    <button onclick="openEditFromDetail()" class="theme-btn px-3 py-1.5 text-xs flex items-center gap-1">
+                    <button onclick="openEditFromDetail()"
+                        class="theme-btn px-3 py-1.5 text-xs flex items-center gap-1">
                         <i class="fas fa-pen"></i> Modify
                     </button>
                 </div>
@@ -852,21 +1015,25 @@
     </div>
 
     <!-- ── CONFLICT RESOLUTION MODAL ── -->
-    <div id="conflict-modal" class="fixed inset-0 z-50 hidden" style="background:rgba(0,0,0,0.85);backdrop-filter:blur(6px);align-items:center;justify-content:center;padding:20px;">
+    <div id="conflict-modal" class="fixed inset-0 z-50 hidden"
+        style="background:rgba(0,0,0,0.85);backdrop-filter:blur(6px);align-items:center;justify-content:center;padding:20px;">
         <div class="floating-card" style="padding:24px;max-width:540px;width:100%;space-y:14px;">
             <div class="flex items-center justify-between pb-3" style="border-bottom:1px solid #2a2a2a;">
                 <h3 style="font-size:16px;font-weight:800;color:#fff;display:flex;align-items:center;gap:8px;">
                     <i class="fas fa-scale-unbalanced text-amber-500"></i> Resolve Requirement Conflict
                 </h3>
-                <button onclick="closeConflictModal()" style="color:#525252;background:none;border:none;cursor:pointer;font-size:20px;">
+                <button onclick="closeConflictModal()"
+                    style="color:#525252;background:none;border:none;cursor:pointer;font-size:20px;">
                     <i class="fas fa-xmark"></i>
                 </button>
             </div>
             <p id="conflict-modal-desc" class="text-xs text-neutral-300 leading-relaxed"></p>
             <div>
-                <label class="text-[11px] font-mono text-neutral-500 uppercase block mb-1">Human Resolution / Trade-Off Decision:</label>
-                <textarea id="conflict-resolution-text" rows="3" placeholder="Specify which constraint takes precedence (e.g., security overrides throughput SLA)..."
-                          class="floating-input w-full p-2 text-xs"></textarea>
+                <label class="text-[11px] font-mono text-neutral-500 uppercase block mb-1">Human Resolution / Trade-Off
+                    Decision:</label>
+                <textarea id="conflict-resolution-text" rows="3"
+                    placeholder="Specify which constraint takes precedence (e.g., security overrides throughput SLA)..."
+                    class="floating-input w-full p-2 text-xs"></textarea>
             </div>
             <div class="flex justify-end gap-2 pt-2">
                 <button onclick="closeConflictModal()" class="btn-secondary px-3 py-1.5 text-xs">Cancel</button>
@@ -878,33 +1045,43 @@
     </div>
 
     <!-- ── EDIT REQUIREMENT MODAL ── -->
-    <div id="edit-modal" class="fixed inset-0 z-50 hidden" style="background:rgba(0,0,0,0.8);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;padding:24px;">
+    <div id="edit-modal" class="fixed inset-0 z-50 hidden"
+        style="background:rgba(0,0,0,0.8);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;padding:24px;">
         <div class="floating-card" style="padding:24px;max-width:500px;width:100%;space-y:16px;">
-            <div class="flex items-center justify-between pb-3" style="border-bottom:1px solid #2a2a2a;margin-bottom:16px;">
+            <div class="flex items-center justify-between pb-3"
+                style="border-bottom:1px solid #2a2a2a;margin-bottom:16px;">
                 <h3 style="font-size:16px;font-weight:800;color:#fff;display:flex;align-items:center;gap:8px;">
                     <i class="fas fa-pen-to-square" style="color:#f59e0b;"></i>
                     Modify Requirement <span id="modal-req-id" class="font-mono" style="color:#f59e0b;"></span>
                 </h3>
-                <button onclick="closeEditModal()" style="color:#525252;background:none;border:none;cursor:pointer;font-size:20px;">
+                <button onclick="closeEditModal()"
+                    style="color:#525252;background:none;border:none;cursor:pointer;font-size:20px;">
                     <i class="fas fa-xmark"></i>
                 </button>
             </div>
             <div style="margin-bottom:14px;">
-                <label style="display:block;font-size:13px;font-weight:800;color:#525252;letter-spacing:0.06em;font-family:'JetBrains Mono',monospace;margin-bottom:6px;">REQUIREMENT STATEMENT:</label>
-                <textarea id="modal-statement" rows="3" class="floating-input w-full focus:outline-none" style="padding:12px;font-size:15px;"></textarea>
+                <label
+                    style="display:block;font-size:13px;font-weight:800;color:#525252;letter-spacing:0.06em;font-family:'JetBrains Mono',monospace;margin-bottom:6px;">REQUIREMENT
+                    STATEMENT:</label>
+                <textarea id="modal-statement" rows="3" class="floating-input w-full focus:outline-none"
+                    style="padding:12px;font-size:15px;"></textarea>
             </div>
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px;">
                 <div>
-                    <label style="display:block;font-size:13px;font-weight:800;color:#525252;letter-spacing:0.06em;font-family:'JetBrains Mono',monospace;margin-bottom:6px;">PRIORITY:</label>
-                    <select id="modal-priority" class="floating-input w-full focus:outline-none" style="padding:10px;font-size:15px;">
+                    <label
+                        style="display:block;font-size:13px;font-weight:800;color:#525252;letter-spacing:0.06em;font-family:'JetBrains Mono',monospace;margin-bottom:6px;">PRIORITY:</label>
+                    <select id="modal-priority" class="floating-input w-full focus:outline-none"
+                        style="padding:10px;font-size:15px;">
                         <option value="High">High</option>
                         <option value="Medium">Medium</option>
                         <option value="Low">Low</option>
                     </select>
                 </div>
                 <div>
-                    <label style="display:block;font-size:13px;font-weight:800;color:#525252;letter-spacing:0.06em;font-family:'JetBrains Mono',monospace;margin-bottom:6px;">STATUS:</label>
-                    <select id="modal-status" class="floating-input w-full focus:outline-none" style="padding:10px;font-size:15px;">
+                    <label
+                        style="display:block;font-size:13px;font-weight:800;color:#525252;letter-spacing:0.06em;font-family:'JetBrains Mono',monospace;margin-bottom:6px;">STATUS:</label>
+                    <select id="modal-status" class="floating-input w-full focus:outline-none"
+                        style="padding:10px;font-size:15px;">
                         <option value="approved">Approved</option>
                         <option value="validated">Validated</option>
                         <option value="draft">Draft</option>
@@ -913,12 +1090,17 @@
                 </div>
             </div>
             <div style="margin-bottom:16px;">
-                <label style="display:block;font-size:13px;font-weight:800;color:#525252;letter-spacing:0.06em;font-family:'JetBrains Mono',monospace;margin-bottom:6px;">REMARKS / RATIONALE:</label>
-                <input type="text" id="modal-comments" placeholder="Change rationale..." class="floating-input w-full focus:outline-none" style="padding:10px;font-size:15px;">
+                <label
+                    style="display:block;font-size:13px;font-weight:800;color:#525252;letter-spacing:0.06em;font-family:'JetBrains Mono',monospace;margin-bottom:6px;">REMARKS
+                    / RATIONALE:</label>
+                <input type="text" id="modal-comments" placeholder="Change rationale..."
+                    class="floating-input w-full focus:outline-none" style="padding:10px;font-size:15px;">
             </div>
             <div style="display:flex;justify-content:flex-end;gap:10px;">
-                <button onclick="closeEditModal()" class="btn-secondary px-4 py-2" style="font-size:15px;">Cancel</button>
-                <button onclick="saveEditRequirement()" class="btn-primary px-4 py-2" style="font-size:15px;">Save Changes</button>
+                <button onclick="closeEditModal()" class="btn-secondary px-4 py-2"
+                    style="font-size:15px;">Cancel</button>
+                <button onclick="saveEditRequirement()" class="btn-primary px-4 py-2" style="font-size:15px;">Save
+                    Changes</button>
             </div>
         </div>
     </div>
@@ -930,4 +1112,5 @@
 
     <script src="script.js?v=2.5.0"></script>
 </body>
+
 </html>

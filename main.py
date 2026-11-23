@@ -335,6 +335,8 @@ async def session_chat(request: ChatRequest, user: Dict[str, Any] = Depends(requ
             "clarifications": clarifications_after,
             "conflicts": list(getattr(state, 'conflicts', [])),
             "resolved_clarifications_count": resolved_count,
+            "pii_masked_items": getattr(state, "latest_masked_items", []),
+            "safe_message": getattr(state, "latest_safe_message", request.message),
         }
     except Exception as e:
         err = str(e)
@@ -362,7 +364,7 @@ async def approve_section(request: ApprovalRequest, user: Dict[str, Any] = Depen
         state.log_event("Human-Approval Agent", "Permission Denied", f"Role '{approver_role}' does not possess sign-off authority for section '{target_section}'.")
         raise HTTPException(
             status_code=403,
-            detail=f"Permission Denied: Role '{approver_role}' is not authorized to approve '{target_section}'. Compliance Officer or Approver role required."
+            detail=f"Permission Denied: Role '{approver_role}' is not authorized to approve '{target_section}'. Approver role required."
         )
 
     def find_req_key(req_id: str) -> Optional[str]:

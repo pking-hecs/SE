@@ -279,8 +279,8 @@ class SecurityGuard:
         (r"\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b", "[EMAIL_MASKED]"),
         (r"\b(?:\d{4}[ -]?){3}\d{4}\b", "[CARD_NUMBER_MASKED]"),
         (r"\b\d{3}-\d{2}-\d{4}\b", "[SSN_MASKED]"),
-        (r"\b(?:\+?[\d]{1,3}[ -]?)?(?:\([\d]{3}\)|[\d]{3})[ -]?[\d]{3}[ -]?[\d]{4}\b", "[PHONE_MASKED]"),
         (r"\b(?:ACC|ACCT|ACCOUNT)[\s#:]*\d{8,16}\b", "[ACCOUNT_MASKED]"),
+        (r"\b(?:\+?[\d]{1,3}[ -]?)?(?:\([\d]{3}\)|[\d]{3})[ -]?[\d]{3}[ -]?[\d]{4}\b", "[PHONE_MASKED]"),
     ]
     INJECTION_PATTERNS = [
         r"ignore\s+all\s+(?:previous|prior)\s+instructions",
@@ -812,27 +812,37 @@ class SDLCSelectionAgent:
             f"Requirements:\n{reqs_summary}\n"
             f"Candidate SDLC Models: {json.dumps(self.MODELS)}\n\n"
             "Task:\n"
-            "1. Evaluate: requirement stability, regulatory criticality, security risk, complexity, "
-            "frequency of changes, and continuous delivery need.\n"
-            "2. Conduct Multi-Criteria Decision Analysis (MCDA). Assign integer percentage scores to ALL "
-            "6 models. Scores MUST sum to exactly 100.\n"
-            "3. Select the best model and provide a detailed 2-3 sentence justification.\n\n"
+            "1. Conduct Multi-Criteria Decision Analysis (MCDA). Evaluate the project decision factors:\n"
+            "   - Regulatory Criticality (w_1)\n"
+            "   - Requirement Change Frequency (w_2)\n"
+            "   - Security & Audit Risk (w_3)\n"
+            "   - Legacy Integration Dependence (w_4)\n"
+            "   - Continuous Delivery / Velocity Need (w_5)\n"
+            "2. For each SDLC model m, calculate an independent Suitability (Fit) percentage score out of 100%:\n"
+            "   Suitability(m) = (sum(w_i * s_m,i) / sum(w_i)) * 100%\n"
+            "   IMPORTANT: Each score is an independent suitability fit percentage (0-100%) measuring how well that model satisfies "
+            "the project criteria. These are NOT probabilities and do NOT sum to 100 (e.g. 88%, 82%, 76%, 70%, 65%, 35%).\n"
+            "3. Select the best model (highest suitability) and provide a detailed 2-3 sentence justification explaining why.\n\n"
             "Return a JSON object with keys:\n"
-            "- recommended_model: string (one of the 6 models)\n"
+            "- recommended_model: string (one of the candidate models)\n"
             "- justification: string\n"
-            "- ranked_scores: object mapping all 6 model names to integer scores (sum = 100)"
+            "- ranked_scores: object mapping all 6 model names to integer suitability scores (0-100)"
         )
         ai_data = await self.llm.call_json_async(prompt, timeout=22.0)
         if isinstance(ai_data, dict) and "ranked_scores" in ai_data:
             scores = ai_data["ranked_scores"]
-            total = sum(scores.values())
-            if total > 0 and total != 100:
-                normalized = {k: round((v / total) * 100) for k, v in scores.items()}
-                diff = 100 - sum(normalized.values())
-                best = ai_data["recommended_model"]
-                normalized[best] = normalized.get(best, 0) + diff
-                ai_data["ranked_scores"] = dict(sorted(normalized.items(), key=lambda x: x[1], reverse=True))
-            print(f"✨ Governance model selected: {ai_data['recommended_model']}.")
+            cleaned_scores = {}
+            for k in self.MODELS:
+                val = scores.get(k, 50)
+                try:
+                    val = max(5, min(100, int(val)))
+                except (ValueError, TypeError):
+                    val = 50
+                cleaned_scores[k] = val
+            ai_data["ranked_scores"] = dict(sorted(cleaned_scores.items(), key=lambda x: x[1], reverse=True))
+            if ai_data.get("recommended_model") not in cleaned_scores:
+                ai_data["recommended_model"] = next(iter(ai_data["ranked_scores"].keys()))
+            print(f"✨ Governance model selected: {ai_data['recommended_model']} ({ai_data['ranked_scores'].get(ai_data['recommended_model'])}% MCDA Fit).")
             return ai_data
 
         return {
@@ -843,8 +853,8 @@ class SDLCSelectionAgent:
                 "into continuous delivery sprints."
             ),
             "ranked_scores": {
-                "Agile–DevSecOps hybrid": 42, "DevSecOps": 25, "V-Model": 15,
-                "Spiral": 10, "Agile": 5, "Waterfall": 3,
+                "Agile–DevSecOps hybrid": 88, "DevSecOps": 82, "V-Model": 76,
+                "Agile": 70, "Spiral": 65, "Waterfall": 35,
             },
         }
 
