@@ -53,9 +53,9 @@ function formatMarkdown(text) {
     let s = escapeHTML(text);
     s = s.replace(/\*\*(.*?)\*\*/g, '<strong style="color:#fff;font-weight:800;">$1</strong>');
     s = s.replace(/\*(.*?)\*/g, '<em style="color:#a3a3a3;">$1</em>');
-    s = s.replace(/`([^`]+)`/g, '<code style="background:rgba(245,158,11,0.12);border:1px solid rgba(245,158,11,0.25);color:#fbbf24;padding:2px 6px;border-radius:4px;font-family:\'JetBrains Mono\',monospace;font-size:14px;">$1</code>');
-    s = s.replace(/^[•\-] (.*)$/gm, '<div style="display:flex;align-items:flex-start;gap:8px;margin:4px 0;"><span style="color:#f59e0b;font-weight:900;flex-shrink:0;">•</span><span>$1</span></div>');
-    s = s.replace(/^(\d+)\.\s+(.*)$/gm, '<div style="display:flex;align-items:flex-start;gap:8px;margin:4px 0;"><span style="color:#f59e0b;font-family:\'JetBrains Mono\',monospace;font-weight:700;flex-shrink:0;">$1.</span><span>$2</span></div>');
+    s = s.replace(/`([^`]+)`/g, '<code style="background:#222;border:1px solid #444;color:#ef4444;padding:2px 6px;border-radius:4px;font-family:\'JetBrains Mono\',monospace;font-size:14px;">$1</code>');
+    s = s.replace(/^[•\-] (.*)$/gm, '<div style="display:flex;align-items:flex-start;gap:8px;margin:4px 0;"><span style="color:#dc2626;font-weight:900;flex-shrink:0;">•</span><span>$1</span></div>');
+    s = s.replace(/^(\d+)\.\s+(.*)$/gm, '<div style="display:flex;align-items:flex-start;gap:8px;margin:4px 0;"><span style="color:#dc2626;font-family:\'JetBrains Mono\',monospace;font-weight:700;flex-shrink:0;">$1.</span><span>$2</span></div>');
     s = s.replace(/\n/g, '<br>');
     return s;
 }
@@ -78,7 +78,7 @@ function highlightMaskedTokens(text) {
     ];
     tokens.forEach(tok => {
         const escaped = escapeHTML(tok);
-        const badge = `<span style="background:rgba(239,68,68,0.2);border:1px solid rgba(239,68,68,0.45);color:#fca5a5;padding:2px 7px;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:800;display:inline-flex;align-items:center;gap:4px;white-space:nowrap !important;vertical-align:baseline;"><i class="fas fa-shield-halved" style="font-size:11px;color:#ef4444;"></i>${escaped}</span>`;
+        const badge = `<span style="background:#3b1414;border:1px solid #7f1d1d;color:#fee2e2;padding:2px 7px;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:800;display:inline-flex;align-items:center;gap:4px;white-space:nowrap !important;vertical-align:baseline;"><i class="fas fa-shield-halved" style="font-size:11px;color:#dc2626;"></i>${escaped}</span>`;
         safe = safe.split(escaped).join(badge);
     });
     return safe;
@@ -95,13 +95,13 @@ function updateBubbleWithMaskedPII(bubbleWrapId, safeText, originalText, maskedI
     const uniqueId = 'toggle-' + Math.random().toString(36).substring(2, 8);
 
     bubble.innerHTML = `
-        <div style="font-size:12px;font-family:'JetBrains Mono',monospace;color:#f59e0b;display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid rgba(245,158,11,0.25);">
+        <div style="font-size:12px;font-family:'JetBrains Mono',monospace;color:#ef4444;display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid #4a1d1d;">
             <span style="display:flex;align-items:center;gap:6px;">
-                <i class="fas fa-shield-halved" style="color:#ef4444;"></i>
+                <i class="fas fa-shield-halved" style="color:#dc2626;"></i>
                 <strong>PII REDACTED BY GUARD</strong>
             </span>
             <button type="button" onclick="const s=document.getElementById('${uniqueId}-safe'), o=document.getElementById('${uniqueId}-orig'); if(s.style.display==='none'){s.style.display='block';o.style.display='none';this.textContent='Show Original';}else{s.style.display='none';o.style.display='block';this.textContent='Show Sanitized';}"
-                style="background:rgba(245,158,11,0.15);border:1px solid rgba(245,158,11,0.3);color:#fbbf24;padding:2px 8px;border-radius:4px;font-size:11px;cursor:pointer;font-family:'JetBrains Mono',monospace;">
+                style="background:#261212;border:1px solid #4d1d1d;color:#fee2e2;padding:2px 8px;border-radius:4px;font-size:11px;cursor:pointer;font-family:'JetBrains Mono',monospace;">
                 Show Original
             </button>
         </div>
@@ -111,8 +111,8 @@ function updateBubbleWithMaskedPII(bubbleWrapId, safeText, originalText, maskedI
         <div id="${uniqueId}-orig" style="display:none;line-height:1.65;font-size:17.5px;color:#a3a3a3;text-decoration:line-through;">
             ${origHtml}
         </div>
-        <div style="margin-top:8px;padding-top:6px;border-top:1px solid rgba(255,255,255,0.06);font-size:12px;color:#737373;font-family:'JetBrains Mono',monospace;">
-            <i class="fas fa-lock" style="margin-right:4px;color:#f59e0b;"></i> Masked: <strong style="color:#fca5a5;">${escapeHTML(maskedItems.join(', '))}</strong> (Raw values isolated from AI)
+        <div style="margin-top:8px;padding-top:6px;border-top:1px solid #262626;font-size:12px;color:#737373;font-family:'JetBrains Mono',monospace;">
+            <i class="fas fa-lock" style="margin-right:4px;color:#dc2626;"></i> Masked: <strong style="color:#ef4444;">${escapeHTML(maskedItems.join(', '))}</strong> (Raw values isolated from AI)
         </div>
     `;
 }
@@ -167,7 +167,7 @@ async function handleSend(e) {
     const loadingId = 'loading-' + Date.now();
     appendChatMessage('assistant',
         '<div style="display:flex;align-items:center;gap:12px;color:#a3a3a3;font-family:\'JetBrains Mono\',monospace;font-size:18px;">' +
-        '<i class="fas fa-circle-notch fa-spin" style="color:#f59e0b;"></i> ORCHESTRATING_13_AGENTS...</div>',
+        '<i class="fas fa-circle-notch fa-spin" style="color:#dc2626;"></i> ORCHESTRATING_13_AGENTS...</div>',
         loadingId
     );
 
@@ -219,7 +219,7 @@ async function handleSend(e) {
             currentSessionTitle = `${domain} — ${new Date().toLocaleDateString()}`;
             const tag = document.getElementById('active-project-tag');
             if (tag) {
-                tag.innerHTML = `<span style="color:#a78bfa;font-weight:700;"><i class="fas fa-folder-open mr-1"></i>${escapeHTML(currentSessionTitle)}</span>`;
+                tag.innerHTML = `<span style="color:#d1d5db;font-weight:700;"><i class="fas fa-folder-open mr-1"></i>${escapeHTML(currentSessionTitle)}</span>`;
                 tag.title = `Project ID: ${currentProjectId}`;
             }
             document.getElementById('session-action-btns').style.display = 'flex';
@@ -277,17 +277,17 @@ async function handleSend(e) {
             let qHtml = '';
             if (questions.length) {
                 qHtml = `
-                <div style="margin-top:18px;padding:18px;border-radius:8px;background:rgba(245,158,11,0.06);border:1px solid rgba(245,158,11,0.25);">
+                <div style="margin-top:18px;padding:18px;border-radius:8px;background:#1a1010;border:1px solid #4a1818;">
                     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
-                        <span style="font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:800;letter-spacing:0.06em;color:#f59e0b;">
+                        <span style="font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:800;letter-spacing:0.06em;color:#ef4444;">
                             <i class="fas fa-clipboard-question" style="margin-right:8px;"></i>CLARIFICATION_REQUIRED
                         </span>
-                        <span style="font-family:'JetBrains Mono',monospace;font-size:13px;background:rgba(245,158,11,0.15);border:1px solid rgba(245,158,11,0.3);color:#fbbf24;padding:4px 10px;border-radius:4px;">INPUT_NEEDED</span>
+                        <span style="font-family:'JetBrains Mono',monospace;font-size:13px;background:#361414;border:1px solid #631f1f;color:#fee2e2;padding:4px 10px;border-radius:4px;">INPUT_NEEDED</span>
                     </div>
                     <div style="display:flex;flex-direction:column;gap:10px;">
                         ${questions.slice(0, 3).map((q, i) => `
-                            <div style="padding:14px 16px;border-radius:6px;background:rgba(0,0,0,0.4);border:1px solid #333;font-size:18px;">
-                                <div style="font-family:'JetBrains Mono',monospace;font-size:13px;color:#f59e0b;font-weight:800;margin-bottom:6px;">
+                            <div style="padding:14px 16px;border-radius:6px;background:#111;border:1px solid #333;font-size:18px;">
+                                <div style="font-family:'JetBrains Mono',monospace;font-size:13px;color:#ef4444;font-weight:800;margin-bottom:6px;">
                                     <i class="fas fa-circle-question" style="margin-right:6px;"></i>ITEM_${i + 1}:
                                 </div>
                                 <div style="color:#f3f4f6;line-height:1.65;">${escapeHTML(q)}</div>
@@ -310,13 +310,13 @@ async function handleSend(e) {
 
             appendChatMessage('assistant', `
                 <div style="display:flex;flex-direction:column;gap:14px;">
-                    <div style="display:flex;align-items:center;gap:12px;padding:14px 16px;border-radius:6px;background:rgba(22,163,74,0.1);border:1px solid rgba(22,163,74,0.25);">
-                        <i class="fas fa-check-circle" style="color:#16a34a;font-size:22px;"></i>
+                    <div style="display:flex;align-items:center;gap:12px;padding:14px 16px;border-radius:6px;background:#122417;border:1px solid #1e4d29;">
+                        <i class="fas fa-check-circle" style="color:#15803d;font-size:22px;"></i>
                         <span style="font-size:19px;color:#e5e5e5;line-height:1.6;">
                             <strong style="color:#fff;">Baseline Synthesized:</strong>
-                            Extracted <strong style="color:#fbbf24;">${currentRequirements.length}</strong> requirements,
-                            mapped <strong style="color:#fbbf24;">${data.compliance_mappings.length}</strong> regulatory citations,
-                            recommended <strong style="color:#fbbf24;">${data.sdlc_info.recommended_model}</strong>.
+                            Extracted <strong style="color:#ef4444;">${currentRequirements.length}</strong> requirements,
+                            mapped <strong style="color:#ef4444;">${data.compliance_mappings.length}</strong> regulatory citations,
+                            recommended <strong style="color:#ef4444;">${data.sdlc_info.recommended_model}</strong>.
                         </span>
                     </div>
                     <p style="font-size:18px;color:#d1d5db;line-height:1.65;">
@@ -347,7 +347,7 @@ async function handleSend(e) {
         document.getElementById(loadingId)?.remove();
         setAgentsActive(false);
         setPipelineStatus('err', 'CONNECTION_ERROR');
-        appendChatMessage('assistant', `<div style="font-size:19px;color:#f87171;">❌ Connection failure — backend unreachable.</div>`);
+        appendChatMessage('assistant', `<div style="font-size:19px;color:#b91c1c;">❌ Connection failure — backend unreachable.</div>`);
     }
 }
 
@@ -360,12 +360,12 @@ function appendChatMessage(role, htmlContent, id = null) {
 
     if (role === 'user') {
         wrap.innerHTML = `
-            <div class="chat-bubble-user" style="background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.25);border-radius:8px;padding:16px 20px;max-width:580px;font-size:20px;line-height:1.7;color:#f3f4f6;">${htmlContent}</div>
-            <div style="width:44px;height:44px;border-radius:6px;background:rgba(245,158,11,0.15);border:1px solid rgba(245,158,11,0.3);flex-shrink:0;display:flex;align-items:center;justify-content:center;color:#fbbf24;font-family:'JetBrains Mono',monospace;font-weight:900;font-size:14px;">U</div>
+            <div class="chat-bubble-user" style="background:#1e1414;border:1px solid #4a1d1d;border-radius:8px;padding:16px 20px;max-width:580px;font-size:20px;line-height:1.7;color:#f3f4f6;">${htmlContent}</div>
+            <div style="width:44px;height:44px;border-radius:6px;background:#261212;border:1px solid #4d1d1d;flex-shrink:0;display:flex;align-items:center;justify-content:center;color:#ef4444;font-family:'JetBrains Mono',monospace;font-weight:900;font-size:14px;">U</div>
         `;
     } else {
         wrap.innerHTML = `
-            <div style="width:44px;height:44px;border-radius:6px;background:rgba(245,158,11,0.15);border:1px solid rgba(245,158,11,0.3);flex-shrink:0;display:flex;align-items:center;justify-content:center;color:#fbbf24;font-family:'JetBrains Mono',monospace;font-weight:900;font-size:14px;">FR</div>
+            <div style="width:44px;height:44px;border-radius:6px;background:#261212;border:1px solid #4d1d1d;flex-shrink:0;display:flex;align-items:center;justify-content:center;color:#ef4444;font-family:'JetBrains Mono',monospace;font-weight:900;font-size:14px;">FR</div>
             <div class="chat-bubble-assistant" style="background:#181818;border:1px solid #2a2a2a;border-radius:8px;padding:16px 20px;max-width:650px;font-size:20px;line-height:1.7;color:#f3f4f6;">${htmlContent}</div>
         `;
     }
@@ -380,7 +380,7 @@ function appendChatMessage(role, htmlContent, id = null) {
 function setPipelineStatus(state, text) {
     const el = document.getElementById('pipeline-status');
     if (!el) return;
-    const colors = { ok: '#16a34a', warn: '#f59e0b', err: '#dc2626', running: '#3b82f6' };
+    const colors = { ok: '#15803d', warn: '#dc2626', err: '#b91c1c', running: '#1d4ed8' };
     const col = colors[state] || '#525252';
     el.innerHTML = `<span style="width:7px;height:7px;border-radius:50%;background:${col};flex-shrink:0;display:inline-block;margin-right:8px;"></span>${text}`;
 }
@@ -427,25 +427,25 @@ function renderFilteredRequirements(reqs) {
         const hi = (r.priority || '').toLowerCase() === 'high';
 
         return `
-        <div style="padding:16px;border-radius:8px;background:#181818;border:1px solid ${ok ? 'rgba(22,163,74,0.3)' : '#2a2a2a'};margin-bottom:10px;transition:border-color 0.15s;">
+        <div style="padding:16px;border-radius:8px;background:#181818;border:1px solid ${ok ? '#1e4d29' : '#2a2a2a'};margin-bottom:10px;transition:border-color 0.15s;">
             <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:10px;">
                 <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
                     <span class="font-mono cursor-pointer" onclick="openReqDetailModal('${id}')" title="Click to view full requirement details"
-                          style="font-size:14px;font-weight:800;color:#fbbf24;background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.25);padding:3px 10px;border-radius:4px;">${escapeHTML(id)}</span>
-                    <span style="font-size:13px;background:rgba(59,130,246,0.1);border:1px solid rgba(59,130,246,0.25);color:#93c5fd;padding:3px 8px;border-radius:4px;font-family:'JetBrains Mono',monospace;">${escapeHTML(r.category || 'Functional')}</span>
-                    <span style="font-size:13px;background:${hi ? 'rgba(220,38,38,0.1)' : 'rgba(245,158,11,0.08)'};border:1px solid ${hi ? 'rgba(220,38,38,0.3)' : 'rgba(245,158,11,0.2)'};color:${hi ? '#fca5a5' : '#fbbf24'};padding:3px 8px;border-radius:4px;font-family:'JetBrains Mono',monospace;font-weight:700;">${hi ? 'HIGH' : 'MEDIUM'}</span>
+                          style="font-size:14px;font-weight:800;color:#fee2e2;background:#361414;border:1px solid #631f1f;padding:3px 10px;border-radius:4px;">${escapeHTML(id)}</span>
+                    <span style="font-size:13px;background:#162238;border:1px solid #1d3c6a;color:#dbeafe;padding:3px 8px;border-radius:4px;font-family:'JetBrains Mono',monospace;">${escapeHTML(r.category || 'Functional')}</span>
+                    <span style="font-size:13px;background:${hi ? '#2f1414' : '#361414'};border:1px solid ${hi ? '#5c1d1d' : '#631f1f'};color:#fee2e2;padding:3px 8px;border-radius:4px;font-family:'JetBrains Mono',monospace;font-weight:700;">${hi ? 'HIGH' : 'MEDIUM'}</span>
                     ${ok
-                ? `<span style="font-size:13px;background:rgba(22,163,74,0.1);border:1px solid rgba(22,163,74,0.3);color:#6ee7b7;padding:3px 8px;border-radius:4px;font-family:'JetBrains Mono',monospace;font-weight:700;display:flex;align-items:center;gap:5px;"><i class="fas fa-check" style="font-size:11px;"></i> APPROVED</span>`
-                : `<span style="font-size:13px;background:rgba(59,130,246,0.08);border:1px solid rgba(59,130,246,0.2);color:#93c5fd;padding:3px 8px;border-radius:4px;font-family:'JetBrains Mono',monospace;">PENDING</span>`}
-                    <span style="font-size:13px;color:#525252;">Risk: <strong style="color:${(r.risk || r.risk_level) === 'High' ? '#f87171' : '#fbbf24'};">${escapeHTML(r.risk || r.risk_level || 'Medium')}</strong></span>
+                ? `<span style="font-size:13px;background:#142a1b;border:1px solid #16532d;color:#dcfce7;padding:3px 8px;border-radius:4px;font-family:'JetBrains Mono',monospace;font-weight:700;display:flex;align-items:center;gap:5px;"><i class="fas fa-check" style="font-size:11px;"></i> APPROVED</span>`
+                : `<span style="font-size:13px;background:#162238;border:1px solid #1d3c6a;color:#dbeafe;padding:3px 8px;border-radius:4px;font-family:'JetBrains Mono',monospace;">PENDING</span>`}
+                    <span style="font-size:13px;color:#525252;">Risk: <strong style="color:#ef4444;">${escapeHTML(r.risk || r.risk_level || 'Medium')}</strong></span>
                 </div>
                 <div style="display:flex;align-items:center;gap:6px;">
                     <button onclick="openReqDetailModal('${id}')" class="btn-secondary" style="padding:6px 10px;border-radius:5px;font-size:13px;cursor:pointer;" title="View Detail Modal">
-                        <i class="fas fa-eye text-amber-400 mr-1"></i> Details
+                        <i class="fas fa-eye text-neutral-400 mr-1"></i> Details
                     </button>
                     ${ok
-                ? `<button onclick="approveSingleReq('${id}','draft')" style="font-size:13px;padding:6px 12px;border-radius:5px;background:rgba(22,163,74,0.15);border:1px solid rgba(22,163,74,0.35);color:#6ee7b7;font-weight:800;cursor:pointer;display:flex;align-items:center;gap:6px;"><i class="fas fa-check-double"></i> Approved</button>`
-                : `<button onclick="approveSingleReq('${id}','approved')" style="font-size:13px;padding:6px 12px;border-radius:5px;background:#16a34a;border:none;color:#fff;font-weight:800;cursor:pointer;display:flex;align-items:center;gap:6px;"><i class="fas fa-check"></i> Approve</button>`}
+                ? `<button onclick="approveSingleReq('${id}','draft')" style="font-size:13px;padding:6px 12px;border-radius:5px;background:#142a1b;border:1px solid #16532d;color:#dcfce7;font-weight:800;cursor:pointer;display:flex;align-items:center;gap:6px;"><i class="fas fa-check-double"></i> Approved</button>`
+                : `<button onclick="approveSingleReq('${id}','approved')" style="font-size:13px;padding:6px 12px;border-radius:5px;background:#15803d;border:none;color:#fff;font-weight:800;cursor:pointer;display:flex;align-items:center;gap:6px;"><i class="fas fa-check"></i> Approve</button>`}
                     <button onclick="removeSingleReq('${id}')" class="btn-remove" style="padding:6px 10px;border-radius:5px;font-size:13px;cursor:pointer;"><i class="fas fa-trash"></i></button>
                     <button onclick="openEditModal('${id}')" class="btn-secondary" style="padding:6px 10px;border-radius:5px;font-size:13px;cursor:pointer;"><i class="fas fa-pen"></i></button>
                 </div>
@@ -453,13 +453,13 @@ function renderFilteredRequirements(reqs) {
             <p onclick="openReqDetailModal('${id}')" class="cursor-pointer hover:text-white" style="font-size:15px;color:#e5e5e5;line-height:1.65;">${escapeHTML(r.statement)}</p>
             ${r.acceptance_criteria ? `
             <div style="margin-top:10px;padding:10px 12px;border-radius:5px;background:#111;border:1px solid #1f1f1f;font-size:14px;color:#a3a3a3;">
-                <span style="font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:800;color:#f59e0b;display:block;margin-bottom:4px;">ACCEPTANCE_CRITERIA:</span>
+                <span style="font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:800;color:#ef4444;display:block;margin-bottom:4px;">ACCEPTANCE_CRITERIA:</span>
                 ${escapeHTML(Array.isArray(r.acceptance_criteria) ? r.acceptance_criteria.join(' ') : r.acceptance_criteria)}
             </div>` : ''}
             ${(r.compliance_mapping || r.regulations)?.length ? `
             <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-top:8px;">
                 <span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#525252;">CITATIONS:</span>
-                ${(r.compliance_mapping || r.regulations).map(reg => `<span style="font-family:'JetBrains Mono',monospace;font-size:12px;background:rgba(59,130,246,0.08);border:1px solid rgba(59,130,246,0.2);color:#93c5fd;padding:2px 7px;border-radius:3px;">${escapeHTML(reg)}</span>`).join('')}
+                ${(r.compliance_mapping || r.regulations).map(reg => `<span style="font-family:'JetBrains Mono',monospace;font-size:12px;background:#162238;border:1px solid #1d3c6a;color:#dbeafe;padding:2px 7px;border-radius:3px;">${escapeHTML(reg)}</span>`).join('')}
             </div>` : ''}
         </div>`;
     }).join('');
@@ -475,11 +475,11 @@ function renderCompliance(mappings) {
     c.innerHTML = mappings.map(m => `
         <div style="padding:14px;border-radius:7px;background:#181818;border:1px solid #2a2a2a;margin-bottom:10px;">
             <div style="display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:10px;">
-                <span style="font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:800;color:#fbbf24;background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.25);padding:3px 8px;border-radius:4px;">${escapeHTML(m.req_id)}</span>
-                <span style="font-size:13px;background:rgba(220,38,38,0.1);border:1px solid rgba(220,38,38,0.3);color:#fca5a5;padding:3px 8px;border-radius:4px;font-family:'JetBrains Mono',monospace;font-weight:700;">${escapeHTML(m.citation)}</span>
+                <span style="font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:800;color:#fee2e2;background:#361414;border:1px solid #631f1f;padding:3px 8px;border-radius:4px;">${escapeHTML(m.req_id)}</span>
+                <span style="font-size:13px;background:#2f1414;border:1px solid #5c1d1d;color:#fee2e2;padding:3px 8px;border-radius:4px;font-family:'JetBrains Mono',monospace;font-weight:700;">${escapeHTML(m.citation)}</span>
                 <span class="font-mono" style="font-size:13px;color:#525252;">${escapeHTML(m.source_doc)}:${m.line_number}</span>
-                <span style="font-size:13px;background:rgba(22,163,74,0.1);border:1px solid rgba(22,163,74,0.25);color:#6ee7b7;padding:3px 8px;border-radius:4px;font-family:'JetBrains Mono',monospace;font-weight:700;">${escapeHTML(m.coverage)}</span>
-                <span style="font-size:13px;background:rgba(59,130,246,0.1);border:1px solid rgba(59,130,246,0.25);color:#93c5fd;padding:3px 8px;border-radius:4px;font-family:'JetBrains Mono',monospace;">${Math.round(m.confidence * 100)}% CONF</span>
+                <span style="font-size:13px;background:#142a1b;border:1px solid #16532d;color:#dcfce7;padding:3px 8px;border-radius:4px;font-family:'JetBrains Mono',monospace;font-weight:700;">${escapeHTML(m.coverage)}</span>
+                <span style="font-size:13px;background:#162238;border:1px solid #1d3c6a;color:#dbeafe;padding:3px 8px;border-radius:4px;font-family:'JetBrains Mono',monospace;">${Math.round(m.confidence * 100)}% CONF</span>
             </div>
             <p style="font-size:14px;color:#a3a3a3;font-family:'JetBrains Mono',monospace;line-height:1.6;padding:10px;background:#111;border-radius:4px;border:1px solid #1f1f1f;">"${escapeHTML(m.evidence)}"</p>
         </div>`).join('');
@@ -510,11 +510,11 @@ function renderSDLC(info, workflow) {
         return `
         <div style="margin-bottom:10px;">
             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;font-size:15px;">
-                <span style="font-weight:${isTop ? '800' : '500'};color:${isTop ? '#fbbf24' : '#a3a3a3'};">${escapeHTML(model)}${isTop ? ' ★' : ''}</span>
-                <span style="font-family:'JetBrains Mono',monospace;font-weight:700;color:${isTop ? '#fbbf24' : '#525252'};">${score}%</span>
+                <span style="font-weight:${isTop ? '800' : '500'};color:${isTop ? '#ef4444' : '#a3a3a3'};">${escapeHTML(model)}${isTop ? ' ★' : ''}</span>
+                <span style="font-family:'JetBrains Mono',monospace;font-weight:700;color:${isTop ? '#ef4444' : '#525252'};">${score}%</span>
             </div>
             <div style="width:100%;height:6px;border-radius:3px;background:#1f1f1f;overflow:hidden;">
-                <div style="height:100%;border-radius:3px;background:${isTop ? '#f59e0b' : '#2a2a2a'};width:${Math.max(score, 3)}%;transition:width 0.6s;"></div>
+                <div style="height:100%;border-radius:3px;background:${isTop ? '#dc2626' : '#2a2a2a'};width:${Math.max(score, 3)}%;transition:width 0.6s;"></div>
             </div>
         </div>`;
     }).join('');
@@ -529,7 +529,7 @@ function renderSDLC(info, workflow) {
             <div style="padding:14px;border-radius:7px;background:#181818;border:1px solid #2a2a2a;margin-bottom:8px;font-size:15px;">
                 <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
                     <span style="font-weight:800;color:#fff;">${escapeHTML(title)}</span>
-                    <span style="font-family:'JetBrains Mono',monospace;font-size:13px;background:rgba(124,58,237,0.1);border:1px solid rgba(124,58,237,0.25);color:#c4b5fd;padding:3px 8px;border-radius:4px;">PHASE ${idx + 1}</span>
+                    <span style="font-family:'JetBrains Mono',monospace;font-size:13px;background:#261433;border:1px solid #4a1f6d;color:#f3e8ff;padding:3px 8px;border-radius:4px;">PHASE ${idx + 1}</span>
                 </div>
                 <div style="color:#a3a3a3;line-height:1.6;">${escapeHTML(desc)}</div>
             </div>`;
@@ -538,12 +538,12 @@ function renderSDLC(info, workflow) {
         <div style="padding:14px;border-radius:7px;background:#181818;border:1px solid #2a2a2a;margin-bottom:8px;font-size:15px;">
             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
                 <span style="font-weight:800;color:#fff;">${escapeHTML(w.phase || `Phase ${idx + 1}`)}</span>
-                <span style="font-family:'JetBrains Mono',monospace;font-size:13px;background:rgba(124,58,237,0.1);border:1px solid rgba(124,58,237,0.25);color:#c4b5fd;padding:3px 8px;border-radius:4px;">${escapeHTML(w.roles || 'Engineering')}</span>
+                <span style="font-family:'JetBrains Mono',monospace;font-size:13px;background:#261433;border:1px solid #4a1f6d;color:#f3e8ff;padding:3px 8px;border-radius:4px;">${escapeHTML(w.roles || 'Engineering')}</span>
             </div>
             <div style="color:#a3a3a3;line-height:1.6;">Activities: ${Array.isArray(w.activities) ? w.activities.map(a => escapeHTML(a)).join(', ') : escapeHTML(w.activities || '')}</div>
             <div style="display:flex;justify-content:space-between;margin-top:8px;padding-top:8px;border-top:1px solid #1f1f1f;font-size:14px;">
-                <span style="color:#525252;"><i class="fas fa-shield-halved" style="color:#3b82f6;margin-right:5px;"></i>${escapeHTML(w.security_controls || 'Security Baseline')}</span>
-                <span style="color:#16a34a;font-weight:700;"><i class="fas fa-flag-checkered" style="margin-right:5px;"></i>Gate: ${escapeHTML(w.validation_gate || 'Quality Gate')}</span>
+                <span style="color:#525252;"><i class="fas fa-shield-halved" style="color:#1d4ed8;margin-right:5px;"></i>${escapeHTML(w.security_controls || 'Security Baseline')}</span>
+                <span style="color:#15803d;font-weight:700;"><i class="fas fa-flag-checkered" style="margin-right:5px;"></i>Gate: ${escapeHTML(w.validation_gate || 'Quality Gate')}</span>
             </div>
         </div>`;
     }).join('');
@@ -561,17 +561,17 @@ function renderRisks(risks) {
         <div style="padding:14px;border-radius:7px;background:#181818;border:1px solid #2a2a2a;margin-bottom:10px;font-size:15px;">
             <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:10px;">
                 <div style="display:flex;align-items:center;gap:8px;">
-                    <span style="font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:800;background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.3);color:#fbbf24;padding:3px 8px;border-radius:4px;">${escapeHTML(k.id)}</span>
+                    <span style="font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:800;background:#361414;border:1px solid #631f1f;color:#fee2e2;padding:3px 8px;border-radius:4px;">${escapeHTML(k.id)}</span>
                     <span style="font-weight:700;color:#fff;">${escapeHTML(k.category)}</span>
                 </div>
                 <div style="display:flex;align-items:center;gap:10px;font-size:14px;color:#525252;">
                     <span>Likelihood: <strong style="color:#e5e5e5;">${escapeHTML(k.likelihood)}</strong></span>
-                    <span>Impact: <strong style="color:#f87171;">${escapeHTML(k.impact)}</strong></span>
-                    <span style="font-family:'JetBrains Mono',monospace;font-weight:800;background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.3);color:#fbbf24;padding:2px 8px;border-radius:4px;">SCORE: ${k.score}/10</span>
+                    <span>Impact: <strong style="color:#ef4444;">${escapeHTML(k.impact)}</strong></span>
+                    <span style="font-family:'JetBrains Mono',monospace;font-weight:800;background:#361414;border:1px solid #631f1f;color:#fee2e2;padding:2px 8px;border-radius:4px;">SCORE: ${k.score}/10</span>
                 </div>
             </div>
             <p style="color:#e5e5e5;line-height:1.65;">${escapeHTML(k.description)}</p>
-            <div style="margin-top:10px;padding:10px 12px;border-radius:5px;background:#111;border:1px solid rgba(22,163,74,0.2);font-size:14px;color:#6ee7b7;">
+            <div style="margin-top:10px;padding:10px 12px;border-radius:5px;background:#111;border:1px solid #1e4d29;font-size:14px;color:#22c55e;">
                 <strong style="font-family:'JetBrains Mono',monospace;font-size:12px;display:block;margin-bottom:4px;"><i class="fas fa-shield-heart" style="margin-right:5px;"></i>MITIGATION:</strong>
                 ${escapeHTML(k.mitigation)}
             </div>
@@ -586,18 +586,18 @@ function renderClarifications(clarifications, conflicts) {
     if (conflicts?.length) {
         html += `
         <div style="margin-bottom:16px;">
-            <h4 style="font-size:15px;font-weight:800;color:#f87171;letter-spacing:0.05em;font-family:'JetBrains Mono',monospace;margin-bottom:10px;">
+            <h4 style="font-size:15px;font-weight:800;color:#ef4444;letter-spacing:0.05em;font-family:'JetBrains Mono',monospace;margin-bottom:10px;">
                 <i class="fas fa-triangle-exclamation" style="margin-right:6px;"></i>CONTRADICTIONS_DETECTED (${conflicts.length})
             </h4>`;
         conflicts.forEach(cf => {
             html += `
-            <div style="padding:14px;border-radius:7px;background:#181818;border:1px solid rgba(220,38,38,0.3);margin-bottom:8px;font-size:15px;">
-                <div style="font-weight:800;color:#f87171;display:flex;align-items:center;gap:8px;margin-bottom:6px;">
-                    <span style="width:8px;height:8px;border-radius:50%;background:#dc2626;flex-shrink:0;"></span>
+            <div style="padding:14px;border-radius:7px;background:#181818;border:1px solid #5c1d1d;margin-bottom:8px;font-size:15px;">
+                <div style="font-weight:800;color:#ef4444;display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+                    <span style="width:8px;height:8px;border-radius:50%;background:#b91c1c;flex-shrink:0;"></span>
                     ${escapeHTML(cf.type || 'Requirement Contradiction')}
                 </div>
                 <p style="color:#e5e5e5;line-height:1.65;">${escapeHTML(cf.description || cf)}</p>
-                ${cf.resolution ? `<div style="margin-top:8px;padding:10px;border-radius:5px;background:#111;border:1px solid rgba(59,130,246,0.2);font-size:14px;color:#93c5fd;"><strong>Resolution:</strong> ${escapeHTML(cf.resolution)}</div>` : ''}
+                ${cf.resolution ? `<div style="margin-top:8px;padding:10px;border-radius:5px;background:#111;border:1px solid #1d3c6a;font-size:14px;color:#dbeafe;"><strong>Resolution:</strong> ${escapeHTML(cf.resolution)}</div>` : ''}
             </div>`;
         });
         html += '</div>';
@@ -606,19 +606,19 @@ function renderClarifications(clarifications, conflicts) {
     if (clarifications?.length) {
         html += `
         <div>
-            <h4 style="font-size:15px;font-weight:800;color:#fbbf24;letter-spacing:0.05em;font-family:'JetBrains Mono',monospace;margin-bottom:10px;">
+            <h4 style="font-size:15px;font-weight:800;color:#ef4444;letter-spacing:0.05em;font-family:'JetBrains Mono',monospace;margin-bottom:10px;">
                 <i class="fas fa-circle-question" style="margin-right:6px;"></i>AMBIGUITY_FLAGS (${clarifications.length})
             </h4>`;
         clarifications.forEach(q => {
             const qText = q.clarification_question || q;
             html += `
-            <div style="padding:14px;border-radius:7px;background:#181818;border:1px solid rgba(245,158,11,0.25);margin-bottom:8px;font-size:15px;display:flex;align-items:flex-start;justify-content:space-between;gap:12px;">
+            <div style="padding:14px;border-radius:7px;background:#181818;border:1px solid #4a1818;margin-bottom:8px;font-size:15px;display:flex;align-items:flex-start;justify-content:space-between;gap:12px;">
                 <div>
-                    <span style="font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:800;background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.25);color:#fbbf24;padding:2px 8px;border-radius:4px;display:inline-block;margin-bottom:8px;">TERM: ${escapeHTML(q.term || 'ambiguity')}</span>
+                    <span style="font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:800;background:#361414;border:1px solid #631f1f;color:#fee2e2;padding:2px 8px;border-radius:4px;display:inline-block;margin-bottom:8px;">TERM: ${escapeHTML(q.term || 'ambiguity')}</span>
                     <p style="color:#e5e5e5;line-height:1.65;">${escapeHTML(qText)}</p>
                 </div>
                 <button onclick="injectClarificationPrompt('${escapeHTML(qText).replace(/'/g, "\\'")}')"
-                    style="padding:8px 14px;border-radius:5px;background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.3);color:#fbbf24;font-weight:800;font-size:14px;cursor:pointer;white-space:nowrap;flex-shrink:0;">
+                    style="padding:8px 14px;border-radius:5px;background:#361414;border:1px solid #631f1f;color:#fee2e2;font-weight:800;font-size:14px;cursor:pointer;white-space:nowrap;flex-shrink:0;">
                     Answer
                 </button>
             </div>`;
@@ -628,8 +628,8 @@ function renderClarifications(clarifications, conflicts) {
 
     if (!html) {
         html = `
-        <div style="padding:24px;border-radius:7px;background:#181818;border:1px solid rgba(22,163,74,0.3);text-align:center;">
-            <i class="fas fa-circle-check" style="font-size:32px;color:#16a34a;display:block;margin-bottom:12px;"></i>
+        <div style="padding:24px;border-radius:7px;background:#181818;border:1px solid #1e4d29;text-align:center;">
+            <i class="fas fa-circle-check" style="font-size:32px;color:#15803d;display:block;margin-bottom:12px;"></i>
             <p style="font-size:16px;font-weight:800;color:#fff;">QUALITY_GATE_PASSED</p>
             <p style="font-size:14px;color:#525252;margin-top:4px;">Zero contradictions or ambiguities detected.</p>
         </div>`;
@@ -663,11 +663,11 @@ function renderAuditTrail(trail) {
             </span>
             <div>
                 <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
-                    <span class="font-mono" style="font-size:14px;font-weight:700;color:#fbbf24;">${escapeHTML(ev.agent)}</span>
-                    <span style="color:#2a2a2a;">→</span>
+                    <span class="font-mono" style="font-size:14px;font-weight:700;color:#ef4444;">${escapeHTML(ev.agent)}</span>
+                    <span style="color:#404040;">→</span>
                     <span style="font-weight:600;color:#e5e5e5;">${escapeHTML(ev.action)}</span>
                 </div>
-                <p style="font-size:14px;color:#525252;">${escapeHTML(ev.detail)}</p>
+                <p style="font-size:14px;color:#737373;">${escapeHTML(ev.detail)}</p>
             </div>
         </div>`).join('');
 }
@@ -904,21 +904,21 @@ function renderHistoryItems(sessions) {
         const reqs = s.requirement_count !== undefined ? s.requirement_count : null;
 
         return `
-        <div style="padding:16px 18px;border-radius:8px;background:${isActive ? 'rgba(124,58,237,0.08)' : '#161616'};border:1px solid ${isActive ? 'rgba(124,58,237,0.45)' : '#262626'};display:flex;flex-direction:column;gap:12px;transition:all 0.15s;">
+        <div style="padding:16px 18px;border-radius:8px;background:${isActive ? '#1f152b' : '#161616'};border:1px solid ${isActive ? '#5b21b6' : '#262626'};display:flex;flex-direction:column;gap:12px;transition:all 0.15s;">
             <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap;">
                 <div style="flex:1;min-width:240px;">
                     <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:6px;">
                         <span style="font-size:16px;font-weight:800;color:#fff;display:flex;align-items:center;gap:8px;">
-                            <i class="fas fa-comments" style="color:#a78bfa;"></i>
+                            <i class="fas fa-comments" style="color:#8b5cf6;"></i>
                             ${escapeHTML(title)}
                         </span>
-                        ${isActive ? `<span style="font-size:11px;font-family:'JetBrains Mono',monospace;background:rgba(22,163,74,0.18);border:1px solid rgba(22,163,74,0.4);color:#4ade80;padding:2px 7px;border-radius:4px;font-weight:700;">CURRENT ACTIVE</span>` : ''}
+                        ${isActive ? `<span style="font-size:11px;font-family:'JetBrains Mono',monospace;background:#142a1b;border:1px solid #16532d;color:#22c55e;padding:2px 7px;border-radius:4px;font-weight:700;">CURRENT ACTIVE</span>` : ''}
                     </div>
                     <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:12.5px;">
-                        <span style="background:rgba(59,130,246,0.12);border:1px solid rgba(59,130,246,0.3);color:#93c5fd;padding:2px 8px;border-radius:4px;font-family:'JetBrains Mono',monospace;">
+                        <span style="background:#162238;border:1px solid #1d3c6a;color:#dbeafe;padding:2px 8px;border-radius:4px;font-family:'JetBrains Mono',monospace;">
                             <i class="fas fa-briefcase mr-1"></i>${escapeHTML(s.domain || 'General')}
                         </span>
-                        <span style="background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.25);color:#fbbf24;padding:2px 8px;border-radius:4px;font-family:'JetBrains Mono',monospace;">
+                        <span style="background:#361414;border:1px solid #631f1f;color:#fee2e2;padding:2px 8px;border-radius:4px;font-family:'JetBrains Mono',monospace;">
                             <i class="fas fa-user-tag mr-1"></i>${escapeHTML(s.role || 'Analyst')}
                         </span>
                         <span style="color:#888;font-family:'JetBrains Mono',monospace;font-size:12px;">
@@ -980,7 +980,7 @@ async function loadHistorySession(sessionId) {
         // Update Header Session Display
         const tag = document.getElementById('active-project-tag');
         if (tag) {
-            tag.innerHTML = `<span style="color:#a78bfa;font-weight:700;"><i class="fas fa-folder-open mr-1"></i>${escapeHTML(currentSessionTitle)}</span>`;
+            tag.innerHTML = `<span style="color:#d1d5db;font-weight:700;"><i class="fas fa-folder-open mr-1"></i>${escapeHTML(currentSessionTitle)}</span>`;
             tag.title = `Project ID: ${session.id}`;
         }
         const actionBtns = document.getElementById('session-action-btns');
@@ -1010,11 +1010,11 @@ async function loadHistorySession(sessionId) {
                 appendChatMessage('user', escapeHTML(session.snapshot.initial_prompt));
                 appendChatMessage('assistant', `
                     <div style="display:flex;flex-direction:column;gap:10px;">
-                        <div style="display:flex;align-items:center;gap:10px;padding:12px 14px;border-radius:6px;background:rgba(22,163,74,0.1);border:1px solid rgba(22,163,74,0.25);">
-                            <i class="fas fa-check-circle" style="color:#16a34a;font-size:19px;"></i>
+                        <div style="display:flex;align-items:center;gap:10px;padding:12px 14px;border-radius:6px;background:#122417;border:1px solid #1e4d29;">
+                            <i class="fas fa-check-circle" style="color:#15803d;font-size:19px;"></i>
                             <span style="font-size:16.5px;color:#e5e5e5;">
                                 <strong style="color:#fff;">Restored Workspace:</strong> Loaded saved chat 
-                                <strong style="color:#fbbf24;">${escapeHTML(currentSessionTitle)}</strong>.
+                                <strong style="color:#ef4444;">${escapeHTML(currentSessionTitle)}</strong>.
                             </span>
                         </div>
                     </div>
@@ -1134,7 +1134,7 @@ async function confirmSaveChatSession() {
             currentSessionTitle = title;
             const tag = document.getElementById('active-project-tag');
             if (tag) {
-                tag.innerHTML = `<span style="color:#a78bfa;font-weight:700;"><i class="fas fa-folder-open mr-1"></i>${escapeHTML(title)}</span>`;
+                tag.innerHTML = `<span style="color:#d1d5db;font-weight:700;"><i class="fas fa-folder-open mr-1"></i>${escapeHTML(title)}</span>`;
             }
             closeSaveChatModal();
             showToast(`Chat "${title}" saved ✓`);
@@ -1192,7 +1192,7 @@ async function confirmRenameSession() {
                 currentSessionTitle = newTitle;
                 const tag = document.getElementById('active-project-tag');
                 if (tag) {
-                    tag.innerHTML = `<span style="color:#a78bfa;font-weight:700;"><i class="fas fa-folder-open mr-1"></i>${escapeHTML(newTitle)}</span>`;
+                    tag.innerHTML = `<span style="color:#d1d5db;font-weight:700;"><i class="fas fa-folder-open mr-1"></i>${escapeHTML(newTitle)}</span>`;
                 }
             }
             refreshHistoryList();
@@ -1233,7 +1233,7 @@ function showToast(msg, type = 'ok') {
     const el = document.getElementById('toast-msg');
     if (!el) return;
     el.textContent = msg;
-    el.style.background = type === 'err' ? 'rgba(220,38,38,0.95)' : 'rgba(22,163,74,0.95)';
+    el.style.background = type === 'err' ? '#b91c1c' : '#15803d';
     el.style.opacity = '1';
     el.style.pointerEvents = 'auto';
     setTimeout(() => { el.style.opacity = '0'; el.style.pointerEvents = 'none'; }, 3000);
@@ -1580,14 +1580,14 @@ async function fetchTraceabilityMatrix() {
             const isApproved = row.approval_status === 'approved';
             return `
                 <tr style="border-bottom:1px solid #1f1f1f;background:${idx % 2 === 0 ? 'transparent' : '#0f0f0f'};">
-                    <td style="padding:10px 8px;color:#fbbf24;font-weight:700;">${escapeHTML(row.req_id)}</td>
+                    <td style="padding:10px 8px;color:#ef4444;font-weight:700;">${escapeHTML(row.req_id)}</td>
                     <td style="padding:10px 8px;color:#e5e5e5;max-width:240px;line-height:1.4;">${escapeHTML(row.statement)}</td>
                     <td style="padding:10px 8px;color:#93c5fd;">${escapeHTML(row.source_stakeholder)}</td>
-                    <td style="padding:10px 8px;color:#fca5a5;">${escapeHTML(row.regulation)}</td>
+                    <td style="padding:10px 8px;color:#f87171;">${escapeHTML(row.regulation)}</td>
                     <td style="padding:10px 8px;color:#c084fc;">${escapeHTML(row.control)}</td>
                     <td style="padding:10px 8px;color:#a3a3a3;max-width:200px;">${escapeHTML(row.test_scenario)}</td>
                     <td style="padding:10px 8px;">
-                        <span style="font-size:11px;padding:2px 6px;border-radius:3px;background:${isApproved ? 'rgba(22,163,74,0.15)' : 'rgba(245,158,11,0.1)'};color:${isApproved ? '#6ee7b7' : '#fbbf24'};border:1px solid ${isApproved ? 'rgba(22,163,74,0.3)' : 'rgba(245,158,11,0.3)'};">
+                        <span style="font-size:11px;padding:2px 6px;border-radius:3px;background:${isApproved ? '#142a1b' : '#361414'};color:${isApproved ? '#dcfce7' : '#fee2e2'};border:1px solid ${isApproved ? '#16532d' : '#631f1f'};">
                             ${isApproved ? 'APPROVED' : 'PENDING'}
                         </span>
                     </td>
@@ -1621,7 +1621,7 @@ async function fetchAdminMetrics() {
                 <tr style="border-bottom:1px solid #1f1f1f;background:${idx % 2 === 0 ? 'transparent' : '#0f0f0f'};">
                     <td style="padding:8px;color:#fff;font-weight:700;">${escapeHTML(run.agent)}</td>
                     <td style="padding:8px;"><span class="text-emerald-400">✓ ${escapeHTML(run.status)}</span></td>
-                    <td style="padding:8px;color:#fbbf24;">${run.duration_ms} ms</td>
+                    <td style="padding:8px;color:#ef4444;">${run.duration_ms} ms</td>
                     <td style="padding:8px;color:#525252;">${escapeHTML(run.time)}</td>
                 </tr>
             `).join('');

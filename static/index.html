@@ -23,12 +23,9 @@
 
             <!-- Brand -->
             <div class="flex items-center gap-3">
-                <div class="brand-logo w-10 h-10 rounded flex items-center justify-center text-sm font-mono font-black">
-                    FR</div>
                 <div>
                     <div class="flex items-center gap-2">
                         <h1 style="font-size:18px; font-weight:900; letter-spacing:-0.04em; color:#fff;">FINREQ</h1>
-                        <span class="badge-amber px-2 py-0.5 rounded font-mono" style="font-size:12px;">v2.5</span>
                     </div>
                     <p style="font-size:13px; color:#525252; font-family:'JetBrains Mono',monospace; margin-top:1px;">
                         AUTONOMOUS FINANCIAL REQUIREMENTS ENGINE</p>
@@ -39,45 +36,44 @@
             <div class="flex items-center gap-2 flex-wrap">
                 <!-- User Profile / RBAC & MFA badge -->
                 <div id="user-badge" onclick="openAuthModal()"
-                    class="theme-tag flex items-center gap-2 px-3 py-2 rounded cursor-pointer hover:border-amber-500 transition-all"
+                    class="theme-btn theme-tag flex items-center gap-2 px-3 py-2 rounded cursor-pointer hover:border-red-500 transition-all"
                     style="font-size:13px;border:1px solid #333;" title="Click to Switch Role or Re-authenticate">
-                    <i class="fas fa-user-shield" style="color:#f59e0b;"></i>
-                    <span id="current-user-label" class="font-mono text-amber-400 font-bold">Sign in required</span>
+                    <i class="fas fa-user-shield" style="color:#dc2626;"></i>
+                    <span id="current-user-label" class="font-mono text-neutral-300 font-bold">Sign in required</span>
                 </div>
 
                 <!-- Document Upload button -->
                 <button onclick="openUploadModal()" class="theme-btn px-3 py-2 rounded flex items-center gap-2"
-                    style="font-size:14px;background:rgba(59,130,246,0.12);border:1px solid rgba(59,130,246,0.35);color:#60a5fa;"
+                    style="font-size:14px;border:1px solid #333;color:#dbeafe;"
                     title="Upload PDF, DOCX, or Policy documents">
                     <i class="fas fa-file-arrow-up"></i> Upload Docs
                 </button>
 
                 <button onclick="openHistoryModal()" class="theme-btn px-3 py-2 rounded flex items-center gap-2"
-                    style="font-size:14px;background:rgba(124,58,237,0.12);border:1px solid rgba(124,58,237,0.35);color:#c4b5fd;"
-                    title="Load a saved chat">
+                    style="font-size:14px;border:1px solid #333;color:#f3e8ff;" title="Load a saved chat">
                     <i class="fas fa-clock-rotate-left"></i> History
                 </button>
 
                 <!-- Session tag -->
                 <div class="theme-tag flex items-center gap-2 px-3 py-2 rounded" style="font-size:14px;">
-                    <span style="width:8px;height:8px;border-radius:50%;background:#16a34a;flex-shrink:0;"></span>
+                    <span style="width:8px;height:8px;border-radius:50%;background:#dc2626;flex-shrink:0;"></span>
                     <span id="active-project-tag" class="font-mono" style="font-size:13px;">NO ACTIVE SESSION</span>
                 </div>
 
                 <!-- Save / Discard — shown after session starts -->
                 <div id="session-action-btns" style="display:none;" class="flex items-center gap-2">
-                    <button id="save-chat-btn" onclick="saveChatSession()"
-                        style="background:rgba(245,158,11,0.15);border:1px solid rgba(245,158,11,0.4);color:#fbbf24;font-weight:800;font-size:15px;padding:8px 14px;border-radius:5px;cursor:pointer;display:flex;align-items:center;gap:6px;transition:all 0.15s;">
+                    <button id="save-chat-btn" onclick="saveChatSession()" class="theme-btn"
+                        style="border:1px solid #333;color:#ffffff;font-weight:800;font-size:15px;padding:8px 14px;border-radius:5px;cursor:pointer;display:flex;align-items:center;gap:6px;transition:all 0.15s;">
                         <i class="fas fa-floppy-disk"></i> Save Chat
                     </button>
-                    <button onclick="discardChatSession()"
-                        style="background:rgba(220,38,38,0.1);border:1px solid rgba(220,38,38,0.3);color:#f87171;font-weight:700;font-size:15px;padding:8px 14px;border-radius:5px;cursor:pointer;display:flex;align-items:center;gap:6px;transition:all 0.15s;">
+                    <button onclick="discardChatSession()" class="theme-btn"
+                        style="border:1px solid #333;color:#ffffff;font-weight:700;font-size:15px;padding:8px 14px;border-radius:5px;cursor:pointer;display:flex;align-items:center;gap:6px;transition:all 0.15s;">
                         <i class="fas fa-trash"></i> Discard
                     </button>
                 </div>
 
                 <button onclick="resetSession()" class="theme-btn px-4 py-2 rounded flex items-center gap-2"
-                    style="font-size:15px;">
+                    style="font-size:15px; color:#ffffff;">
                     <i class="fas fa-rotate-right"></i> Reset
                 </button>
             </div>
@@ -93,7 +89,7 @@
                 <div class="flex items-center gap-3">
                     <span
                         style="font-size:13px;font-weight:800;letter-spacing:0.08em;color:#525252;font-family:'JetBrains Mono',monospace;">
-                        <i class="fas fa-microchip" style="color:#f59e0b;margin-right:6px;"></i>MULTI-AGENT PIPELINE
+                        <i class="fas fa-microchip" style="color:#dc2626;margin-right:6px;"></i>MULTI-AGENT PIPELINE
                     </span>
                     <span class="badge-amber px-2 py-0.5 rounded font-mono" style="font-size:12px;font-weight:800;">13
                         NODES</span>
@@ -108,25 +104,25 @@
             <div class="grid gap-2" style="grid-template-columns:repeat(13,1fr);">
                 <div id="agent-coordinator" class="agent-node p-2 text-center"
                     title="Controls workflow & orchestrates state">
-                    <i class="fas fa-sitemap block mb-1" style="font-size:14px;color:#525252;"></i>
+                    <i class="fas fa-sitemap block mb-1" style="font-size:14px;color:#dc2626;"></i>
                     <div style="font-size:11px;">Coord</div>
                 </div>
                 <div id="agent-interaction" class="agent-node p-2 text-center" title="Adaptive stakeholder interviews">
-                    <i class="fas fa-comments block mb-1" style="font-size:14px;color:#3b82f6;"></i>
+                    <i class="fas fa-comments block mb-1" style="font-size:14px;color:#dc2626;"></i>
                     <div style="font-size:11px;">Interact</div>
                 </div>
                 <div id="agent-extraction" class="agent-node p-2 text-center" title="Extracts structured requirements">
-                    <i class="fas fa-file-export block mb-1" style="font-size:14px;color:#3b82f6;"></i>
+                    <i class="fas fa-file-export block mb-1" style="font-size:14px;color:#dc2626;"></i>
                     <div style="font-size:11px;">Extract</div>
                 </div>
                 <div id="agent-clarification" class="agent-node p-2 text-center"
                     title="Detects ambiguity & missing bounds">
-                    <i class="fas fa-circle-question block mb-1" style="font-size:14px;color:#f59e0b;"></i>
+                    <i class="fas fa-circle-question block mb-1" style="font-size:14px;color:#dc2626;"></i>
                     <div style="font-size:11px;">Clarify</div>
                 </div>
                 <div id="agent-classification" class="agent-node p-2 text-center"
                     title="13-dimension financial taxonomy">
-                    <i class="fas fa-tags block mb-1" style="font-size:14px;color:#7c3aed;"></i>
+                    <i class="fas fa-tags block mb-1" style="font-size:14px;color:#dc2626;"></i>
                     <div style="font-size:11px;">Classify</div>
                 </div>
                 <div id="agent-conflict" class="agent-node p-2 text-center" title="Detects requirement contradictions">
@@ -139,27 +135,27 @@
                     <div style="font-size:11px;">Comply</div>
                 </div>
                 <div id="agent-security" class="agent-node p-2 text-center" title="STRIDE threat modeling">
-                    <i class="fas fa-shield-halved block mb-1" style="font-size:14px;color:#16a34a;"></i>
+                    <i class="fas fa-shield-halved block mb-1" style="font-size:14px;color:#dc2626;"></i>
                     <div style="font-size:11px;">Security</div>
                 </div>
                 <div id="agent-risk" class="agent-node p-2 text-center" title="Evaluates business & credit risks">
-                    <i class="fas fa-triangle-exclamation block mb-1" style="font-size:14px;color:#f59e0b;"></i>
+                    <i class="fas fa-triangle-exclamation block mb-1" style="font-size:14px;color:#dc2626;"></i>
                     <div style="font-size:11px;">Risk</div>
                 </div>
                 <div id="agent-sdlc" class="agent-node p-2 text-center" title="SDLC recommendation engine">
-                    <i class="fas fa-diagram-project block mb-1" style="font-size:14px;color:#16a34a;"></i>
+                    <i class="fas fa-diagram-project block mb-1" style="font-size:14px;color:#dc2626;"></i>
                     <div style="font-size:11px;">SDLC</div>
                 </div>
                 <div id="agent-doc" class="agent-node p-2 text-center" title="Synthesizes SRS, User Stories & RTM">
-                    <i class="fas fa-file-lines block mb-1" style="font-size:14px;color:#7c3aed;"></i>
+                    <i class="fas fa-file-lines block mb-1" style="font-size:14px;color:#dc2626;"></i>
                     <div style="font-size:11px;">Docs</div>
                 </div>
                 <div id="agent-validator" class="agent-node p-2 text-center" title="Verifies evidence grounding">
-                    <i class="fas fa-clipboard-check block mb-1" style="font-size:14px;color:#3b82f6;"></i>
+                    <i class="fas fa-clipboard-check block mb-1" style="font-size:14px;color:#dc2626;"></i>
                     <div style="font-size:11px;">Validate</div>
                 </div>
                 <div id="agent-approval" class="agent-node p-2 text-center" title="Human-in-the-loop governance">
-                    <i class="fas fa-signature block mb-1" style="font-size:14px;color:#f59e0b;"></i>
+                    <i class="fas fa-signature block mb-1" style="font-size:14px;color:#dc2626;"></i>
                     <div style="font-size:11px;">Approve</div>
                 </div>
             </div>
@@ -170,7 +166,7 @@
             <div class="flex items-center gap-3">
                 <label for="domain-select"
                     style="font-size:13px;font-weight:800;letter-spacing:0.08em;color:#525252;font-family:'JetBrains Mono',monospace;">
-                    <i class="fas fa-layer-group" style="color:#f59e0b;margin-right:5px;"></i>DOMAIN:
+                    <i class="fas fa-layer-group" style="color:#dc2626;margin-right:5px;"></i>DOMAIN:
                 </label>
                 <select id="domain-select" class="floating-input font-mono px-3 py-2"
                     style="min-width:300px;font-size:15px;">
@@ -192,16 +188,16 @@
                 <span
                     style="font-size:13px;font-weight:800;letter-spacing:0.06em;color:#525252;font-family:'JetBrains Mono',monospace;">TEMPLATES:</span>
                 <button onclick="loadPreset('loan')" class="preset-chip px-3 py-2 flex items-center gap-2">
-                    <i class="fas fa-building-columns" style="color:#3b82f6;"></i> SME Lending
+                    <i class="fas fa-building-columns" style="color:#dc2626;"></i> SME Lending
                 </button>
                 <button onclick="loadPreset('kyc')" class="preset-chip px-3 py-2 flex items-center gap-2">
-                    <i class="fas fa-id-card" style="color:#16a34a;"></i> Biometric KYC
+                    <i class="fas fa-id-card" style="color:#dc2626;"></i> Biometric KYC
                 </button>
                 <button onclick="loadPreset('payments')" class="preset-chip px-3 py-2 flex items-center gap-2">
-                    <i class="fas fa-credit-card" style="color:#7c3aed;"></i> ISO 20022
+                    <i class="fas fa-credit-card" style="color:#dc2626;"></i> ISO 20022
                 </button>
                 <button onclick="loadPreset('fraud')" class="preset-chip px-3 py-2 flex items-center gap-2">
-                    <i class="fas fa-shield-cat" style="color:#f59e0b;"></i> AML &amp; Fraud
+                    <i class="fas fa-shield-cat" style="color:#dc2626;"></i> AML &amp; Fraud
                 </button>
             </div>
         </section>
@@ -217,19 +213,19 @@
                 <div class="px-5 py-4 flex items-center justify-between" style="border-bottom:1px solid #2a2a2a;">
                     <div class="flex items-center gap-3">
                         <div
-                            style="width:12px;height:12px;border-radius:50%;background:#16a34a;animation:subtle-pulse 2s infinite;">
+                            style="width:12px;height:12px;border-radius:50%;background:#dc2626;animation:subtle-pulse 2s infinite;">
                         </div>
                         <h2
                             style="font-size:18px;font-weight:800;letter-spacing:0.05em;color:#fff;font-family:'JetBrains Mono',monospace;">
                             STAKEHOLDER_CONSOLE</h2>
                     </div>
                     <span class="terminal-line" style="font-size:15px !important;">
-                        <span id="chat-count" style="color:#f59e0b;font-weight:800;">0</span> MESSAGES
+                        <span id="chat-count" style="color:#dc2626;font-weight:800;">0</span> MESSAGES
                     </span>
                 </div>
 
                 <!-- Amber accent line -->
-                <div style="height:2px;background:linear-gradient(90deg,#f59e0b 0%,transparent 60%);"></div>
+                <div style="height:2px;background:#2e2e2e;"></div>
 
                 <!-- Chat Window -->
                 <div id="chat-window" class="flex-1 overflow-y-auto custom-scrollbar"
@@ -237,7 +233,7 @@
                     <!-- Welcome -->
                     <div class="flex items-start gap-4">
                         <div
-                            style="width:44px;height:44px;border-radius:6px;background:rgba(245,158,11,0.15);border:1px solid rgba(245,158,11,0.3);flex-shrink:0;display:flex;align-items:center;justify-content:center;color:#fbbf24;font-family:'JetBrains Mono',monospace;font-weight:900;font-size:14px;">
+                            style="width:44px;height:44px;border-radius:6px;background:#261212;border:1px solid #4d1d1d;flex-shrink:0;display:flex;align-items:center;justify-content:center;color:#ef4444;font-family:'JetBrains Mono',monospace;font-weight:900;font-size:14px;">
                             FR</div>
                         <div class="inner-card"
                             style="padding:20px 22px;max-width:620px;font-size:20px;line-height:1.7;">
@@ -252,7 +248,7 @@
                                         class="fas fa-shield-check" style="color:#16a34a;font-size:18px;"></i> PII
                                     Redaction &amp; Prompt Injection Guard</div>
                                 <div style="font-size:17px;color:#a3a3a3;display:flex;align-items:center;gap:10px;"><i
-                                        class="fas fa-scale-balanced" style="color:#f59e0b;font-size:18px;"></i> RAG:
+                                        class="fas fa-scale-balanced" style="color:#dc2626;font-size:18px;"></i> RAG:
                                     GDPR, PCI-DSS, Basel III/IV</div>
                                 <div style="font-size:17px;color:#a3a3a3;display:flex;align-items:center;gap:10px;"><i
                                         class="fas fa-diagram-project" style="color:#7c3aed;font-size:18px;"></i>
@@ -268,7 +264,7 @@
                     <div class="flex items-center gap-3">
                         <label for="role-select"
                             style="font-size:15px;font-weight:800;letter-spacing:0.06em;color:#737373;font-family:'JetBrains Mono',monospace;">
-                            <i class="fas fa-user" style="color:#f59e0b;margin-right:6px;"></i>PERSONA:
+                            <i class="fas fa-user" style="color:#dc2626;margin-right:6px;"></i>PERSONA:
                         </label>
                         <select id="role-select" class="floating-input px-3 py-2" style="font-size:17px;">
                             <option value="Business Analyst">Business Analyst</option>
@@ -291,8 +287,8 @@
                             class="floating-input custom-scrollbar w-full focus:outline-none"
                             style="padding:16px 64px 16px 18px;resize:none;font-size:20px;line-height:1.6;"></textarea>
                         <button type="submit" id="send-btn"
-                            style="position:absolute;right:12px;bottom:14px;width:44px;height:44px;border-radius:6px;background:#f59e0b;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.15s;">
-                            <i class="fas fa-arrow-up" style="color:#000;font-size:20px;font-weight:900;"></i>
+                            style="position:absolute;right:12px;bottom:14px;width:44px;height:44px;border-radius:6px;background:#dc2626;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.15s;">
+                            <i class="fas fa-arrow-up" style="color:#fff;font-size:20px;font-weight:900;"></i>
                         </button>
                     </form>
                 </div>
@@ -307,7 +303,7 @@
                     style="border-bottom:1px solid #2a2a2a;background:#111;">
                     <button onclick="switchTab('requirements')" id="tab-btn-requirements"
                         class="tab-btn active px-4 py-2 flex items-center gap-2 whitespace-nowrap">
-                        <i class="fas fa-list-check" style="color:#f59e0b;"></i> Requirements
+                        <i class="fas fa-list-check" style="color:#dc2626;"></i> Requirements
                         <span id="req-count" class="badge-amber px-2 py-0.5 rounded font-mono"
                             style="font-size:12px;">0</span>
                     </button>
@@ -317,33 +313,33 @@
                     </button>
                     <button onclick="switchTab('sdlc')" id="tab-btn-sdlc"
                         class="tab-btn px-4 py-2 flex items-center gap-2 whitespace-nowrap">
-                        <i class="fas fa-diagram-project" style="color:#16a34a;"></i> SDLC
+                        <i class="fas fa-diagram-project" style="color:#dc2626;"></i> SDLC
                     </button>
                     <button onclick="switchTab('risks')" id="tab-btn-risks"
                         class="tab-btn px-4 py-2 flex items-center gap-2 whitespace-nowrap">
-                        <i class="fas fa-shield-virus" style="color:#f59e0b;"></i> Risk Register
+                        <i class="fas fa-shield-virus" style="color:#dc2626;"></i> Risk Register
                         <span id="risk-count" class="badge-amber px-2 py-0.5 rounded font-mono"
                             style="font-size:12px;">0</span>
                     </button>
                     <button onclick="switchTab('clarifications')" id="tab-btn-clarifications"
                         class="tab-btn px-4 py-2 flex items-center gap-2 whitespace-nowrap">
-                        <i class="fas fa-circle-nodes" style="color:#7c3aed;"></i> Quality &amp; Gaps
+                        <i class="fas fa-circle-nodes" style="color:#dc2626;"></i> Quality &amp; Gaps
                     </button>
                     <button onclick="switchTab('traceability')" id="tab-btn-traceability"
                         class="tab-btn px-4 py-2 flex items-center gap-2 whitespace-nowrap">
-                        <i class="fas fa-table-cells" style="color:#0ea5e9;"></i> Traceability (RTM)
+                        <i class="fas fa-table-cells" style="color:#dc2626;"></i> Traceability (RTM)
                     </button>
                     <button onclick="switchTab('admin')" id="tab-btn-admin"
                         class="tab-btn px-4 py-2 flex items-center gap-2 whitespace-nowrap">
-                        <i class="fas fa-chart-line" style="color:#10b981;"></i> Admin &amp; Telemetry
+                        <i class="fas fa-chart-line" style="color:#dc2626;"></i> Admin &amp; Telemetry
                     </button>
                     <button onclick="switchTab('artifacts')" id="tab-btn-artifacts"
                         class="tab-btn px-4 py-2 flex items-center gap-2 whitespace-nowrap">
-                        <i class="fas fa-box-archive" style="color:#3b82f6;"></i> Artifacts
+                        <i class="fas fa-box-archive" style="color:#dc2626;"></i> Artifacts
                     </button>
                     <button onclick="switchTab('audit')" id="tab-btn-audit"
                         class="tab-btn px-4 py-2 flex items-center gap-2 whitespace-nowrap">
-                        <i class="fas fa-receipt" style="color:#525252;"></i> Audit Trail
+                        <i class="fas fa-receipt" style="color:#dc2626;"></i> Audit Trail
                     </button>
                 </div>
 
@@ -461,7 +457,7 @@
                         <div class="inner-card" style="padding:16px;space-y:8px;">
                             <div class="flex items-center justify-between" style="margin-bottom:8px;">
                                 <span
-                                    style="font-size:13px;font-weight:800;letter-spacing:0.08em;color:#f59e0b;font-family:'JetBrains Mono',monospace;">
+                                    style="font-size:13px;font-weight:800;letter-spacing:0.08em;color:#dc2626;font-family:'JetBrains Mono',monospace;">
                                     <i class="fas fa-award" style="margin-right:5px;"></i>OPTIMAL MATCH
                                 </span>
                                 <span id="sdlc-top-badge" class="badge-amber px-3 py-1 rounded font-mono"
@@ -479,7 +475,8 @@
                                 <h4
                                     style="font-size:14px;font-weight:800;letter-spacing:0.06em;color:#525252;font-family:'JetBrains Mono',monospace;">
                                     MCDA SUITABILITY SCORES (OUT OF 100%)</h4>
-                                <span class="badge-amber px-2 py-0.5 rounded font-mono" style="font-size:12px;">INDEPENDENT FIT</span>
+                                <span class="badge-amber px-2 py-0.5 rounded font-mono"
+                                    style="font-size:12px;">INDEPENDENT FIT</span>
                             </div>
                             <div id="sdlc-ranking-bars" class="space-y-3"></div>
                         </div>
@@ -583,7 +580,7 @@
                                 style="padding:16px;text-align:left;cursor:pointer;border:none;">
                                 <div
                                     style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-                                    <i class="fas fa-shield-virus" style="color:#f59e0b;font-size:20px;"></i>
+                                    <i class="fas fa-shield-virus" style="color:#dc2626;font-size:20px;"></i>
                                     <i class="fas fa-download" style="color:#525252;font-size:14px;"></i>
                                 </div>
                                 <div style="font-size:15px;font-weight:800;color:#fff;">Risk Register</div>
@@ -676,7 +673,7 @@
                         <div id="admin-metrics-cards" class="grid grid-cols-2 md:grid-cols-4 gap-3">
                             <div class="inner-card p-3">
                                 <div class="text-xs text-neutral-500 font-mono">DATABASE ENGINE</div>
-                                <div id="metric-db" class="text-base font-bold text-amber-400 mt-1">PostgreSQL +
+                                <div id="metric-db" class="text-base font-bold text-red-400 mt-1">PostgreSQL +
                                     pgvector</div>
                             </div>
                             <div class="inner-card p-3">
@@ -732,10 +729,10 @@
             <div class="flex items-center justify-between pb-3" style="border-bottom:1px solid #2a2a2a;">
                 <div>
                     <h3 style="font-size:18px;font-weight:800;color:#fff;display:flex;align-items:center;gap:10px;">
-                        <i class="fas fa-clock-rotate-left" style="color:#a78bfa;"></i>
+                        <i class="fas fa-clock-rotate-left" style="color:#8b5cf6;"></i>
                         <span>Saved Chats History</span>
                         <span id="history-count-badge"
-                            style="font-size:12px;font-family:'JetBrains Mono',monospace;background:rgba(124,58,237,0.18);border:1px solid rgba(124,58,237,0.4);color:#c4b5fd;padding:2px 8px;border-radius:12px;">0
+                            style="font-size:12px;font-family:'JetBrains Mono',monospace;background:#261433;border:1px solid #4a1f6d;color:#f3e8ff;padding:2px 8px;border-radius:12px;">0
                             sessions</span>
                     </h3>
                     <p style="font-size:13px;color:#888;margin-top:4px;">Access your saved workspaces with their custom
@@ -775,7 +772,7 @@
         <div class="floating-card" style="padding:24px;max-width:520px;width:100%;">
             <div class="flex items-center justify-between pb-3" style="border-bottom:1px solid #2a2a2a;">
                 <h3 style="font-size:16px;font-weight:800;color:#fff;display:flex;align-items:center;gap:8px;">
-                    <i class="fas fa-floppy-disk" style="color:#fbbf24;"></i> Save Chat Workspace
+                    <i class="fas fa-floppy-disk" style="color:#dc2626;"></i> Save Chat Workspace
                 </h3>
                 <button onclick="closeSaveChatModal()"
                     style="color:#737373;background:none;border:none;cursor:pointer;font-size:20px;"><i
@@ -786,7 +783,7 @@
                     Name:</label>
                 <input type="text" id="save-chat-title-input"
                     onkeydown="if(event.key==='Enter')confirmSaveChatSession()"
-                    style="width:100%;padding:10px 14px;border-radius:6px;background:#141414;border:1px solid #f59e0b;color:#fff;font-size:14.5px;outline:none;"
+                    style="width:100%;padding:10px 14px;border-radius:6px;background:#141414;border:1px solid #dc2626;color:#fff;font-size:14.5px;outline:none;"
                     placeholder="e.g. SME Loan Origination & Credit Assessment" />
                 <p style="font-size:12.5px;color:#888;line-height:1.5;">Give this chat a meaningful name. It will be
                     saved into History with all messages, requirements, risk analyses, regulatory compliance citations,
@@ -795,7 +792,7 @@
                     <button onclick="closeSaveChatModal()"
                         class="theme-btn px-4 py-2 rounded text-sm text-neutral-300">Cancel</button>
                     <button onclick="confirmSaveChatSession()"
-                        style="padding:8px 16px;border-radius:6px;font-size:14px;font-weight:800;background:#f59e0b;color:#000;border:none;cursor:pointer;display:flex;align-items:center;gap:6px;">
+                        style="padding:8px 16px;border-radius:6px;font-size:14px;font-weight:800;background:#dc2626;color:#fff;border:none;cursor:pointer;display:flex;align-items:center;gap:6px;">
                         <i class="fas fa-check"></i> Save Chat
                     </button>
                 </div>
@@ -809,7 +806,7 @@
         <div class="floating-card" style="padding:24px;max-width:480px;width:100%;">
             <div class="flex items-center justify-between pb-3" style="border-bottom:1px solid #2a2a2a;">
                 <h3 style="font-size:16px;font-weight:800;color:#fff;display:flex;align-items:center;gap:8px;">
-                    <i class="fas fa-pen" style="color:#a78bfa;"></i> Rename Saved Chat
+                    <i class="fas fa-pen" style="color:#8b5cf6;"></i> Rename Saved Chat
                 </h3>
                 <button onclick="closeRenameModal()"
                     style="color:#737373;background:none;border:none;cursor:pointer;font-size:20px;"><i
@@ -838,7 +835,7 @@
         <div class="floating-card" style="padding:24px;max-width:480px;width:100%;space-y:16px;">
             <div class="flex items-center justify-between pb-3" style="border-bottom:1px solid #2a2a2a;">
                 <h3 style="font-size:16px;font-weight:800;color:#fff;display:flex;align-items:center;gap:8px;">
-                    <i class="fas fa-shield-halved" style="color:#f59e0b;"></i> Identity &amp; RBAC Access
+                    <i class="fas fa-shield-halved" style="color:#dc2626;"></i> Identity &amp; RBAC Access
                 </h3>
                 <button onclick="closeAuthModal()"
                     style="color:#525252;background:none;border:none;cursor:pointer;font-size:20px;">
@@ -853,7 +850,7 @@
                 <div class="grid grid-cols-2 gap-2 mb-3">
                     <button onclick="quickLogin('analyst@finreq.bank', 'ANALYST')"
                         class="theme-btn py-1.5 px-2 text-xs text-left">
-                        <div class="font-bold text-amber-400">Lead Analyst</div>
+                        <div class="font-bold text-red-400">Lead Analyst</div>
                         <div class="text-neutral-500 text-[11px]">Requirements writing</div>
                     </button>
                     <button onclick="quickLogin('compliance@finreq.bank', 'COMPLIANCE_OFFICER')"
@@ -892,13 +889,12 @@
 
             <!-- MFA Code Verification View -->
             <div id="auth-mfa-view" class="hidden space-y-3">
-                <div class="p-3 rounded"
-                    style="background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.3);">
-                    <i class="fas fa-lock text-amber-400 mr-2"></i>
-                    <span class="text-xs text-amber-200">TOTP Multi-Factor Authentication Required</span>
+                <div class="p-3 rounded" style="background:#261212;border:1px solid #4d1d1d;">
+                    <i class="fas fa-lock text-red-500 mr-2"></i>
+                    <span class="text-xs text-neutral-200">TOTP Multi-Factor Authentication Required</span>
                 </div>
                 <p class="text-xs text-neutral-300">Enter the 6-digit verification code from your authenticator app
-                    (Demo bypass: <strong class="text-amber-400 font-mono">123456</strong>):</p>
+                    (Demo bypass: <strong class="text-red-400 font-mono">123456</strong>):</p>
                 <input type="text" id="auth-mfa-code" maxlength="6" placeholder="123456"
                     class="floating-input w-full text-center text-lg font-mono tracking-widest py-2">
                 <button onclick="submitMFA()" class="btn-primary w-full py-2 text-sm font-bold">
@@ -925,7 +921,7 @@
                 notes. The system will extract text, chunk, and index into PostgreSQL pgvector.</p>
 
             <div id="drop-zone"
-                class="p-6 border-2 border-dashed border-neutral-700 rounded-lg text-center cursor-pointer hover:border-amber-500 transition-all bg-neutral-900/50">
+                class="p-6 border-2 border-dashed border-neutral-700 rounded-lg text-center cursor-pointer hover:border-red-500 transition-all bg-neutral-900/50">
                 <i class="fas fa-cloud-arrow-up text-3xl text-neutral-500 mb-2"></i>
                 <p class="text-sm font-bold text-neutral-300">Choose file or drag &amp; drop</p>
                 <p class="text-xs text-neutral-500 mt-1">PDF, DOCX, TXT, MD up to 25MB</p>
@@ -974,7 +970,7 @@
                 </div>
                 <div>
                     <span class="text-[11px] font-mono text-neutral-500 block">RISK LEVEL</span>
-                    <span id="detail-risk" class="text-xs text-amber-400 font-bold">Medium</span>
+                    <span id="detail-risk" class="text-xs text-red-400 font-bold">Medium</span>
                 </div>
                 <div>
                     <span class="text-[11px] font-mono text-neutral-500 block">CONFIDENCE SCORE</span>
@@ -1020,7 +1016,7 @@
         <div class="floating-card" style="padding:24px;max-width:540px;width:100%;space-y:14px;">
             <div class="flex items-center justify-between pb-3" style="border-bottom:1px solid #2a2a2a;">
                 <h3 style="font-size:16px;font-weight:800;color:#fff;display:flex;align-items:center;gap:8px;">
-                    <i class="fas fa-scale-unbalanced text-amber-500"></i> Resolve Requirement Conflict
+                    <i class="fas fa-scale-unbalanced text-red-500"></i> Resolve Requirement Conflict
                 </h3>
                 <button onclick="closeConflictModal()"
                     style="color:#525252;background:none;border:none;cursor:pointer;font-size:20px;">
@@ -1051,8 +1047,8 @@
             <div class="flex items-center justify-between pb-3"
                 style="border-bottom:1px solid #2a2a2a;margin-bottom:16px;">
                 <h3 style="font-size:16px;font-weight:800;color:#fff;display:flex;align-items:center;gap:8px;">
-                    <i class="fas fa-pen-to-square" style="color:#f59e0b;"></i>
-                    Modify Requirement <span id="modal-req-id" class="font-mono" style="color:#f59e0b;"></span>
+                    <i class="fas fa-pen-to-square" style="color:#dc2626;"></i>
+                    Modify Requirement <span id="modal-req-id" class="font-mono" style="color:#dc2626;"></span>
                 </h3>
                 <button onclick="closeEditModal()"
                     style="color:#525252;background:none;border:none;cursor:pointer;font-size:20px;">
