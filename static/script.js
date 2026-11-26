@@ -53,9 +53,9 @@ function formatMarkdown(text) {
     let s = escapeHTML(text);
     s = s.replace(/\*\*(.*?)\*\*/g, '<strong style="color:#fff;font-weight:800;">$1</strong>');
     s = s.replace(/\*(.*?)\*/g, '<em style="color:#a3a3a3;">$1</em>');
-    s = s.replace(/`([^`]+)`/g, '<code style="background:#222;border:1px solid #444;color:#ef4444;padding:2px 6px;border-radius:4px;font-family:\'JetBrains Mono\',monospace;font-size:14px;">$1</code>');
-    s = s.replace(/^[•\-] (.*)$/gm, '<div style="display:flex;align-items:flex-start;gap:8px;margin:4px 0;"><span style="color:#dc2626;font-weight:900;flex-shrink:0;">•</span><span>$1</span></div>');
-    s = s.replace(/^(\d+)\.\s+(.*)$/gm, '<div style="display:flex;align-items:flex-start;gap:8px;margin:4px 0;"><span style="color:#dc2626;font-family:\'JetBrains Mono\',monospace;font-weight:700;flex-shrink:0;">$1.</span><span>$2</span></div>');
+    s = s.replace(/`([^`]+)`/g, '<code style="background:#0d0e11;border:1px solid #1e2025;color:#f87171;padding:2px 6px;border-radius:4px;font-family:\'JetBrains Mono\',monospace;font-size:14px;">$1</code>');
+    s = s.replace(/^[•\-] (.*)$/gm, '<div style="display:flex;align-items:flex-start;gap:8px;margin:4px 0;"><span style="color:#db3847;font-weight:900;flex-shrink:0;">•</span><span>$1</span></div>');
+    s = s.replace(/^(\d+)\.\s+(.*)$/gm, '<div style="display:flex;align-items:flex-start;gap:8px;margin:4px 0;"><span style="color:#db3847;font-family:\'JetBrains Mono\',monospace;font-weight:700;flex-shrink:0;">$1.</span><span>$2</span></div>');
     s = s.replace(/\n/g, '<br>');
     return s;
 }
@@ -78,7 +78,7 @@ function highlightMaskedTokens(text) {
     ];
     tokens.forEach(tok => {
         const escaped = escapeHTML(tok);
-        const badge = `<span style="background:#3b1414;border:1px solid #7f1d1d;color:#fee2e2;padding:2px 7px;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:800;display:inline-flex;align-items:center;gap:4px;white-space:nowrap !important;vertical-align:baseline;"><i class="fas fa-shield-halved" style="font-size:11px;color:#dc2626;"></i>${escaped}</span>`;
+        const badge = `<span style="background:#351f28;border:1px solid #573a3d;color:#fee2e2;padding:2px 7px;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:800;display:inline-flex;align-items:center;gap:4px;white-space:nowrap !important;vertical-align:baseline;"><i class="fas fa-shield-halved" style="font-size:11px;color:#db3847;"></i>${escaped}</span>`;
         safe = safe.split(escaped).join(badge);
     });
     return safe;
@@ -95,13 +95,13 @@ function updateBubbleWithMaskedPII(bubbleWrapId, safeText, originalText, maskedI
     const uniqueId = 'toggle-' + Math.random().toString(36).substring(2, 8);
 
     bubble.innerHTML = `
-        <div style="font-size:12px;font-family:'JetBrains Mono',monospace;color:#ef4444;display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid #4a1d1d;">
+        <div style="font-size:12px;font-family:'JetBrains Mono',monospace;color:#db3847;display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid #573a3d;">
             <span style="display:flex;align-items:center;gap:6px;">
-                <i class="fas fa-shield-halved" style="color:#dc2626;"></i>
+                <i class="fas fa-shield-halved" style="color:#db3847;"></i>
                 <strong>PII REDACTED BY GUARD</strong>
             </span>
             <button type="button" onclick="const s=document.getElementById('${uniqueId}-safe'), o=document.getElementById('${uniqueId}-orig'); if(s.style.display==='none'){s.style.display='block';o.style.display='none';this.textContent='Show Original';}else{s.style.display='none';o.style.display='block';this.textContent='Show Sanitized';}"
-                style="background:#261212;border:1px solid #4d1d1d;color:#fee2e2;padding:2px 8px;border-radius:4px;font-size:11px;cursor:pointer;font-family:'JetBrains Mono',monospace;">
+                style="background:#351f28;border:1px solid #573a3d;color:#fee2e2;padding:2px 8px;border-radius:4px;font-size:11px;cursor:pointer;font-family:'JetBrains Mono',monospace;">
                 Show Original
             </button>
         </div>
@@ -111,8 +111,8 @@ function updateBubbleWithMaskedPII(bubbleWrapId, safeText, originalText, maskedI
         <div id="${uniqueId}-orig" style="display:none;line-height:1.65;font-size:17.5px;color:#a3a3a3;text-decoration:line-through;">
             ${origHtml}
         </div>
-        <div style="margin-top:8px;padding-top:6px;border-top:1px solid #262626;font-size:12px;color:#737373;font-family:'JetBrains Mono',monospace;">
-            <i class="fas fa-lock" style="margin-right:4px;color:#dc2626;"></i> Masked: <strong style="color:#ef4444;">${escapeHTML(maskedItems.join(', '))}</strong> (Raw values isolated from AI)
+        <div style="margin-top:8px;padding-top:6px;border-top:1px solid #262626;font-size:12px;color:#94a3b8;font-family:'JetBrains Mono',monospace;">
+            <i class="fas fa-lock" style="margin-right:4px;color:#db3847;"></i> Masked: <strong style="color:#db3847;">${escapeHTML(maskedItems.join(', '))}</strong> (Raw values isolated from AI)
         </div>
     `;
 }
@@ -167,7 +167,7 @@ async function handleSend(e) {
     const loadingId = 'loading-' + Date.now();
     appendChatMessage('assistant',
         '<div style="display:flex;align-items:center;gap:12px;color:#a3a3a3;font-family:\'JetBrains Mono\',monospace;font-size:18px;">' +
-        '<i class="fas fa-circle-notch fa-spin" style="color:#dc2626;"></i> ORCHESTRATING_13_AGENTS...</div>',
+        '<i class="fas fa-circle-notch fa-spin" style="color:#db3847;"></i> ORCHESTRATING_13_AGENTS...</div>',
         loadingId
     );
 
@@ -277,30 +277,30 @@ async function handleSend(e) {
             let qHtml = '';
             if (questions.length) {
                 qHtml = `
-                <div style="margin-top:18px;padding:18px;border-radius:8px;background:#1a1010;border:1px solid #4a1818;">
+                <div style="margin-top:18px;padding:18px;border-radius:8px;background:#1a1c20;border:1px solid #26282e;">
                     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
-                        <span style="font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:800;letter-spacing:0.06em;color:#ef4444;">
+                        <span style="font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:800;letter-spacing:0.06em;color:#db3847;">
                             <i class="fas fa-clipboard-question" style="margin-right:8px;"></i>CLARIFICATION_REQUIRED
                         </span>
-                        <span style="font-family:'JetBrains Mono',monospace;font-size:13px;background:#361414;border:1px solid #631f1f;color:#fee2e2;padding:4px 10px;border-radius:4px;">INPUT_NEEDED</span>
+                        <span style="font-family:'JetBrains Mono',monospace;font-size:12px;background:#db3847;border:none;color:#ffffff;padding:4px 10px;border-radius:4px;font-weight:800;">INPUT_NEEDED</span>
                     </div>
                     <div style="display:flex;flex-direction:column;gap:10px;">
                         ${questions.slice(0, 3).map((q, i) => `
-                            <div style="padding:14px 16px;border-radius:6px;background:#111;border:1px solid #333;font-size:18px;">
-                                <div style="font-family:'JetBrains Mono',monospace;font-size:13px;color:#ef4444;font-weight:800;margin-bottom:6px;">
+                            <div style="padding:14px 16px;border-radius:6px;background:#111215;border:1px solid #1e2025;border-left:3px solid #db3847;font-size:17px;">
+                                <div style="font-family:'JetBrains Mono',monospace;font-size:13px;color:#db3847;font-weight:800;margin-bottom:6px;">
                                     <i class="fas fa-circle-question" style="margin-right:6px;"></i>ITEM_${i + 1}:
                                 </div>
-                                <div style="color:#f3f4f6;line-height:1.65;">${escapeHTML(q)}</div>
+                                <div style="color:#ffffff;line-height:1.65;font-weight:500;">${escapeHTML(q)}</div>
                             </div>
                         `).join('')}
                     </div>
-                    <div style="margin-top:14px;padding-top:12px;border-top:1px solid #2a2a2a;">
-                        <div style="font-size:14px;color:#737373;margin-bottom:8px;font-family:'JetBrains Mono',monospace;font-weight:700;">QUICK_TEMPLATES:</div>
+                    <div style="margin-top:14px;padding-top:12px;border-top:1px solid #1e2025;">
+                        <div style="font-size:14px;color:#a3b0c3;margin-bottom:8px;font-family:'JetBrains Mono',monospace;font-weight:700;">QUICK_TEMPLATES:</div>
                         <div style="display:flex;flex-wrap:wrap;gap:8px;">
-                            <button type="button" onclick="fillChatInput('Peak throughput is 5,000 TPS with p99 latency < 150ms. Step-up MFA threshold is $10,000. Core banking connects via IBM MQ using ISO 20022 PACS.008.')" class="preset-chip" style="padding:10px 14px;font-size:16px;">
+                            <button type="button" onclick="fillChatInput('Peak throughput is 5,000 TPS with p99 latency < 150ms. Step-up MFA threshold is $10,000. Core banking connects via IBM MQ using ISO 20022 PACS.008.')" class="preset-chip" style="padding:10px 14px;font-size:15px;background:#111215;border:1px solid #1e2025;color:#f1f5f9;">
                                 ⚡ Payment SLAs: 5k TPS, &lt;150ms, $10k MFA
                             </button>
-                            <button type="button" onclick="fillChatInput('Statutory retention is 7 years immutable audit trail. Mandatory four-eyes dual authorization for transfers exceeding $50,000.')" class="preset-chip" style="padding:10px 14px;font-size:16px;">
+                            <button type="button" onclick="fillChatInput('Statutory retention is 7 years immutable audit trail. Mandatory four-eyes dual authorization for transfers exceeding $50,000.')" class="preset-chip" style="padding:10px 14px;font-size:15px;background:#111215;border:1px solid #1e2025;color:#f1f5f9;">
                                 🛡️ Compliance: 7yr retention, $50k dual-auth
                             </button>
                         </div>
@@ -314,9 +314,9 @@ async function handleSend(e) {
                         <i class="fas fa-check-circle" style="color:#15803d;font-size:22px;"></i>
                         <span style="font-size:19px;color:#e5e5e5;line-height:1.6;">
                             <strong style="color:#fff;">Baseline Synthesized:</strong>
-                            Extracted <strong style="color:#ef4444;">${currentRequirements.length}</strong> requirements,
-                            mapped <strong style="color:#ef4444;">${data.compliance_mappings.length}</strong> regulatory citations,
-                            recommended <strong style="color:#ef4444;">${data.sdlc_info.recommended_model}</strong>.
+                            Extracted <strong style="color:#db3847;">${currentRequirements.length}</strong> requirements,
+                            mapped <strong style="color:#db3847;">${data.compliance_mappings.length}</strong> regulatory citations,
+                            recommended <strong style="color:#db3847;">${data.sdlc_info.recommended_model}</strong>.
                         </span>
                     </div>
                     <p style="font-size:18px;color:#d1d5db;line-height:1.65;">
@@ -360,13 +360,13 @@ function appendChatMessage(role, htmlContent, id = null) {
 
     if (role === 'user') {
         wrap.innerHTML = `
-            <div class="chat-bubble-user" style="background:#1e1414;border:1px solid #4a1d1d;border-radius:8px;padding:16px 20px;max-width:580px;font-size:20px;line-height:1.7;color:#f3f4f6;">${htmlContent}</div>
-            <div style="width:44px;height:44px;border-radius:6px;background:#261212;border:1px solid #4d1d1d;flex-shrink:0;display:flex;align-items:center;justify-content:center;color:#ef4444;font-family:'JetBrains Mono',monospace;font-weight:900;font-size:14px;">U</div>
+            <div class="chat-bubble-user" style="background:#1a1c20;border:1px solid #22242a;border-radius:8px;padding:16px 20px;max-width:580px;font-size:20px;line-height:1.7;color:#f3f4f6;">${htmlContent}</div>
+            <div class="chat-avatar">U</div>
         `;
     } else {
         wrap.innerHTML = `
-            <div style="width:44px;height:44px;border-radius:6px;background:#261212;border:1px solid #4d1d1d;flex-shrink:0;display:flex;align-items:center;justify-content:center;color:#ef4444;font-family:'JetBrains Mono',monospace;font-weight:900;font-size:14px;">FR</div>
-            <div class="chat-bubble-assistant" style="background:#181818;border:1px solid #2a2a2a;border-radius:8px;padding:16px 20px;max-width:650px;font-size:20px;line-height:1.7;color:#f3f4f6;">${htmlContent}</div>
+            <div class="chat-avatar">FR</div>
+            <div class="chat-bubble-assistant" style="background:#1a1c20;border:1px solid #22242a;border-radius:8px;padding:16px 20px;max-width:650px;font-size:20px;line-height:1.7;color:#f3f4f6;">${htmlContent}</div>
         `;
     }
 
@@ -418,48 +418,53 @@ function filterRequirements() {
 function renderFilteredRequirements(reqs) {
     const c = document.getElementById('requirements-list');
     if (!reqs.length) {
-        c.innerHTML = `<div style="text-align:center;padding:60px 0;color:#525252;font-size:15px;">No requirements matching current filter criteria.</div>`;
+        c.innerHTML = `<div style="text-align:center;padding:60px 0;color:#a3b0c3;font-size:15px;">No requirements matching current filter criteria.</div>`;
         return;
     }
     c.innerHTML = reqs.map((r, idx) => {
         const id = r.id || r.req_id || `REQ-${idx + 1}`;
         const ok = r.approval_status === 'approved' || r.status === 'approved';
         const hi = (r.priority || '').toLowerCase() === 'high';
+        const med = (r.priority || '').toLowerCase() === 'medium';
 
         return `
-        <div style="padding:16px;border-radius:8px;background:#181818;border:1px solid ${ok ? '#1e4d29' : '#2a2a2a'};margin-bottom:10px;transition:border-color 0.15s;">
+        <div style="padding:16px;border-radius:8px;background:#1a1c20;border:1px solid ${ok ? '#166534' : '#26282e'};margin-bottom:12px;transition:border-color 0.15s;">
             <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:10px;">
                 <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
                     <span class="font-mono cursor-pointer" onclick="openReqDetailModal('${id}')" title="Click to view full requirement details"
-                          style="font-size:14px;font-weight:800;color:#fee2e2;background:#361414;border:1px solid #631f1f;padding:3px 10px;border-radius:4px;">${escapeHTML(id)}</span>
-                    <span style="font-size:13px;background:#162238;border:1px solid #1d3c6a;color:#dbeafe;padding:3px 8px;border-radius:4px;font-family:'JetBrains Mono',monospace;">${escapeHTML(r.category || 'Functional')}</span>
-                    <span style="font-size:13px;background:${hi ? '#2f1414' : '#361414'};border:1px solid ${hi ? '#5c1d1d' : '#631f1f'};color:#fee2e2;padding:3px 8px;border-radius:4px;font-family:'JetBrains Mono',monospace;font-weight:700;">${hi ? 'HIGH' : 'MEDIUM'}</span>
+                          style="font-size:13.5px;font-weight:800;color:#ffffff;background:#db3847;padding:3px 10px;border-radius:4px;letter-spacing:0.02em;">${escapeHTML(id)}</span>
+                    <span style="font-size:13px;background:#1e293b;border:1px solid #3b82f6;color:#93c5fd;padding:3px 8px;border-radius:4px;font-family:'JetBrains Mono',monospace;">${escapeHTML(r.category || 'Functional')}</span>
+                    ${hi
+                ? `<span style="font-size:13px;background:rgba(219,56,71,0.2);border:1px solid #db3847;color:#fecdd3;padding:3px 8px;border-radius:4px;font-family:'JetBrains Mono',monospace;font-weight:700;">HIGH</span>`
+                : (med
+                    ? `<span style="font-size:13px;background:rgba(234,179,8,0.18);border:1px solid #eab308;color:#fef08a;padding:3px 8px;border-radius:4px;font-family:'JetBrains Mono',monospace;font-weight:700;">MEDIUM</span>`
+                    : `<span style="font-size:13px;background:rgba(148,163,184,0.18);border:1px solid #94a3b8;color:#f1f5f9;padding:3px 8px;border-radius:4px;font-family:'JetBrains Mono',monospace;font-weight:700;">LOW</span>`)}
                     ${ok
-                ? `<span style="font-size:13px;background:#142a1b;border:1px solid #16532d;color:#dcfce7;padding:3px 8px;border-radius:4px;font-family:'JetBrains Mono',monospace;font-weight:700;display:flex;align-items:center;gap:5px;"><i class="fas fa-check" style="font-size:11px;"></i> APPROVED</span>`
-                : `<span style="font-size:13px;background:#162238;border:1px solid #1d3c6a;color:#dbeafe;padding:3px 8px;border-radius:4px;font-family:'JetBrains Mono',monospace;">PENDING</span>`}
-                    <span style="font-size:13px;color:#525252;">Risk: <strong style="color:#ef4444;">${escapeHTML(r.risk || r.risk_level || 'Medium')}</strong></span>
+                ? `<span style="font-size:13px;background:#143527;border:1px solid #10b981;color:#bbf7d0;padding:3px 8px;border-radius:4px;font-family:'JetBrains Mono',monospace;font-weight:700;display:flex;align-items:center;gap:5px;"><i class="fas fa-check" style="font-size:11px;"></i> APPROVED</span>`
+                : `<span style="font-size:13px;background:#22242a;border:1px solid #2d3038;color:#bfdbfe;padding:3px 8px;border-radius:4px;font-family:'JetBrains Mono',monospace;font-weight:700;">PENDING</span>`}
+                    <span style="font-size:13px;color:#a3b0c3;">Risk: <strong style="color:#db3847;">${escapeHTML(r.risk || r.risk_level || 'Medium')}</strong></span>
                 </div>
                 <div style="display:flex;align-items:center;gap:6px;">
                     <button onclick="openReqDetailModal('${id}')" class="btn-secondary" style="padding:6px 10px;border-radius:5px;font-size:13px;cursor:pointer;" title="View Detail Modal">
                         <i class="fas fa-eye text-neutral-400 mr-1"></i> Details
                     </button>
                     ${ok
-                ? `<button onclick="approveSingleReq('${id}','draft')" style="font-size:13px;padding:6px 12px;border-radius:5px;background:#142a1b;border:1px solid #16532d;color:#dcfce7;font-weight:800;cursor:pointer;display:flex;align-items:center;gap:6px;"><i class="fas fa-check-double"></i> Approved</button>`
-                : `<button onclick="approveSingleReq('${id}','approved')" style="font-size:13px;padding:6px 12px;border-radius:5px;background:#15803d;border:none;color:#fff;font-weight:800;cursor:pointer;display:flex;align-items:center;gap:6px;"><i class="fas fa-check"></i> Approve</button>`}
+                ? `<button onclick="approveSingleReq('${id}','draft')" style="font-size:13px;padding:6px 12px;border-radius:5px;background:#143527;border:1px solid #10b981;color:#bbf7d0;font-weight:800;cursor:pointer;display:flex;align-items:center;gap:6px;"><i class="fas fa-check-double"></i> Approved</button>`
+                : `<button onclick="approveSingleReq('${id}','approved')" style="font-size:13px;padding:6px 12px;border-radius:5px;background:#db3847;border:none;color:#fff;font-weight:800;cursor:pointer;display:flex;align-items:center;gap:6px;"><i class="fas fa-check"></i> Approve</button>`}
                     <button onclick="removeSingleReq('${id}')" class="btn-remove" style="padding:6px 10px;border-radius:5px;font-size:13px;cursor:pointer;"><i class="fas fa-trash"></i></button>
                     <button onclick="openEditModal('${id}')" class="btn-secondary" style="padding:6px 10px;border-radius:5px;font-size:13px;cursor:pointer;"><i class="fas fa-pen"></i></button>
                 </div>
             </div>
-            <p onclick="openReqDetailModal('${id}')" class="cursor-pointer hover:text-white" style="font-size:15px;color:#e5e5e5;line-height:1.65;">${escapeHTML(r.statement)}</p>
+            <p onclick="openReqDetailModal('${id}')" class="cursor-pointer hover:text-white" style="font-size:15.5px;color:#f1f5f9;line-height:1.65;margin-top:4px;">${escapeHTML(r.statement)}</p>
             ${r.acceptance_criteria ? `
-            <div style="margin-top:10px;padding:10px 12px;border-radius:5px;background:#111;border:1px solid #1f1f1f;font-size:14px;color:#a3a3a3;">
-                <span style="font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:800;color:#ef4444;display:block;margin-bottom:4px;">ACCEPTANCE_CRITERIA:</span>
+            <div style="margin-top:12px;padding:12px 14px;border-radius:6px;background:#111215;border:1px solid #1e2025;border-left:3px solid #db3847;font-size:14px;color:#f1f5f9;">
+                <span style="font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:800;color:#db3847;display:block;margin-bottom:4px;letter-spacing:0.04em;">ACCEPTANCE_CRITERIA:</span>
                 ${escapeHTML(Array.isArray(r.acceptance_criteria) ? r.acceptance_criteria.join(' ') : r.acceptance_criteria)}
             </div>` : ''}
             ${(r.compliance_mapping || r.regulations)?.length ? `
             <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-top:8px;">
-                <span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#525252;">CITATIONS:</span>
-                ${(r.compliance_mapping || r.regulations).map(reg => `<span style="font-family:'JetBrains Mono',monospace;font-size:12px;background:#162238;border:1px solid #1d3c6a;color:#dbeafe;padding:2px 7px;border-radius:3px;">${escapeHTML(reg)}</span>`).join('')}
+                <span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#a3b0c3;">CITATIONS:</span>
+                ${(r.compliance_mapping || r.regulations).map(reg => `<span style="font-family:'JetBrains Mono',monospace;font-size:12px;background:#1e293b;border:1px solid #3b82f6;color:#93c5fd;padding:2px 7px;border-radius:3px;">${escapeHTML(reg)}</span>`).join('')}
             </div>` : ''}
         </div>`;
     }).join('');
@@ -469,19 +474,19 @@ function renderFilteredRequirements(reqs) {
 function renderCompliance(mappings) {
     const c = document.getElementById('compliance-list');
     if (!mappings.length) {
-        c.innerHTML = `<div style="text-align:center;padding:60px 0;color:#525252;font-size:15px;">No compliance mappings.</div>`;
+        c.innerHTML = `<div style="text-align:center;padding:60px 0;color:#a3b0c3;font-size:15px;">No compliance mappings.</div>`;
         return;
     }
     c.innerHTML = mappings.map(m => `
-        <div style="padding:14px;border-radius:7px;background:#181818;border:1px solid #2a2a2a;margin-bottom:10px;">
+        <div style="padding:14px;border-radius:8px;background:#1a1c20;border:1px solid #26282e;margin-bottom:12px;">
             <div style="display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:10px;">
-                <span style="font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:800;color:#fee2e2;background:#361414;border:1px solid #631f1f;padding:3px 8px;border-radius:4px;">${escapeHTML(m.req_id)}</span>
-                <span style="font-size:13px;background:#2f1414;border:1px solid #5c1d1d;color:#fee2e2;padding:3px 8px;border-radius:4px;font-family:'JetBrains Mono',monospace;font-weight:700;">${escapeHTML(m.citation)}</span>
-                <span class="font-mono" style="font-size:13px;color:#525252;">${escapeHTML(m.source_doc)}:${m.line_number}</span>
-                <span style="font-size:13px;background:#142a1b;border:1px solid #16532d;color:#dcfce7;padding:3px 8px;border-radius:4px;font-family:'JetBrains Mono',monospace;font-weight:700;">${escapeHTML(m.coverage)}</span>
-                <span style="font-size:13px;background:#162238;border:1px solid #1d3c6a;color:#dbeafe;padding:3px 8px;border-radius:4px;font-family:'JetBrains Mono',monospace;">${Math.round(m.confidence * 100)}% CONF</span>
+                <span style="font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:800;color:#ffffff;background:#db3847;padding:3px 8px;border-radius:4px;">${escapeHTML(m.req_id)}</span>
+                <span style="font-size:13px;background:#22242a;border:1px solid #2d3038;color:#ffffff;padding:3px 8px;border-radius:4px;font-family:'JetBrains Mono',monospace;font-weight:700;">${escapeHTML(m.citation)}</span>
+                <span class="font-mono" style="font-size:13px;color:#a3b0c3;">${escapeHTML(m.source_doc)}:${m.line_number}</span>
+                <span style="font-size:13px;background:#143527;border:1px solid #10b981;color:#bbf7d0;padding:3px 8px;border-radius:4px;font-family:'JetBrains Mono',monospace;font-weight:700;">${escapeHTML(m.coverage)}</span>
+                <span style="font-size:13px;background:#1e293b;border:1px solid #3b82f6;color:#93c5fd;padding:3px 8px;border-radius:4px;font-family:'JetBrains Mono',monospace;font-weight:700;">${Math.round(m.confidence * 100)}% CONF</span>
             </div>
-            <p style="font-size:14px;color:#a3a3a3;font-family:'JetBrains Mono',monospace;line-height:1.6;padding:10px;background:#111;border-radius:4px;border:1px solid #1f1f1f;">"${escapeHTML(m.evidence)}"</p>
+            <p style="font-size:14px;color:#f1f5f9;font-family:'JetBrains Mono',monospace;line-height:1.6;padding:12px 14px;background:#111215;border-radius:6px;border:1px solid #1e2025;border-left:3px solid #3b82f6;">"${escapeHTML(m.evidence)}"</p>
         </div>`).join('');
 }
 
@@ -510,11 +515,11 @@ function renderSDLC(info, workflow) {
         return `
         <div style="margin-bottom:10px;">
             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;font-size:15px;">
-                <span style="font-weight:${isTop ? '800' : '500'};color:${isTop ? '#ef4444' : '#a3a3a3'};">${escapeHTML(model)}${isTop ? ' ★' : ''}</span>
-                <span style="font-family:'JetBrains Mono',monospace;font-weight:700;color:${isTop ? '#ef4444' : '#525252'};">${score}%</span>
+                <span style="font-weight:${isTop ? '800' : '500'};color:${isTop ? '#db3847' : '#f1f5f9'};">${escapeHTML(model)}${isTop ? ' ★' : ''}</span>
+                <span style="font-family:'JetBrains Mono',monospace;font-weight:700;color:${isTop ? '#db3847' : '#a3b0c3'};">${score}%</span>
             </div>
-            <div style="width:100%;height:6px;border-radius:3px;background:#1f1f1f;overflow:hidden;">
-                <div style="height:100%;border-radius:3px;background:${isTop ? '#dc2626' : '#2a2a2a'};width:${Math.max(score, 3)}%;transition:width 0.6s;"></div>
+            <div style="width:100%;height:6px;border-radius:3px;background:#111215;overflow:hidden;border:1px solid #1e2025;">
+                <div style="height:100%;border-radius:3px;background:${isTop ? '#db3847' : '#3b4e68'};width:${Math.max(score, 3)}%;transition:width 0.6s;"></div>
             </div>
         </div>`;
     }).join('');
@@ -526,24 +531,24 @@ function renderSDLC(info, workflow) {
             const title = parts[0] || `Phase ${idx + 1}`;
             const desc = parts.slice(1).join(':').trim() || w;
             return `
-            <div style="padding:14px;border-radius:7px;background:#181818;border:1px solid #2a2a2a;margin-bottom:8px;font-size:15px;">
+            <div style="padding:14px;border-radius:7px;background:#1a1c20;border:1px solid #26282e;margin-bottom:8px;font-size:15px;">
                 <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
                     <span style="font-weight:800;color:#fff;">${escapeHTML(title)}</span>
-                    <span style="font-family:'JetBrains Mono',monospace;font-size:13px;background:#261433;border:1px solid #4a1f6d;color:#f3e8ff;padding:3px 8px;border-radius:4px;">PHASE ${idx + 1}</span>
+                    <span style="font-family:'JetBrains Mono',monospace;font-size:13px;background:#22242a;border:1px solid #2d3038;color:#ffffff;padding:3px 8px;border-radius:4px;">PHASE ${idx + 1}</span>
                 </div>
-                <div style="color:#a3a3a3;line-height:1.6;">${escapeHTML(desc)}</div>
+                <div style="color:#e2e8f0;line-height:1.6;">${escapeHTML(desc)}</div>
             </div>`;
         }
         return `
-        <div style="padding:14px;border-radius:7px;background:#181818;border:1px solid #2a2a2a;margin-bottom:8px;font-size:15px;">
+        <div style="padding:14px;border-radius:7px;background:#1a1c20;border:1px solid #26282e;margin-bottom:8px;font-size:15px;">
             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
                 <span style="font-weight:800;color:#fff;">${escapeHTML(w.phase || `Phase ${idx + 1}`)}</span>
-                <span style="font-family:'JetBrains Mono',monospace;font-size:13px;background:#261433;border:1px solid #4a1f6d;color:#f3e8ff;padding:3px 8px;border-radius:4px;">${escapeHTML(w.roles || 'Engineering')}</span>
+                <span style="font-family:'JetBrains Mono',monospace;font-size:13px;background:#22242a;border:1px solid #2d3038;color:#ffffff;padding:3px 8px;border-radius:4px;">${escapeHTML(w.roles || 'Engineering')}</span>
             </div>
-            <div style="color:#a3a3a3;line-height:1.6;">Activities: ${Array.isArray(w.activities) ? w.activities.map(a => escapeHTML(a)).join(', ') : escapeHTML(w.activities || '')}</div>
-            <div style="display:flex;justify-content:space-between;margin-top:8px;padding-top:8px;border-top:1px solid #1f1f1f;font-size:14px;">
-                <span style="color:#525252;"><i class="fas fa-shield-halved" style="color:#1d4ed8;margin-right:5px;"></i>${escapeHTML(w.security_controls || 'Security Baseline')}</span>
-                <span style="color:#15803d;font-weight:700;"><i class="fas fa-flag-checkered" style="margin-right:5px;"></i>Gate: ${escapeHTML(w.validation_gate || 'Quality Gate')}</span>
+            <div style="color:#e2e8f0;line-height:1.6;">Activities: ${Array.isArray(w.activities) ? w.activities.map(a => escapeHTML(a)).join(', ') : escapeHTML(w.activities || '')}</div>
+            <div style="display:flex;justify-content:space-between;margin-top:8px;padding-top:8px;border-top:1px solid #1e2025;font-size:14px;">
+                <span style="color:#a3b0c3;"><i class="fas fa-shield-halved" style="color:#3b82f6;margin-right:5px;"></i>${escapeHTML(w.security_controls || 'Security Baseline')}</span>
+                <span style="color:#10b981;font-weight:700;"><i class="fas fa-flag-checkered" style="margin-right:5px;"></i>Gate: ${escapeHTML(w.validation_gate || 'Quality Gate')}</span>
             </div>
         </div>`;
     }).join('');
@@ -554,25 +559,25 @@ function renderRisks(risks) {
     document.getElementById('risk-count').textContent = risks.length;
     const c = document.getElementById('risk-list');
     if (!risks.length) {
-        c.innerHTML = `<div style="text-align:center;padding:60px 0;color:#525252;font-size:15px;">No risks recorded.</div>`;
+        c.innerHTML = `<div style="text-align:center;padding:60px 0;color:#a3b0c3;font-size:15px;">No risks recorded.</div>`;
         return;
     }
     c.innerHTML = risks.map(k => `
-        <div style="padding:14px;border-radius:7px;background:#181818;border:1px solid #2a2a2a;margin-bottom:10px;font-size:15px;">
+        <div style="padding:14px;border-radius:8px;background:#1a1c20;border:1px solid #26282e;margin-bottom:12px;font-size:15px;">
             <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:10px;">
                 <div style="display:flex;align-items:center;gap:8px;">
-                    <span style="font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:800;background:#361414;border:1px solid #631f1f;color:#fee2e2;padding:3px 8px;border-radius:4px;">${escapeHTML(k.id)}</span>
+                    <span style="font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:800;background:#db3847;color:#ffffff;padding:3px 8px;border-radius:4px;">${escapeHTML(k.id)}</span>
                     <span style="font-weight:700;color:#fff;">${escapeHTML(k.category)}</span>
                 </div>
-                <div style="display:flex;align-items:center;gap:10px;font-size:14px;color:#525252;">
+                <div style="display:flex;align-items:center;gap:10px;font-size:14px;color:#a3b0c3;">
                     <span>Likelihood: <strong style="color:#e5e5e5;">${escapeHTML(k.likelihood)}</strong></span>
-                    <span>Impact: <strong style="color:#ef4444;">${escapeHTML(k.impact)}</strong></span>
-                    <span style="font-family:'JetBrains Mono',monospace;font-weight:800;background:#361414;border:1px solid #631f1f;color:#fee2e2;padding:2px 8px;border-radius:4px;">SCORE: ${k.score}/10</span>
+                    <span>Impact: <strong style="color:#db3847;">${escapeHTML(k.impact)}</strong></span>
+                    <span style="font-family:'JetBrains Mono',monospace;font-weight:800;background:#22242a;border:1px solid #2d3038;color:#ffffff;padding:2px 8px;border-radius:4px;">SCORE: ${k.score}/10</span>
                 </div>
             </div>
-            <p style="color:#e5e5e5;line-height:1.65;">${escapeHTML(k.description)}</p>
-            <div style="margin-top:10px;padding:10px 12px;border-radius:5px;background:#111;border:1px solid #1e4d29;font-size:14px;color:#22c55e;">
-                <strong style="font-family:'JetBrains Mono',monospace;font-size:12px;display:block;margin-bottom:4px;"><i class="fas fa-shield-heart" style="margin-right:5px;"></i>MITIGATION:</strong>
+            <p style="color:#f1f5f9;line-height:1.65;">${escapeHTML(k.description)}</p>
+            <div style="margin-top:10px;padding:12px 14px;border-radius:6px;background:#111215;border:1px solid #166534;border-left:3px solid #10b981;font-size:14px;color:#bbf7d0;">
+                <strong style="font-family:'JetBrains Mono',monospace;font-size:12px;display:block;margin-bottom:4px;color:#10b981;"><i class="fas fa-shield-heart" style="margin-right:5px;"></i>MITIGATION:</strong>
                 ${escapeHTML(k.mitigation)}
             </div>
         </div>`).join('');
@@ -586,18 +591,18 @@ function renderClarifications(clarifications, conflicts) {
     if (conflicts?.length) {
         html += `
         <div style="margin-bottom:16px;">
-            <h4 style="font-size:15px;font-weight:800;color:#ef4444;letter-spacing:0.05em;font-family:'JetBrains Mono',monospace;margin-bottom:10px;">
+            <h4 style="font-size:15px;font-weight:800;color:#db3847;letter-spacing:0.05em;font-family:'JetBrains Mono',monospace;margin-bottom:10px;">
                 <i class="fas fa-triangle-exclamation" style="margin-right:6px;"></i>CONTRADICTIONS_DETECTED (${conflicts.length})
             </h4>`;
         conflicts.forEach(cf => {
             html += `
-            <div style="padding:14px;border-radius:7px;background:#181818;border:1px solid #5c1d1d;margin-bottom:8px;font-size:15px;">
-                <div style="font-weight:800;color:#ef4444;display:flex;align-items:center;gap:8px;margin-bottom:6px;">
-                    <span style="width:8px;height:8px;border-radius:50%;background:#b91c1c;flex-shrink:0;"></span>
+            <div style="padding:14px;border-radius:8px;background:#1a1c20;border:1px solid #7f1d1d;margin-bottom:10px;">
+                <div style="font-weight:800;color:#db3847;display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+                    <span style="width:8px;height:8px;border-radius:50%;background:#db3847;flex-shrink:0;"></span>
                     ${escapeHTML(cf.type || 'Requirement Contradiction')}
                 </div>
-                <p style="color:#e5e5e5;line-height:1.65;">${escapeHTML(cf.description || cf)}</p>
-                ${cf.resolution ? `<div style="margin-top:8px;padding:10px;border-radius:5px;background:#111;border:1px solid #1d3c6a;font-size:14px;color:#dbeafe;"><strong>Resolution:</strong> ${escapeHTML(cf.resolution)}</div>` : ''}
+                <p style="color:#f1f5f9;line-height:1.65;">${escapeHTML(cf.description || cf)}</p>
+                ${cf.resolution ? `<div style="margin-top:10px;padding:12px;border-radius:6px;background:#111215;border:1px solid #1d3c6a;border-left:3px solid #3b82f6;font-size:14px;color:#dbeafe;"><strong>Resolution:</strong> ${escapeHTML(cf.resolution)}</div>` : ''}
             </div>`;
         });
         html += '</div>';
@@ -606,19 +611,19 @@ function renderClarifications(clarifications, conflicts) {
     if (clarifications?.length) {
         html += `
         <div>
-            <h4 style="font-size:15px;font-weight:800;color:#ef4444;letter-spacing:0.05em;font-family:'JetBrains Mono',monospace;margin-bottom:10px;">
+            <h4 style="font-size:15px;font-weight:800;color:#db3847;letter-spacing:0.05em;font-family:'JetBrains Mono',monospace;margin-bottom:10px;">
                 <i class="fas fa-circle-question" style="margin-right:6px;"></i>AMBIGUITY_FLAGS (${clarifications.length})
             </h4>`;
         clarifications.forEach(q => {
             const qText = q.clarification_question || q;
             html += `
-            <div style="padding:14px;border-radius:7px;background:#181818;border:1px solid #4a1818;margin-bottom:8px;font-size:15px;display:flex;align-items:flex-start;justify-content:space-between;gap:12px;">
+            <div style="padding:14px;border-radius:8px;background:#1a1c20;border:1px solid #26282e;margin-bottom:10px;font-size:15px;display:flex;align-items:flex-start;justify-content:space-between;gap:12px;">
                 <div>
-                    <span style="font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:800;background:#361414;border:1px solid #631f1f;color:#fee2e2;padding:2px 8px;border-radius:4px;display:inline-block;margin-bottom:8px;">TERM: ${escapeHTML(q.term || 'ambiguity')}</span>
-                    <p style="color:#e5e5e5;line-height:1.65;">${escapeHTML(qText)}</p>
+                    <span style="font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:800;background:#22242a;border:1px solid #2d3038;color:#ffffff;padding:2px 8px;border-radius:4px;display:inline-block;margin-bottom:8px;">TERM: ${escapeHTML(q.term || 'ambiguity')}</span>
+                    <p style="color:#f1f5f9;line-height:1.65;">${escapeHTML(qText)}</p>
                 </div>
                 <button onclick="injectClarificationPrompt('${escapeHTML(qText).replace(/'/g, "\\'")}')"
-                    style="padding:8px 14px;border-radius:5px;background:#361414;border:1px solid #631f1f;color:#fee2e2;font-weight:800;font-size:14px;cursor:pointer;white-space:nowrap;flex-shrink:0;">
+                    style="padding:8px 14px;border-radius:6px;background:#db3847;border:none;color:#ffffff;font-weight:800;font-size:14px;cursor:pointer;white-space:nowrap;flex-shrink:0;">
                     Answer
                 </button>
             </div>`;
@@ -628,10 +633,10 @@ function renderClarifications(clarifications, conflicts) {
 
     if (!html) {
         html = `
-        <div style="padding:24px;border-radius:7px;background:#181818;border:1px solid #1e4d29;text-align:center;">
-            <i class="fas fa-circle-check" style="font-size:32px;color:#15803d;display:block;margin-bottom:12px;"></i>
+        <div style="padding:24px;border-radius:8px;background:#1a1c20;border:1px solid #166534;text-align:center;">
+            <i class="fas fa-circle-check" style="font-size:32px;color:#10b981;display:block;margin-bottom:12px;"></i>
             <p style="font-size:16px;font-weight:800;color:#fff;">QUALITY_GATE_PASSED</p>
-            <p style="font-size:14px;color:#525252;margin-top:4px;">Zero contradictions or ambiguities detected.</p>
+            <p style="font-size:14px;color:#a3b0c3;margin-top:4px;">Zero contradictions or ambiguities detected.</p>
         </div>`;
     }
 
@@ -653,21 +658,21 @@ function renderArtifacts(srsPlan) {
 function renderAuditTrail(trail) {
     const c = document.getElementById('audit-trail-timeline');
     if (!trail?.length) {
-        c.innerHTML = `<div style="text-align:center;padding:60px 0;color:#525252;font-size:15px;">No audit events yet.</div>`;
+        c.innerHTML = `<div style="text-align:center;padding:60px 0;color:#a3b0c3;font-size:15px;">No audit events yet.</div>`;
         return;
     }
     c.innerHTML = [...trail].reverse().map(ev => `
-        <div style="padding:12px;border-radius:6px;background:#181818;border:1px solid #2a2a2a;margin-bottom:8px;display:flex;align-items:flex-start;gap:12px;font-size:15px;">
-            <span class="font-mono" style="font-size:13px;color:#525252;white-space:nowrap;background:#111;border:1px solid #1f1f1f;padding:4px 8px;border-radius:4px;flex-shrink:0;">
+        <div style="padding:14px;border-radius:8px;background:#1a1c20;border:1px solid #26282e;margin-bottom:10px;display:flex;align-items:flex-start;gap:12px;font-size:15px;">
+            <span class="font-mono" style="font-size:13px;color:#a3b0c3;white-space:nowrap;background:#111215;border:1px solid #1e2025;padding:4px 8px;border-radius:4px;flex-shrink:0;">
                 ${(ev.timestamp || ev.created_at || '').split('T')[1]?.split('.')[0] || 'UTC'}
             </span>
             <div>
                 <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
-                    <span class="font-mono" style="font-size:14px;font-weight:700;color:#ef4444;">${escapeHTML(ev.agent)}</span>
-                    <span style="color:#404040;">→</span>
-                    <span style="font-weight:600;color:#e5e5e5;">${escapeHTML(ev.action)}</span>
+                    <span class="font-mono" style="font-size:14px;font-weight:700;color:#db3847;">${escapeHTML(ev.agent)}</span>
+                    <span style="color:#64748b;">→</span>
+                    <span style="font-weight:600;color:#ffffff;">${escapeHTML(ev.action)}</span>
                 </div>
-                <p style="font-size:14px;color:#737373;">${escapeHTML(ev.detail)}</p>
+                <p style="font-size:14px;color:#cbd5e1;">${escapeHTML(ev.detail)}</p>
             </div>
         </div>`).join('');
 }
@@ -886,10 +891,10 @@ function renderHistoryItems(sessions) {
 
     if (!sessions || sessions.length === 0) {
         listEl.innerHTML = `
-            <div style="text-align:center;padding:48px 20px;border-radius:8px;background:#141414;border:1px dashed #333;">
-                <i class="fas fa-box-open" style="font-size:36px;color:#525252;margin-bottom:12px;display:block;"></i>
+            <div style="text-align:center;padding:48px 20px;border-radius:8px;background:#141518;border:1px dashed #26282e;">
+                <i class="fas fa-box-open" style="font-size:36px;color:#a3b0c3;margin-bottom:12px;display:block;"></i>
                 <div style="font-size:16px;font-weight:700;color:#e5e5e5;">No Saved Chats Found</div>
-                <div style="font-size:13px;color:#737373;margin-top:6px;max-width:400px;margin-left:auto;margin-right:auto;">
+                <div style="font-size:13px;color:#94a3b8;margin-top:6px;max-width:400px;margin-left:auto;margin-right:auto;">
                     Start a project in the workspace, run your interview or analysis, and click <strong>Save Chat</strong> to preserve everything under a custom name.
                 </div>
             </div>`;
@@ -912,13 +917,13 @@ function renderHistoryItems(sessions) {
                             <i class="fas fa-comments" style="color:#8b5cf6;"></i>
                             ${escapeHTML(title)}
                         </span>
-                        ${isActive ? `<span style="font-size:11px;font-family:'JetBrains Mono',monospace;background:#142a1b;border:1px solid #16532d;color:#22c55e;padding:2px 7px;border-radius:4px;font-weight:700;">CURRENT ACTIVE</span>` : ''}
+                        ${isActive ? `<span style="font-size:11px;font-family:'JetBrains Mono',monospace;background:#123023;border:1px solid #166534;color:#22c55e;padding:2px 7px;border-radius:4px;font-weight:700;">CURRENT ACTIVE</span>` : ''}
                     </div>
                     <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:12.5px;">
-                        <span style="background:#162238;border:1px solid #1d3c6a;color:#dbeafe;padding:2px 8px;border-radius:4px;font-family:'JetBrains Mono',monospace;">
+                        <span style="background:#192b45;border:1px solid #254d7d;color:#bfdbfe;padding:2px 8px;border-radius:4px;font-family:'JetBrains Mono',monospace;">
                             <i class="fas fa-briefcase mr-1"></i>${escapeHTML(s.domain || 'General')}
                         </span>
-                        <span style="background:#361414;border:1px solid #631f1f;color:#fee2e2;padding:2px 8px;border-radius:4px;font-family:'JetBrains Mono',monospace;">
+                        <span style="background:#2b2030;border:1px solid #4d2633;color:#fee2e2;padding:2px 8px;border-radius:4px;font-family:'JetBrains Mono',monospace;">
                             <i class="fas fa-user-tag mr-1"></i>${escapeHTML(s.role || 'Analyst')}
                         </span>
                         <span style="color:#888;font-family:'JetBrains Mono',monospace;font-size:12px;">
@@ -949,7 +954,7 @@ function renderHistoryItems(sessions) {
                     </button>
                 </div>
             </div>
-            <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#525252;display:flex;justify-content:space-between;">
+            <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#a3b0c3;display:flex;justify-content:space-between;">
                 <span>ID: ${escapeHTML(s.id)}</span>
             </div>
         </div>`;
@@ -1014,7 +1019,7 @@ async function loadHistorySession(sessionId) {
                             <i class="fas fa-check-circle" style="color:#15803d;font-size:19px;"></i>
                             <span style="font-size:16.5px;color:#e5e5e5;">
                                 <strong style="color:#fff;">Restored Workspace:</strong> Loaded saved chat 
-                                <strong style="color:#ef4444;">${escapeHTML(currentSessionTitle)}</strong>.
+                                <strong style="color:#db3847;">${escapeHTML(currentSessionTitle)}</strong>.
                             </span>
                         </div>
                     </div>
@@ -1563,7 +1568,7 @@ async function submitConflictResolution() {
 async function fetchTraceabilityMatrix() {
     const tbody = document.getElementById('rtm-table-body');
     if (!currentProjectId) {
-        tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:40px;color:#525252;">No active session. Submit requirements to generate RTM.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:40px;color:#a3b0c3;">No active session. Submit requirements to generate RTM.</td></tr>`;
         return;
     }
     tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:24px;color:#a3a3a3;"><i class="fas fa-spinner fa-spin mr-2"></i> Loading Traceability Matrix...</td></tr>`;
@@ -1572,22 +1577,22 @@ async function fetchTraceabilityMatrix() {
         const res = await authorizedFetch(`/session/${currentProjectId}/rtm_matrix`);
         const data = await res.json();
         if (!res.ok || !data.matrix?.length) {
-            tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:30px;color:#525252;">No matrix rows found.</td></tr>`;
+            tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:30px;color:#a3b0c3;">No matrix rows found.</td></tr>`;
             return;
         }
 
         tbody.innerHTML = data.matrix.map((row, idx) => {
             const isApproved = row.approval_status === 'approved';
             return `
-                <tr style="border-bottom:1px solid #1f1f1f;background:${idx % 2 === 0 ? 'transparent' : '#0f0f0f'};">
-                    <td style="padding:10px 8px;color:#ef4444;font-weight:700;">${escapeHTML(row.req_id)}</td>
+                <tr style="border-bottom:1px solid #1e2025;background:${idx % 2 === 0 ? 'transparent' : '#111215'};">
+                    <td style="padding:10px 8px;color:#db3847;font-weight:700;">${escapeHTML(row.req_id)}</td>
                     <td style="padding:10px 8px;color:#e5e5e5;max-width:240px;line-height:1.4;">${escapeHTML(row.statement)}</td>
                     <td style="padding:10px 8px;color:#93c5fd;">${escapeHTML(row.source_stakeholder)}</td>
                     <td style="padding:10px 8px;color:#f87171;">${escapeHTML(row.regulation)}</td>
                     <td style="padding:10px 8px;color:#c084fc;">${escapeHTML(row.control)}</td>
                     <td style="padding:10px 8px;color:#a3a3a3;max-width:200px;">${escapeHTML(row.test_scenario)}</td>
                     <td style="padding:10px 8px;">
-                        <span style="font-size:11px;padding:2px 6px;border-radius:3px;background:${isApproved ? '#142a1b' : '#361414'};color:${isApproved ? '#dcfce7' : '#fee2e2'};border:1px solid ${isApproved ? '#16532d' : '#631f1f'};">
+                        <span style="font-size:11px;padding:2px 6px;border-radius:3px;background:${isApproved ? '#123023' : '#351f26'};color:${isApproved ? '#bbf7d0' : '#fecdd3'};border:1px solid ${isApproved ? '#166534' : '#6b2633'};">
                             ${isApproved ? 'APPROVED' : 'PENDING'}
                         </span>
                     </td>
@@ -1618,11 +1623,11 @@ async function fetchAdminMetrics() {
         const runsTbody = document.getElementById('admin-runs-body');
         if (m.recent_agent_runs && m.recent_agent_runs.length) {
             runsTbody.innerHTML = m.recent_agent_runs.map((run, idx) => `
-                <tr style="border-bottom:1px solid #1f1f1f;background:${idx % 2 === 0 ? 'transparent' : '#0f0f0f'};">
+                <tr style="border-bottom:1px solid #1e2025;background:${idx % 2 === 0 ? 'transparent' : '#111215'};">
                     <td style="padding:8px;color:#fff;font-weight:700;">${escapeHTML(run.agent)}</td>
                     <td style="padding:8px;"><span class="text-emerald-400">✓ ${escapeHTML(run.status)}</span></td>
-                    <td style="padding:8px;color:#ef4444;">${run.duration_ms} ms</td>
-                    <td style="padding:8px;color:#525252;">${escapeHTML(run.time)}</td>
+                    <td style="padding:8px;color:#db3847;">${run.duration_ms} ms</td>
+                    <td style="padding:8px;color:#a3b0c3;">${escapeHTML(run.time)}</td>
                 </tr>
             `).join('');
         }

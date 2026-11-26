@@ -1,42 +1,42 @@
 /* ═══════════════════════════════════════════════════
-   FINREQ — Security & Compliance Theme
-   Black + Crimson Red, Heavy Typography, Terminal UI
+   FINREQ — Slate Navy & Crimson Red Theme
+   Matching Requirements Baseline Ledger Palette
    ═══════════════════════════════════════════════════ */
 
 @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
 
 :root {
-    --bg: #0a0a0a;
-    --bg-2: #121212;
-    --bg-3: #1a1a1a;
-    --bg-4: #242424;
-    --border: #2e2e2e;
-    --border-hover: #444444;
+    --bg: #000000;          /* Deep pitch black canvas */
+    --bg-2: #0f0f0f;        /* Main section & panel surface (blackish grey) */
+    --bg-3: #0f0f0f;        /* Elevated card surface */
+    --bg-4: #0f0f0f;        /* Active tab & hover surface */
+    --border: #26282e;      /* Clean subtle border */
+    --border-hover: #383b44;
 
-    --amber: #dc2626;
-    --amber-bright: #ef4444;
-    --amber-dim: #261212;
-    --amber-border: #4d1d1d;
-    --orange: #b91c1c;
+    --amber: #db3847;       /* Primary crimson red */
+    --amber-bright: #eb4d5b;
+    --amber-dim: rgba(219, 56, 71, 0.15);
+    --amber-border: #db3847;
+    --orange: #c92e3c;
 
     --white: #ffffff;
-    --grey-1: #e5e5e5;
-    --grey-2: #a3a3a3;
-    --grey-3: #666666;
-    --grey-4: #2e2e2e;
+    --grey-1: #f1f5f9;      /* Bright readable text */
+    --grey-2: #9da3af;      /* Muted text for inactive tabs & labels */
+    --grey-3: #6b7280;      /* Muted secondary labels */
+    --grey-4: #22242a;      /* Dark UI accents */
 
-    --green: #15803d;
-    --green-dim: #122417;
-    --green-border: #1d4d29;
-    --red: #dc2626;
-    --red-dim: #261212;
-    --red-border: #4d1d1d;
-    --blue: #1d4ed8;
-    --blue-dim: #121c2d;
-    --blue-border: #1d3557;
-    --purple: #6d28d9;
-    --purple-dim: #20122d;
-    --purple-border: #3e1f59;
+    --green: #10b981;
+    --green-dim: #132b26;
+    --green-border: #1a4d3e;
+    --red: #db3847;
+    --red-dim: #2e1a22;
+    --red-border: #52232c;
+    --blue: #3b82f6;
+    --blue-dim: #1e2e4a;
+    --blue-border: #254b7d;
+    --purple: #8b5cf6;
+    --purple-dim: #271e3d;
+    --purple-border: #46336c;
 }
 
 /* ─── RESET & BASE ─── */
@@ -119,8 +119,8 @@ pre,
 
 /* ─── SCROLLBARS ─── */
 ::-webkit-scrollbar {
-    width: 4px;
-    height: 4px;
+    width: 5px;
+    height: 5px;
 }
 
 ::-webkit-scrollbar-track {
@@ -129,11 +129,11 @@ pre,
 
 ::-webkit-scrollbar-thumb {
     background: var(--grey-4);
-    border-radius: 2px;
+    border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: var(--grey-3);
+    background: var(--border-hover);
 }
 
 .custom-scrollbar {
@@ -141,12 +141,17 @@ pre,
     scrollbar-color: var(--grey-4) transparent;
 }
 
-/* ─── HEADER ─── */
+/* ─── HEADER (Glassmorphic & See-Through) ─── */
 .theme-header {
-    background: var(--bg);
-    border-bottom: 1px solid var(--border);
+    background: rgba(18, 19, 23, 0.75) !important;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    margin-left: 30px;
+    margin-right: 30px;
+    border: 1px solid rgba(42, 45, 52, 0.6) !important;
+    border-radius: 1.5em;
     position: sticky;
-    top: 0;
+    top: 7.5px;
     z-index: 50;
 }
 
@@ -156,24 +161,58 @@ pre,
 
 .theme-tag {
     background: var(--bg-3);
-    border: 1px solid var(--border);
     color: var(--grey-2);
 }
 
 .theme-btn {
-    background: var(--bg-3);
-    border: 1px solid var(--border);
-    color: var(--grey-2);
+    background: transparent;
+    color: var(--grey-1);
     font-weight: 600;
-    transition: all 0.15s;
+    transition: all 0.15s ease;
     font-size: 15px !important;
 }
 
 .theme-btn:hover {
-    border-color: var(--amber) !important;
-    background: var(--amber-dim) !important;
-    color: var(--white) !important;
-    box-shadow: none !important;
+    border-color: #db3847 !important;
+    background: #db3847 !important;
+    color: #ffffff !important;
+}
+
+.theme-btn:hover i,
+.theme-btn:hover span,
+.theme-btn:hover div {
+    color: #ffffff !important;
+}
+
+/* ─── NAVBAR BUTTONS (No Background, Crimson on Hover) ─── */
+.theme-header .theme-btn {
+    background: transparent !important;
+    color: #f1f5f9 !important;
+    cursor: pointer;
+    border-radius: 6px;
+    transition: all 0.15s ease;
+}
+
+.theme-header .theme-btn i {
+    color: #a3b0c3;
+    transition: color 0.15s ease;
+}
+
+.theme-header .theme-btn:hover {
+    background: #db3847 !important;
+    border-color: #db3847 !important;
+    color: #ffffff !important;
+}
+
+.theme-header .theme-btn:hover i,
+.theme-header .theme-btn:hover span,
+.theme-header .theme-btn:hover div {
+    color: #ffffff !important;
+}
+
+.theme-header .theme-tag {
+    background: transparent !important;
+    border-radius: 6px;
 }
 
 /* ─── CARDS ─── */
@@ -193,7 +232,7 @@ pre,
     background: var(--bg-3);
     border: 1px solid var(--border);
     border-radius: 6px;
-    color: var(--grey-2);
+    color: var(--grey-1);
     transition: border-color 0.15s;
 }
 
@@ -209,13 +248,12 @@ pre,
     color: var(--white);
     border-radius: 6px;
     font-size: 15px !important;
-    transition: border-color 0.15s, box-shadow 0.15s;
+    transition: border-color 0.15s;
 }
 
 .floating-input:focus,
 .glass-input:focus {
     border-color: var(--amber);
-    box-shadow: none;
     outline: none;
 }
 
@@ -236,75 +274,83 @@ select.floating-input option {
     font-weight: 600;
     font-size: 14px !important;
     transition: all 0.15s;
-    border-radius: 4px;
+    border-radius: 6px;
 }
 
 .preset-chip:hover {
-    background: var(--amber-dim);
-    border-color: var(--amber-border);
-    color: var(--amber-bright);
+    background: #22242a;
+    border-color: var(--border-hover);
+    color: var(--white);
 }
 
 /* ─── AGENT NODES ─── */
 .agent-node {
     background: var(--bg-3);
     border: 1px solid var(--border);
-    border-radius: 5px;
+    border-radius: 6px;
     font-size: 13px !important;
     font-weight: 600;
-    color: var(--grey-3);
+    color: var(--grey-2);
     transition: all 0.15s;
 }
 
 .agent-node.active-agent {
-    border-color: var(--amber) !important;
-    background: var(--amber-dim) !important;
-    color: var(--white) !important;
-    box-shadow: none !important;
+    border-color: #db3847 !important;
+    background: #db3847 !important;
+    color: #ffffff !important;
 }
 
-/* ─── TABS ─── */
+.agent-node.active-agent i,
+.agent-node.active-agent div,
+.agent-node.active-agent span {
+    color: #ffffff !important;
+}
+
+/* ─── TABS (Exact match from screenshot) ─── */
 .tab-strip {
     border-bottom: 1px solid var(--border);
     background: var(--bg-2);
 }
 
 .tab-btn {
-    border-radius: 4px;
+    border-radius: 6px;
     border: 1px solid transparent;
-    font-weight: 700;
-    font-size: 15px !important;
-    color: var(--grey-3);
+    font-weight: 600;
+    font-size: 14.5px !important;
+    color: var(--grey-2);
+    background: transparent;
     transition: all 0.15s;
     letter-spacing: -0.01em;
 }
 
 .tab-btn:hover {
-    color: var(--grey-1);
-    background: var(--bg-3);
+    color: var(--white);
+    background: #1c1e23;
 }
 
 .tab-btn.active {
-    color: var(--white);
-    background: var(--amber-dim);
-    border-color: var(--amber-border);
-    font-weight: 800;
+    color: var(--white) !important;
+    background: #22242a !important;
+    border-color: transparent !important;
+    font-weight: 700;
 }
 
 /* ─── BUTTONS ─── */
-.btn-primary {
-    background: #dc2626;
+.btn-primary,
+.btn-approve {
+    background: #db3847;
     color: #ffffff;
-    font-weight: 800;
+    font-weight: 700;
     font-size: 15px !important;
-    border-radius: 5px;
+    border-radius: 8px;
     border: none;
-    transition: background 0.12s;
+    transition: background 0.15s;
     letter-spacing: -0.01em;
 }
 
-.btn-primary:hover {
-    background: #b91c1c;
+.btn-primary:hover,
+.btn-approve:hover {
+    background: #c52d3c;
 }
 
 .btn-secondary {
@@ -312,28 +358,15 @@ select.floating-input option {
     border: 1px solid var(--border);
     color: var(--grey-2);
     font-weight: 600;
-    font-size: 15px !important;
-    border-radius: 5px;
+    font-size: 14px !important;
+    border-radius: 6px;
     transition: all 0.12s;
 }
 
 .btn-secondary:hover {
     background: var(--bg-4);
     color: var(--white);
-}
-
-.btn-approve {
-    background: var(--amber);
-    color: #ffffff;
-    font-weight: 800;
-    font-size: 15px !important;
-    border-radius: 5px;
-    border: none;
-    transition: background 0.12s;
-}
-
-.btn-approve:hover {
-    background: #dc2626;
+    border-color: var(--border-hover);
 }
 
 .btn-remove {
@@ -342,7 +375,7 @@ select.floating-input option {
     color: var(--grey-3);
     font-weight: 600;
     font-size: 14px !important;
-    border-radius: 5px;
+    border-radius: 6px;
     transition: all 0.12s;
 }
 
@@ -352,43 +385,43 @@ select.floating-input option {
     color: #ffffff;
 }
 
-/* ─── BADGES (SOLID) ─── */
+/* ─── BADGES (SOLID & THEMED) ─── */
 .badge-blue {
-    background: #162238;
-    border: 1px solid #1d3c6a;
-    color: #dbeafe;
+    background: #192b45;
+    border: 1px solid #254d7d;
+    color: #bfdbfe;
     font-size: 13px !important;
 }
 
 .badge-green {
-    background: #142a1b;
-    border: 1px solid #16532d;
-    color: #dcfce7;
+    background: #123023;
+    border: 1px solid #166534;
+    color: #bbf7d0;
     font-size: 13px !important;
 }
 
 .badge-red {
-    background: #2f1414;
-    border: 1px solid #5c1d1d;
-    color: #fee2e2;
+    background: #351f26;
+    border: 1px solid #6b2633;
+    color: #fecdd3;
     font-size: 13px !important;
 }
 
 .badge-amber {
-    background: #361414;
-    border: 1px solid #631f1f;
-    color: #fee2e2;
+    background: #db3847;
+    border: 1px solid #78350f;
+    color: #ffffff;
     font-size: 13px !important;
 }
 
 .badge-purple {
-    background: #261433;
-    border: 1px solid #4a1f6d;
-    color: #f3e8ff;
+    background: #251d3b;
+    border: 1px solid #5b21b6;
+    color: #e9d5ff;
     font-size: 13px !important;
 }
 
-/* ─── AMBER ACCENT GLOW (active elements) ─── */
+/* ─── ACCENTS ─── */
 .accent-line {
     width: 3px;
     height: 100%;
@@ -396,7 +429,7 @@ select.floating-input option {
     border-radius: 2px;
 }
 
-/* ─── CHAT BUBBLES & CONSOLE (MAX SIZED) ─── */
+/* ─── CHAT BUBBLES & CONSOLE ─── */
 #chat-window {
     font-size: 20px !important;
     line-height: 1.7 !important;
@@ -415,20 +448,46 @@ select.floating-input option {
 .chat-bubble-user {
     font-size: 20px !important;
     line-height: 1.7 !important;
+    background: #1a1c20 !important;
+    border: 1px solid #26282e !important;
+    color: #f8fafc !important;
 }
 
 .chat-bubble-assistant {
     font-size: 20px !important;
     line-height: 1.7 !important;
+    background: #141518 !important;
+    border: 1px solid #22242a !important;
+    color: #f1f5f9 !important;
+}
+
+.chat-avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 6px;
+    background: #db3847 !important;
+    border: none !important;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff !important;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 900;
+    font-size: 14px;
 }
 
 #user-input {
     font-size: 20px !important;
     line-height: 1.6 !important;
+    background: #141518 !important;
+    border: 1px solid #26282e !important;
+    color: #ffffff !important;
 }
 
 #user-input::placeholder {
     font-size: 18px !important;
+    color: var(--grey-3) !important;
 }
 
 /* ─── ANIMATIONS ─── */
@@ -455,7 +514,7 @@ select.floating-input option {
     font-weight: 700;
 }
 
-/* ─── AMBER SECTION DIVIDER ─── */
+/* ─── SECTION DIVIDER ─── */
 .amber-divider {
     height: 1px;
     background: var(--border);
@@ -476,16 +535,16 @@ select.floating-input option {
 .terminal-line {
     font-family: 'JetBrains Mono', monospace;
     font-size: 13px !important;
-    color: var(--grey-3);
+    color: var(--grey-2);
     letter-spacing: 0.03em;
 }
 
 .terminal-line .ok {
-    color: #15803d;
+    color: #10b981;
 }
 
 .terminal-line .err {
-    color: #b91c1c;
+    color: #db3847;
 }
 
 /* ─── MODAL OVERLAYS & DIALOGS ─── */
@@ -493,7 +552,7 @@ select.floating-input option {
     position: fixed;
     inset: 0;
     z-index: 50;
-    background: rgba(0, 0, 0, 0.82);
+    background: rgba(10, 15, 23, 0.85);
     backdrop-filter: blur(8px);
     display: flex;
     align-items: center;
@@ -508,15 +567,15 @@ select.floating-input option {
 /* ─── RTM & TELEMETRY TABLES ─── */
 .rtm-table th,
 .rtm-table td {
-    border: 1px solid #262626;
+    border: 1px solid #2a3b52;
 }
 
 .rtm-table tr:hover td {
-    background: rgba(245, 158, 11, 0.04);
+    background: rgba(45, 59, 80, 0.35);
 }
 
 /* ─── DROP ZONE ─── */
 #drop-zone.dragover {
     border-color: var(--amber) !important;
-    background: rgba(245, 158, 11, 0.08) !important;
+    background: rgba(219, 56, 71, 0.08) !important;
 }
